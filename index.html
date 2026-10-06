@@ -144,7 +144,7 @@
     .emerald-text { color: var(--emerald); }
     .rose-text { color: var(--rose); }
 
-    /* Runner Console */
+    /* Interactive Run Console */
     .runner-card {
       background: linear-gradient(180deg, #111827 0%, #0c121e 100%);
       border: 1px solid rgba(6, 182, 212, 0.3);
@@ -160,6 +160,9 @@
       letter-spacing: 0.05em;
       text-transform: uppercase;
       margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
     .runner-controls {
@@ -198,13 +201,12 @@
       font-size: 0.85rem;
       padding: 12px 20px;
       cursor: pointer;
-      display: inline-flex;
+      display: flex;
       align-items: center;
       justify-content: center;
       gap: 6px;
       transition: background 0.2s ease, transform 0.1s ease;
       white-space: nowrap;
-      text-decoration: none;
     }
 
     .btn-run:hover { background: #22d3ee; }
@@ -309,10 +311,10 @@
             <input id="smilesInput" type="text" class="input-field" value="CN1CCN(CC1)C2=CC=C(NC(=O)C=C)C=C2" placeholder="Ligand SMILES string" />
           </div>
           <button class="btn-run" id="btnRun" onclick="runSimulation()">
-            ▶ RUN SIMULATION
+            ▶ VIEW DEMO
           </button>
           <a href="https://rapidapi.com/shs15199702/api/neoma-bio-molecular-docking-physical-convergence/playground/Run%20Molecular%20Docking" target="_blank" rel="noopener noreferrer" class="btn-rapid-link">
-            🌐 RUN LIVE ON RAPIDAPI
+            🌐 EXECUTE REAL API
           </a>
         </div>
       </div>
@@ -371,10 +373,10 @@
             Target Engine: <span style="color: var(--cyan);">P-CAM Physics Reflex Engine</span>
           </div>
           <button class="btn-run" id="btnCoreRun" style="background: var(--emerald);" onclick="runCorePing()">
-            ▶ TEST CORE COMPUTATION
+            ▶ VIEW DEMO
           </button>
           <a href="https://rapidapi.com/shs15199702/api/neoma-p-cam-physics-reflex-engine/playground/Compute%20Reflex" target="_blank" rel="noopener noreferrer" class="btn-rapid-link">
-            🌐 RUN LIVE ON RAPIDAPI
+            🌐 EXECUTE REAL API
           </a>
         </div>
       </div>
@@ -456,7 +458,7 @@
         document.getElementById('disp-tx').innerText = newTx + ' (Permanent Protocol Burn)';
 
         btn.disabled = false;
-        btn.innerText = '▶ RUN SIMULATION';
+        btn.innerText = '▶ VIEW DEMO';
       }, 400);
     }
 
@@ -474,7 +476,7 @@
         document.getElementById('core-val-tunnel').innerText = 'CONNECTED';
         
         btn.disabled = false;
-        btn.innerText = '▶ TEST CORE COMPUTATION';
+        btn.innerText = '▶ VIEW DEMO';
       }, 300);
     }
 
