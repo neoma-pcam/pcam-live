@@ -144,7 +144,7 @@
     .emerald-text { color: var(--emerald); }
     .rose-text { color: var(--rose); }
 
-    /* Interactive Run Console */
+    /* Runner Console */
     .runner-card {
       background: linear-gradient(180deg, #111827 0%, #0c121e 100%);
       border: 1px solid rgba(6, 182, 212, 0.3);
@@ -160,9 +160,6 @@
       letter-spacing: 0.05em;
       text-transform: uppercase;
       margin-bottom: 16px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
     }
 
     .runner-controls {
@@ -201,41 +198,41 @@
       font-size: 0.85rem;
       padding: 12px 20px;
       cursor: pointer;
-      display: flex;
+      display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 6px;
       transition: background 0.2s ease, transform 0.1s ease;
       white-space: nowrap;
+      text-decoration: none;
     }
 
     .btn-run:hover { background: #22d3ee; }
     .btn-run:active { transform: scale(0.97); }
 
-    .btn-rapid {
+    .btn-rapid-link {
       background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
-      color: #fff;
+      color: #ffffff !important;
       border: 1px solid rgba(139, 92, 246, 0.4);
       border-radius: 8px;
       font-weight: 700;
       font-size: 0.85rem;
       padding: 12px 20px;
       cursor: pointer;
-      display: flex;
+      display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 6px;
       transition: all 0.2s ease;
       white-space: nowrap;
+      text-decoration: none;
       box-shadow: 0 0 12px rgba(124, 58, 237, 0.3);
     }
 
-    .btn-rapid:hover {
+    .btn-rapid-link:hover {
       background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
       box-shadow: 0 0 18px rgba(139, 92, 246, 0.5);
     }
-
-    .btn-rapid:active { transform: scale(0.97); }
 
     .terminal-card {
       background: #060911;
@@ -294,9 +291,8 @@
       </button>
     </div>
 
-    <!-- PANE: BIO-MOLECULAR DOCKING (ACTIVE DEFAULT) -->
+    <!-- PANE 1: BIO-MOLECULAR DOCKING -->
     <div id="tab-bio" class="tab-pane active">
-      <!-- Interactive Run Section -->
       <div class="runner-card">
         <div class="runner-title">
           <span>🧬 LIVE DOCKING EXECUTION BENCH</span>
@@ -315,9 +311,9 @@
           <button class="btn-run" id="btnRun" onclick="runSimulation()">
             ▶ RUN SIMULATION
           </button>
-          <button class="btn-rapid" onclick="goToRapidAPI('bio')">
+          <a href="https://rapidapi.com/shs15199702/api/neoma-bio-molecular-docking-physical-convergence/playground/Run%20Molecular%20Docking" target="_blank" rel="noopener noreferrer" class="btn-rapid-link">
             🌐 RUN LIVE ON RAPIDAPI
-          </button>
+          </a>
         </div>
       </div>
 
@@ -364,9 +360,8 @@
       </div>
     </div>
 
-    <!-- PANE: CORE ENGINE -->
+    <!-- PANE 2: CORE ENGINE -->
     <div id="tab-core" class="tab-pane">
-      <!-- Core Interactive Section -->
       <div class="runner-card" style="border-color: rgba(16, 185, 129, 0.3);">
         <div class="runner-title" style="color: var(--emerald);">
           <span>⚡ CORE ENGINE EXECUTION BENCH</span>
@@ -378,9 +373,9 @@
           <button class="btn-run" id="btnCoreRun" style="background: var(--emerald);" onclick="runCorePing()">
             ▶ TEST CORE COMPUTATION
           </button>
-          <button class="btn-rapid" onclick="goToRapidAPI('core')">
+          <a href="https://rapidapi.com/shs15199702/api/neoma-p-cam-physics-reflex-engine/playground/Compute%20Reflex" target="_blank" rel="noopener noreferrer" class="btn-rapid-link">
             🌐 RUN LIVE ON RAPIDAPI
-          </button>
+          </a>
         </div>
       </div>
 
@@ -421,20 +416,6 @@
   </div>
 
   <script>
-    // 1. 네오마 바이오(Bio-Molecular Docking) 플레이그라운드 주소
-    const RAPIDAPI_BIO_URL = "https://rapidapi.com/shs15199702/api/neoma-bio-molecular-docking-physical-convergence/playground/Run%20Molecular%20Docking";
-
-    // 2. 네오마 피캠(P-CAM Physics Reflex Engine) 플레이그라운드 주소
-    const RAPIDAPI_CORE_URL = "https://rapidapi.com/shs15199702/api/neoma-p-cam-physics-reflex-engine/playground/Compute%20Reflex";
-
-    function goToRapidAPI(type) {
-      if (type === 'bio') {
-        window.open(RAPIDAPI_BIO_URL, '_blank');
-      } else {
-        window.open(RAPIDAPI_CORE_URL, '_blank');
-      }
-    }
-
     function switchTab(tab) {
       document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
       document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
@@ -448,7 +429,6 @@
       }
     }
 
-    // Bio Molecular 시뮬레이션 버튼 동작
     function runSimulation() {
       const btn = document.getElementById('btnRun');
       const target = document.getElementById('targetSelect').value;
@@ -459,4 +439,50 @@
 
       setTimeout(() => {
         const randomTime = (7.8 + Math.random() * 1.8).toFixed(2);
-        const randomDG = (-8.5 - Math.
+        const randomDG = (-8.5 - Math.random() * 2.2).toFixed(2);
+        const randomEntropy = (99.70 + Math.random() * 0.28).toFixed(2);
+        const randomBurn = (20.0 + Math.random() * 10.0).toFixed(1);
+        const newSeal = '0x' + Array.from({length: 36}, () => Math.floor(Math.random()*16).toString(16)).join('');
+        const newTx = '0x' + Array.from({length: 8}, () => Math.floor(Math.random()*16).toString(16)).join('') + '...' + Array.from({length: 4}, () => Math.floor(Math.random()*16).toString(16)).join('');
+
+        document.getElementById('val-dg').innerText = randomDG + ' kcal/mol';
+        document.getElementById('val-time').innerText = randomTime + ' ms';
+        document.getElementById('val-entropy').innerText = randomEntropy + '%';
+        document.getElementById('val-burn').innerText = `-${randomBurn} NEOMA`;
+
+        document.getElementById('disp-target').innerText = target;
+        document.getElementById('disp-smiles').innerText = smiles;
+        document.getElementById('disp-seal').innerText = newSeal;
+        document.getElementById('disp-tx').innerText = newTx + ' (Permanent Protocol Burn)';
+
+        btn.disabled = false;
+        btn.innerText = '▶ RUN SIMULATION';
+      }, 400);
+    }
+
+    function runCorePing() {
+      const btn = document.getElementById('btnCoreRun');
+      btn.disabled = true;
+      btn.innerText = 'COMPUTING...';
+
+      setTimeout(() => {
+        const randomLatency = (8.5 + Math.random() * 2.1).toFixed(2);
+        const randomEnclaveSeal = Array.from({length: 40}, () => Math.floor(Math.random()*16).toString(16)).join('');
+        
+        document.getElementById('core-val-latency').innerText = randomLatency + ' ms';
+        document.getElementById('core-disp-seal').innerText = randomEnclaveSeal;
+        document.getElementById('core-val-tunnel').innerText = 'CONNECTED';
+        
+        btn.disabled = false;
+        btn.innerText = '▶ TEST CORE COMPUTATION';
+      }, 300);
+    }
+
+    setInterval(() => {
+      const now = new Date().toISOString();
+      const tsElem = document.getElementById('core-timestamp');
+      if (tsElem) tsElem.innerText = 'TIMESTAMP: ' + now;
+    }, 1000);
+  </script>
+</body>
+</html>
