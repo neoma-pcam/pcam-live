@@ -290,7 +290,7 @@
         🧬 BIO-MOLECULAR (RAPIDAPI)
       </button>
       <button class="tab-btn" onclick="switchTab('core')">
-        ⚡ CORE ENGINE
+        ⚡ CORE ENGINE (RAPIDAPI)
       </button>
     </div>
 
@@ -315,7 +315,7 @@
           <button class="btn-run" id="btnRun" onclick="runSimulation()">
             ▶ RUN SIMULATION
           </button>
-          <button class="btn-rapid" onclick="goToRapidAPI()">
+          <button class="btn-rapid" onclick="goToRapidAPI('bio')">
             🌐 RUN LIVE ON RAPIDAPI
           </button>
         </div>
@@ -369,17 +369,17 @@
       <!-- Core Interactive Section -->
       <div class="runner-card" style="border-color: rgba(16, 185, 129, 0.3);">
         <div class="runner-title" style="color: var(--emerald);">
-          <span>⚡ CORE GATEWAY PING BENCH</span>
+          <span>⚡ CORE ENGINE EXECUTION BENCH</span>
         </div>
         <div class="runner-controls" style="grid-template-columns: 2fr auto auto;">
           <div style="color: var(--muted); font-size: 0.85rem; font-family: var(--font-mono);">
-            Target Node Enclave: <span style="color: var(--cyan);">https://practices-legendary-cassette-mixing.trycloudflare.com</span>
+            Target Engine: <span style="color: var(--cyan);">P-CAM Physics Reflex Engine</span>
           </div>
           <button class="btn-run" id="btnCoreRun" style="background: var(--emerald);" onclick="runCorePing()">
-            ▶ TEST CORE PING
+            ▶ TEST CORE COMPUTATION
           </button>
-          <button class="btn-rapid" onclick="goToRapidAPI()">
-            🌐 VIEW ON RAPIDAPI
+          <button class="btn-rapid" onclick="goToRapidAPI('core')">
+            🌐 RUN LIVE ON RAPIDAPI
           </button>
         </div>
       </div>
@@ -421,13 +421,18 @@
   </div>
 
   <script>
-    // 이 변수에 실제 생성된 대표님의 RapidAPI 마켓 주소를 넣어주시면 됩니다.
-    // 예: https://rapidapi.com/neoma-pcam/api/neoma-bio-molecular-docking-physical-convergence
-    const RAPIDAPI_URL = "https://rapidapi.com/hub"; 
+    // 1. 네오마 바이오(Bio-Molecular Docking) 플레이그라운드 주소
+    const RAPIDAPI_BIO_URL = "https://rapidapi.com/shs15199702/api/neoma-bio-molecular-docking-physical-convergence/playground/Run%20Molecular%20Docking";
 
-    function goToRapidAPI() {
-      // 새 탭으로 RapidAPI 상점 페이지를 엽니다.
-      window.open(RAPIDAPI_URL, '_blank');
+    // 2. 네오마 피캠(P-CAM Physics Reflex Engine) 플레이그라운드 주소
+    const RAPIDAPI_CORE_URL = "https://rapidapi.com/shs15199702/api/neoma-p-cam-physics-reflex-engine/playground/Compute%20Reflex";
+
+    function goToRapidAPI(type) {
+      if (type === 'bio') {
+        window.open(RAPIDAPI_BIO_URL, '_blank');
+      } else {
+        window.open(RAPIDAPI_CORE_URL, '_blank');
+      }
     }
 
     function switchTab(tab) {
@@ -454,51 +459,4 @@
 
       setTimeout(() => {
         const randomTime = (7.8 + Math.random() * 1.8).toFixed(2);
-        const randomDG = (-8.5 - Math.random() * 2.2).toFixed(2);
-        const randomEntropy = (99.70 + Math.random() * 0.28).toFixed(2);
-        const randomBurn = (20.0 + Math.random() * 10.0).toFixed(1);
-        const newSeal = '0x' + Array.from({length: 36}, () => Math.floor(Math.random()*16).toString(16)).join('');
-        const newTx = '0x' + Array.from({length: 8}, () => Math.floor(Math.random()*16).toString(16)).join('') + '...' + Array.from({length: 4}, () => Math.floor(Math.random()*16).toString(16)).join('');
-
-        document.getElementById('val-dg').innerText = randomDG + ' kcal/mol';
-        document.getElementById('val-time').innerText = randomTime + ' ms';
-        document.getElementById('val-entropy').innerText = randomEntropy + '%';
-        document.getElementById('val-burn').innerText = `-${randomBurn} NEOMA`;
-
-        document.getElementById('disp-target').innerText = target;
-        document.getElementById('disp-smiles').innerText = smiles;
-        document.getElementById('disp-seal').innerText = newSeal;
-        document.getElementById('disp-tx').innerText = newTx + ' (Permanent Protocol Burn)';
-
-        btn.disabled = false;
-        btn.innerText = '▶ RUN SIMULATION';
-      }, 400);
-    }
-
-    // Core Engine 핑 테스트 버튼 동작
-    function runCorePing() {
-      const btn = document.getElementById('btnCoreRun');
-      btn.disabled = true;
-      btn.innerText = 'PINGING...';
-
-      setTimeout(() => {
-        const randomLatency = (8.5 + Math.random() * 2.1).toFixed(2);
-        const randomEnclaveSeal = Array.from({length: 40}, () => Math.floor(Math.random()*16).toString(16)).join('');
-        
-        document.getElementById('core-val-latency').innerText = randomLatency + ' ms';
-        document.getElementById('core-disp-seal').innerText = randomEnclaveSeal;
-        document.getElementById('core-val-tunnel').innerText = 'CONNECTED';
-        
-        btn.disabled = false;
-        btn.innerText = '▶ TEST CORE PING';
-      }, 300);
-    }
-
-    setInterval(() => {
-      const now = new Date().toISOString();
-      const tsElem = document.getElementById('core-timestamp');
-      if (tsElem) tsElem.innerText = 'TIMESTAMP: ' + now;
-    }, 1000);
-  </script>
-</body>
-</html>
+        const randomDG = (-8.5 - Math.
