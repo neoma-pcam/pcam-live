@@ -32,8 +32,8 @@ The pipeline operates via a decoupled co-working structure:
 To support independent academic evaluation, an automated tier of **100 free screening queries per month** is accessible directly via the RapidAPI Hub without manual onboarding.
 
 ### Step 1: Obtain Your Key
-Subscribe to the free tier at:
-`https://rapidapi.com/your-organization/api/neoma-p-cam` *(Replace with your actual RapidAPI endpoint URL)*
+
+Subscribe to the free tier at: https://rapidapi.com/shs15199702/api/neoma-bio-molecular-docking-physical-convergence
 
 ### Step 2: Run Python Benchmark
 ```bash
@@ -43,9 +43,13 @@ import time
 import requests
 
 # 1. RapidAPI Configuration
-RAPIDAPI_URL = "[https://your-rapidapi-host.p.rapidapi.com/v1/optimize](https://your-rapidapi-host.p.rapidapi.com/v1/optimize)"
-RAPIDAPI_KEY = "YOUR_RAPIDAPI_KEY_HERE"  # Your personal RapidAPI key
-RAPIDAPI_HOST = "your-rapidapi-host.p.rapidapi.com"
+RAPIDAPI_URL = (
+    "https://neoma-bio-molecular-docking-physical-convergence.p.rapidapi.com/dock"
+)
+RAPIDAPI_HOST = (
+    "neoma-bio-molecular-docking-physical-convergence.p.rapidapi.com"
+)
+
 
 headers = {
     "content-type": "application/json",
