@@ -84,22 +84,19 @@ if response.status_code == 200:
 else:
     print(f"[!] Request failed: HTTP {response.status_code}")
     print(response.text)
-### Step 2: Run Python Benchmark
 
-```bash
+Step 2: Run Python Benchmark
+Bash
 pip install requests
-
-Universal Payload Schema
+4. Universal Payload Schema
 The endpoint accepts structured JSON inputs for multi-domain optimization tasks:
 
-Parameter,Type,Description
-task_type,string,"conformation_optimization, molecular_docking, trajectory_optimization"
-input_format,string,"SMILES, PDB, XYZ, or numeric array"
-data,string,Raw molecular text or coordinate payload
-constraints,object,Boundary parameters parsed by the orchestration layer
-
-Operations Policy
+Parameter	Type	Description
+task_type	string	conformation_optimization, molecular_docking, trajectory_optimization
+input_format	string	SMILES, PDB, XYZ, or numeric array
+data	string	Raw molecular text or coordinate payload
+constraints	object	Boundary parameters parsed by the orchestration layer
+5. Operations Policy
 Headless Deployment: This node operates autonomously. We do not provide manual consulting, customized pipeline engineering, or disclosure of internal hardware design.
 
 Empirical Validation: Researchers are encouraged to independently cross-validate convergence profiles against standard tools (e.g., AutoDock Vina, Glide, Gaussian).
-
