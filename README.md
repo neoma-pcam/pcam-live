@@ -84,7 +84,10 @@ if response.status_code == 200:
 else:
     print(f"[!] Request failed: HTTP {response.status_code}")
     print(response.text)
+### Step 2: Run Python Benchmark
 
+```bash
+pip install requests
 
 Universal Payload Schema
 The endpoint accepts structured JSON inputs for multi-domain optimization tasks:
