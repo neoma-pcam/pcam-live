@@ -85,8 +85,6 @@ else:
     print(f"[!] Request failed: HTTP {response.status_code}")
     print(response.text)
 
-Step 2: Run Python Benchmark
-Bash
 pip install requests
 4. Universal Payload Schema
 The endpoint accepts structured JSON inputs for multi-domain optimization tasks:
