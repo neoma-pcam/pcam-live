@@ -48,7 +48,11 @@ The official Python client library is available on [PyPI](https://pypi.org/proje
 
 ```bash
 pip install --upgrade neoma-pcam
+```
 
+### Option A: Ultra-Fast Molecular Docking (< 1.3ms)
+
+```python
 import neoma_pcam as pcam
 
 # Initialize client with your RapidAPI Key
@@ -67,7 +71,11 @@ print("Hardware Seal ID :", result["physical_telemetry"]["hardware_seal_id"])
 print("Receipt Hash     :", result["receipt"]["proof_hash"])
 print("\n[Mechanistic Explanation]")
 print(result["physical_telemetry"]["local_explanation"])
+```
 
+### Option B: Physical Equilibrium Reflex Convergence (< 0.9ms)
+
+```python
 import neoma_pcam as pcam
 
 client = pcam.PCAMClient(api_key="YOUR_RAPIDAPI_KEY")
@@ -80,12 +88,43 @@ print("Total Latency    :", reflex["physical_telemetry"]["total_latency_ms"], "m
 print("Core Latency     :", reflex["physical_telemetry"]["physical_latency_ms"], "ms")
 print("Equilibrium Lock :", reflex["physical_telemetry"]["future_guidance_weights"]["equilibrium_drift_suppression"])
 print("Proof Hash       :", reflex["receipt"]["proof_hash"])
+```
 
+---
+
+## 4. Direct REST API Specification
+
+For systems without Python dependencies, connect directly via HTTPS:
+
+### Endpoint 1: Molecular Docking
+* **Method**: `POST`
+* **URL**: `https://neoma-bio-molecular-docking-physical-convergence.p.rapidapi.com/v1/bio/molecular-docking`
+* **Headers**:
+  * `Content-Type`: `application/json`
+  * `X-RapidAPI-Key`: `<YOUR_API_KEY>`
+  * `X-RapidAPI-Host`: `neoma-bio-molecular-docking-physical-convergence.p.rapidapi.com`
+* **Payload**:
+```json
 {
   "target_protein": "SAMPLE_PDB_DATA",
   "ligand_smiles": "CC(=O)OC1=CC=CC=C1C(=O)O"
 }
+```
 
+### Endpoint 2: Physics Reflex Engine
+* **Method**: `POST`
+* **URL**: `https://neoma-p-cam-physics-reflex-engine.p.rapidapi.com/solve_physical_convergence`
+* **Headers**:
+  * `X-RapidAPI-Key`: `<YOUR_API_KEY>`
+  * `X-RapidAPI-Host`: `neoma-p-cam-physics-reflex-engine.p.rapidapi.com`
+
+---
+
+## 5. Verified Output Telemetry Schema
+
+Every response returns an auditable cryptographic telemetry block:
+
+```json
 {
   "status": "CONVERGED_SUCCESS",
   "domain": "NEOMA_BIO_PHARMA",
@@ -115,34 +154,18 @@ print("Proof Hash       :", reflex["receipt"]["proof_hash"])
     "audit_trail": "INTEGRATED_VERIFIED"
   }
 }
+```
 
-{
-  "status": "CONVERGED_SUCCESS",
-  "domain": "NEOMA_BIO_PHARMA",
-  "physical_telemetry": {
-    "hardware_seal_id": "003A00283438510C36383532",
-    "local_execution": "VERIFIED_EMBODIED",
-    "local_ai_model": "NEOMA_EMBODIED_BIO_CORE",
-    "synthesis_engine": "PHARMACOPHORE_CONTEXT_GUIDANCE",
-    "physical_latency_ms": 0.011,
-    "explanation_latency_ms": 0.326,
-    "total_latency_ms": 1.22,
-    "local_explanation": "[Embodied-BioCognition] P-CAM adaptive damping loop stabilized pocket...",
-    "future_guidance_weights": {
-      "binding_affinity_kcal_mol": -9.42,
-      "thermodynamic_stability_index": 0.998,
-      "entropy_attenuation_ratio": "99.84%",
-      "clinical_trajectory_guidance": "OPTIMAL_CANDIDATE"
-    }
-  },
-  "receipt": {
-    "receipt_id": "PCAM-BIO-36C0CB28837A",
-    "proof_hash": "36c0cb28837ab7cb05a1d7f31ef67042bf40058ded64eb29b65fe885dfce7c17",
-    "timestamp_utc": "2026-10-08T13:02:24Z"
-  },
-  "governance": {
-    "ip_protection": "PATENT_PENDING",
-    "audit_trail": "INTEGRATED_VERIFIED"
-  }
-}
+---
 
+## 6. Access & Academic Evaluation Policy
+
+* **Self-Serve Access**: Direct onboarding and evaluation tiers are available via the [RapidAPI Hub](https://rapidapi.com/shs15199702).
+* **Headless Infrastructure**: This node operates autonomously. We do not provide manual consulting or disclosure of internal hardware ASIC/FPGA designs.
+* **Cross-Validation**: Researchers and pharma engineering teams are encouraged to independently benchmark binding affinities against AutoDock Vina, Glide, or Amber trajectories.
+
+---
+
+## License
+
+MIT License © NEOMA Embodied Systems. All Rights Reserved.
