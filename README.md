@@ -1,8 +1,8 @@
 # NEOMA P-CAM: Deterministic Physical Solver & Screening Engine (v2.0)
 
 [![PyPI version](https://img.shields.io/pypi/v/neoma-pcam.svg?style=for-the-badge&logo=pypi&color=blue)](https://pypi.org/project/neoma-pcam/)
-[![Live Telemetry](https://img.shields.io/badge/Telemetry-NODE%20ACTIVE%20(0.87ms)-00ff66?style=for-the-badge&logo=statuspage)](https://rapidapi.com/shs15199702)
-[![Silicon Enclave](https://img.shields.io/badge/Silicon%20Enclave-003A...8532-00e5ff?style=for-the-badge)](https://rapidapi.com/shs15199702)
+[![Live Telemetry](https://img.shields.io/badge/Telemetry-NODE%20ACTIVE%20(0.87ms)-00ff66?style=for-the-badge&logo=statuspage)](https://rapidapi.com/shs15199702/api/neoma-bio-molecular-docking-physical-convergence)
+[![Silicon Enclave](https://img.shields.io/badge/Silicon%20Enclave-003A...8532-00e5ff?style=for-the-badge)](https://rapidapi.com/shs15199702/api/neoma-p-cam-physics-reflex-engine)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
 
 **NEOMA P-CAM** is a headless, hardware-attested **Deterministic Physical Convergence & High-Throughput Screening Engine**. 
@@ -160,7 +160,7 @@ Every response returns an auditable cryptographic telemetry block:
 
 ## 6. Access & Academic Evaluation Policy
 
-* **Self-Serve Access**: Direct onboarding and evaluation tiers are available via the [RapidAPI Hub](https://rapidapi.com/shs15199702).
+* **Self-Serve Access**: Direct onboarding and evaluation tiers are available via the [RapidAPI Hub - Bio Docking](https://rapidapi.com/shs15199702/api/neoma-bio-molecular-docking-physical-convergence) and [RapidAPI Hub - Physics Reflex](https://rapidapi.com/shs15199702/api/neoma-p-cam-physics-reflex-engine).
 * **Headless Infrastructure**: This node operates autonomously. We do not provide manual consulting or disclosure of internal hardware ASIC/FPGA designs.
 * **Cross-Validation**: Researchers and pharma engineering teams are encouraged to independently benchmark binding affinities against AutoDock Vina, Glide, or Amber trajectories.
 
