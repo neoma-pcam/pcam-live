@@ -13,14 +13,6 @@
 
 NEOMA P-CAM is a headless, hardware-attested **Deterministic Physical Convergence & High-Throughput Screening Engine**.
 
-# NEOMA P-CAM: Deterministic Physical Solver & Screening Engine (v2.0)
-
-[![PyPI version](https://img.shields.io/pypi/v/neoma-pcam.svg?style=for-the-badge&logo=pypi&color=blue)](https://pypi.org/project/neoma-pcam/)
-[![Live Telemetry](https://img.shields.io/badge/Telemetry-NODE%20ACTIVE%20(0.87ms)-00ff66?style=for-the-badge&logo=statuspage)](https://rapidapi.com/shs15199702/api/neoma-bio-molecular-docking-physical-convergence)
-[![Silicon Enclave](https://img.shields.io/badge/Silicon%20Enclave-003A...8532-00e5ff?style=for-the-badge)](https://rapidapi.com/shs15199702/api/neoma-p-cam-physics-reflex-engine)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
-
-**NEOMA P-CAM** is a headless, hardware-attested **Deterministic Physical Convergence & High-Throughput Screening Engine**. 
 
 By coupling context-aware synthesis with a dedicated deterministic hardware core, P-CAM eliminates iterative stochastic convergence stalls and delivers **sub-millisecond (< 1.0 ms) macro-dynamic physical convergence** with cryptographic proof-of-execution.
 
