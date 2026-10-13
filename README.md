@@ -1,13 +1,16 @@
 # NEOMA P-CAM: Deterministic Physical Solver & DeSci Tokenomics Engine (v2.0)
 
-[![PyPI](https://img.shields.io/badge/PYPI-V0.2.1-007ec6.svg)](https://pypi.org/project/neoma-pcam/)
+[![PyPI](https://img.shields.io/badge/PYPI-v0.4.1-007ec6.svg)](https://pypi.org/project/neoma-pcam/)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1D1P7mC9Jc0q7H9rZk3w4X8_T2n6m4v5G)
 [![Telemetry](https://img.shields.io/badge/TELEMETRY-NODE%20ACTIVE%20(0.87MS)-00e676.svg)](https://neoma-pcam.github.io/pcam-live/)
 [![Tokenomics](https://img.shields.io/badge/TOKENOMICS-10B%20HARD%20CAP%20%7C%2050%25%20BURN-ff9100.svg)](https://neoma-pcam.github.io/pcam-live/)
 [![Silicon Enclave](https://img.shields.io/badge/SILICON%20ENCLAVE-96--BIT%20RoT%20VERIFIED-00e5ff.svg)](https://neoma-pcam.github.io/pcam-live/)
 [![License: MIT](https://img.shields.io/badge/LICENSE-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 > 🌐 **Live Telemetry & Interactive Web Console:**  
-> 👉 [https://neoma-pcam.github.io/pcam-live/](https://neoma-pcam.github.io/pcam-live/)
+> 👉 [https://neoma-pcam.github.io/pcam-live/](https://neoma-pcam.github.io/pcam-live/)  
+> 🔑 **RapidAPI Gateway (100 Free Requests / Month):**  
+> 👉 [NEOMA Bio-Molecular Docking & Physical Convergence Hub](https://rapidapi.com/shs15199702/api/neoma-bio-molecular-docking-physical-convergence)
 
 ---
 
@@ -19,16 +22,16 @@ By fusing deterministic silicon co-processing with a decentralized high-throughp
 
 ## 1. System Architecture (3-Pillar Framework)
 
-```
-       [ Client Application / SDK / RapidAPI Gateway ]
-                             │
-     ┌───────────────────────┴───────────────────────┐
-     ▼                                               ▼
-[ Bio-Molecular Core ]                     [ Physical Reflex Core ]
-  - ΔG Affinity Minimization                 - Sub-10ms Equilibrium Locking
-  - Adaptive Pocket Damping                  - Non-Linear Chaos Suppression
-     └───────────────────────┬───────────────────────┘
-                             ▼
+```text
+        [ Client Application / Python SDK / RapidAPI Gateway ]
+                                │
+      ┌─────────────────────────┴─────────────────────────┐
+      ▼                                                   ▼
+[ Quantum Annealing / QUBO Core ]              [ Bio-Molecular Core ]
+  - D-Wave `dimod` Compatible                    - ΔG Affinity Minimization
+  - Sub-millisecond Ground State Locking         - Adaptive Pocket Damping
+      └─────────────────────────┬─────────────────────────┘
+                                ▼
   ┌─────────────────────────────────────────────────────┐
   │         Silicon Hardware Enclave (STM32/ESP32)      │
   │   - 96-Bit Silicon RoT Identity: `hardware_seal_id` │
@@ -40,54 +43,79 @@ By fusing deterministic silicon co-processing with a decentralized high-throughp
   │   - 10 Billion Hard Cap Deflationary Supply         │
   │   - 50% Auto-Burn Protocol (Permanent Deflation)    │
   │   - 50% Infrastructure / R&D Treasury Recycling     │
-  │   - Real-Time Price Oracle Calibrated Execution     │
+  │   - RapidAPI Metering: 100 Free Cycles / Month      │
   └─────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## 2. DeSci Proof-of-Physics (PoP) Tokenomics
+## 2. DeSci Proof-of-Physics (PoP) Tokenomics & RapidAPI Metering
 
 NEOMA P-CAM features a utility-backed deflationary settlement protocol operating across every physical computation cycle:
 
-* **Fixed Supply Cap**: Strictly hard-capped at **10,000,000,000 (10 Billion) PCAM**, with zero inflationary minting capability beyond the reserve.
-* **Dual Settlement Model**:
+- **100 Free Calls Tier**: Every researcher receives **100 free requests per month** via RapidAPI to benchmark and validate algorithms without barrier.
+- **Pay-Per-Use Scaling**: Subsequent calls are automatically settled via pay-as-you-go microtransactions ($1.00 base reference compute).
+- **Fixed Supply Cap**: Strictly hard-capped at **10,000,000,000 (10 Billion) PCAM**, with zero inflationary minting capability beyond the reserve.
+- **Dual Settlement Model**:
   * **Token Redemption (`TOKEN_REDEEM` / Basic)**: Physical computation is settled using `PCAM_GAS`.
     * **🔥 50% Permanent Burn**: Half of all consumed gas is permanently burned and excised from supply.
     * **🏛️ 50% Treasury Return**: Remaining 50% returns to the autonomous Founder R&D Treasury for infrastructure expansion.
   * **Fiat Gateway (`FIAT_PAID` / Tier Plans)**: Enterprise fiat settlements automatically award **10% of transaction value** in freshly allocated PCAM tokens calculated via the dynamic price oracle.
-* **Dynamic Price Oracle (`system_oracle`)**: Integrates real-time USD/PCAM exchange indexing to automatically calibrate network gas requirements to exact compute costs ($1.00 base compute reference).
-* **Cryptographic Attestation Receipt**: Every execution generates an immutable receipt linking customer identity, physical latency, 96-bit silicon chip UID, and SHA-256 state proof.
+- **Cryptographic Attestation Receipt**: Every execution generates an immutable receipt linking customer identity, physical latency, 96-bit silicon chip UID, and SHA-256 state proof.
 
 ---
 
 ## 3. Verified Performance Benchmarks
 
-| Metric | Conventional Solvers (AutoDock / OpenMM) | NEOMA P-CAM Hardware Acceleration |
+| Metric | Conventional Solvers (AutoDock / OpenMM / Simulated Annealing) | NEOMA P-CAM Hardware Acceleration |
 | :--- | :--- | :--- |
 | **Physical Convergence Reflex** | 500 ms – 15,000 ms | **0.87 ms** (Sub-1ms Real-time) |
-| **Physical Hardware Core Latency** | N/A (Software Iterations) | **0.010 ms** (10 microseconds) |
+| **Hardware Core Physical Latency** | N/A (Software Iterations) | **0.010 ms** (10 microseconds) |
 | **Molecular Docking (ΔG Convergence)** | 3,000 ms – 60,000 ms | **1.22 ms** |
-| **Thermodynamic Stability** | Variable (Local Minima Risk) | **0.998 Index** (Global Convergence) |
+| **QUBO Ground State Convergence** | Iterative Stalls / Local Traps | **Sub-millisecond Global Convergence** |
+| **Thermodynamic Stability** | Variable (Local Minima Risk) | **0.998 Index** |
 | **Auditability & Proof** | None | **96-Bit Chip UID + SHA-256 Receipt Lock** |
 | **Token Economy Alignment** | None | **50% Auto-Burn / Hard-Capped Ledger** |
 
 ---
 
-## 4. Quickstart: Python SDK
+## 4. Quickstart: Python SDK (`v0.4.1`)
 
-Install the official client library:
+Install the official client library and `dimod` optimization stack:
 
 ```bash
-pip install --upgrade neoma-pcam
+pip install --upgrade neoma-pcam dimod
 ```
 
-### Option A: Bio-Molecular Docking Simulation
+### Option A: Quantum Annealing & QUBO Optimization (D-Wave `dimod` Compatible)
+
+`PCAMSampler` implements the standard `dimod.Sampler` interface. You can replace existing D-Wave solvers with P-CAM physical hardware without modifying your QUBO modeling code:
+
+```python
+import dimod
+from neoma_pcam import PCAMSampler
+
+# 1. Initialize sampler with RapidAPI Key (100 Free calls/mo)
+sampler = PCAMSampler(rapidapi_key="YOUR_RAPIDAPI_KEY")
+
+# 2. Define Quadratic Unconstrained Binary Optimization (QUBO) problem
+Q = {
+    (0, 0): -1.0,
+    (1, 1): -1.0,
+    (0, 1):  2.0
+}
+
+# 3. Solve via physical hardware annealing
+response = sampler.sample_qubo(Q)
+print("Physical Annealing Result:")
+print(response)
+```
+
+### Option B: Bio-Molecular Docking Simulation
 
 ```python
 import neoma_pcam as pcam
 
-# Initialize client with RapidAPI Key
 client = pcam.PCAMClient(api_key="YOUR_RAPIDAPI_KEY")
 
 # Run Docking Simulation
@@ -104,7 +132,7 @@ print("Receipt Hash     :", result["receipt"]["proof_hash"])
 print("Tokens Burned    :", result["token_economy"]["tokens_burned_50pct"], "PCAM")
 ```
 
-### Option B: Physical Equilibrium Convergence & Token Burn
+### Option C: Physical Equilibrium Reflex & Token Burn
 
 ```python
 import neoma_pcam as pcam
@@ -125,23 +153,32 @@ print("Remaining Balance:", reflex["token_economy"]["customer_balance"], "PCAM_G
 
 ## 5. Direct REST API Specification
 
-### Endpoint 1: Physical Convergence & Gas Consumption
-* **Method**: `POST`
-* **Path**: `/solve_physical_convergence` (or `/v1/actuate`)
-* **Headers**: `Content-Type: application/json`, `X-RapidAPI-Key: <KEY>`
-* **Payload**:
+### Endpoint 1: Physical Annealing Convergence (QUBO)
+- **Method**: `POST`
+- **Path**: `/solve_physical_convergence`
+- **Headers**:
+```http
+Content-Type: application/json
+x-rapidapi-key: <YOUR_RAPIDAPI_KEY>
+x-rapidapi-host: neoma-bio-molecular-docking-physical-convergence.p.rapidapi.com
+```
+- **Payload**:
 ```json
 {
-  "sensor_input": 1.0,
-  "engine_mode": "AUTO",
-  "sub_plan": "BASIC"
+  "qubo_matrix": {
+    "0_0": -1.0,
+    "1_1": -1.0,
+    "0_1": 2.0
+  },
+  "engine_mode": "QUANTUM_ANNEALING",
+  "sub_plan": "QUBO_OPTIMIZATION"
 }
 ```
 
 ### Endpoint 2: Molecular Docking Convergence
-* **Method**: `POST`
-* **Path**: `/v1/bio/molecular-docking`
-* **Payload**:
+- **Method**: `POST`
+- **Path**: `/v1/bio/molecular-docking`
+- **Payload**:
 ```json
 {
   "target_protein": "SAMPLE_PDB_DATA",
@@ -150,19 +187,14 @@ print("Remaining Balance:", reflex["token_economy"]["customer_balance"], "PCAM_G
 ```
 
 ### Endpoint 3: Real-Time Cluster Telemetry & Tokenomics Metrics
-* **Method**: `GET`
-* **Path**: `/v1/cluster/status`
-* **Description**: Returns live node health, chip UID, cumulative tokens burned, and circulating supply metrics.
+- **Method**: `GET`
+- **Path**: `/v1/cluster/status`
+- **Description**: Returns live node health, chip UID, cumulative tokens burned, and circulating supply metrics.
 
 ### Endpoint 4: Hardware Receipt Verification
-* **Method**: `GET`
-* **Path**: `/v1/receipt/{receipt_id}`
-* **Description**: Verifies cryptographic execution proof, silicon attestation UID, and token burn accounting.
-
-### Endpoint 5: Wallet Balance Lookup
-* **Method**: `GET`
-* **Path**: `/v1/wallet/{customer_id}`
-* **Description**: Returns current `PCAM_GAS` balance and ledger timestamp for a customer identity.
+- **Method**: `GET`
+- **Path**: `/v1/receipt/{receipt_id}`
+- **Description**: Verifies cryptographic execution proof, silicon attestation UID, and token burn accounting.
 
 ---
 
@@ -218,11 +250,10 @@ Every request returns an auditable telemetry block integrating physics, silicon 
 
 ## 7. Governance & Patent Notice
 
-* **Patent Pending**: Ambient deterministic convergence hardware architecture and silicon-attested proof algorithms are protected under pending intellectual property filings.
-* **Autonomous Enclave**: Physical compute nodes operate in a tamper-resistant environment (Silicon Root-of-Trust). Direct ASIC/FPGA register structures are obfuscated for security compliance.
-* **RapidAPI Hubs**:
-  * [NEOMA Bio-Molecular Docking Hub](https://rapidapi.com/shs15199702/api/neoma-bio-molecular-docking-physical-convergence)
-  * [NEOMA Physics Reflex Engine Hub](https://rapidapi.com/shs15199702/api/neoma-p-cam-physics-reflex-engine)
+- **Patent Pending**: Ambient deterministic convergence hardware architecture and silicon-attested proof algorithms are protected under pending intellectual property filings.
+- **Autonomous Enclave**: Physical compute nodes operate in a tamper-resistant environment (Silicon Root-of-Trust). Direct ASIC/FPGA register structures are obfuscated for security compliance.
+- **RapidAPI Hub**:
+  * [NEOMA Bio-Molecular Docking & Physical Convergence Hub](https://rapidapi.com/shs15199702/api/neoma-bio-molecular-docking-physical-convergence)
 
 ---
 
