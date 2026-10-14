@@ -432,46 +432,78 @@
 
     // 서버(/v1/sense/adapt)와 실제 통신하여 화면을 갱신하는 실제 함수
     async function executeSenseAdapt() {
-      const strain = parseFloat(document.getElementById('strainInput').value) || 0.0;
-      const thermal = parseFloat(document.getElementById('thermalInput').value) || 25.0;
+  const btn = document.querySelector('#tab-sense .btn-run') || document.getElementById('senseBtn');
+  const strain = parseFloat(document.getElementById('strainInput')?.value) || 0.0;
+  const thermal = parseFloat(document.getElementById('thermalInput')?.value) || 25.0;
 
-      const payload = {
-        sensor_stream: {
-          strain: strain,
-          thermal_flux: thermal,
-          impedance: 1.0
-        },
-        environment_type: "MATERIAL_STRUCTURAL"
-      };
+  // 버튼 누름 시 시각적 반응
+  if (btn) {
+    btn.innerText = "⚡ COMPUTING...";
+    btn.disabled = true;
+  }
 
-      try {
-        const response = await fetch('/v1/sense/adapt', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
+  const payload = {
+    sensor_stream: {
+      strain: strain,
+      thermal_flux: thermal,
+      impedance: 1.0
+    },
+    environment_type: "MATERIAL_STRUCTURAL"
+  };
 
-        if (response.ok) {
-          const res = await response.json();
-          document.getElementById('sense-energy').innerText = res.diagnostics.instability_energy;
-          document.getElementById('sense-damping').innerText = res.adaptive_control.damping_coefficient;
-          document.getElementById('sense-state').innerText = res.adaptive_control.target_state;
-          document.getElementById('sense-latency').innerText = res.hardware_reflex_ms + ' ms';
-          document.getElementById('sense-seal').innerText = res.hardware_seal_id;
-          document.getElementById('sense-instruction').innerText = res.adaptive_control.feedback_instruction;
-          document.getElementById('sense-timestamp').innerText = 'STATUS: CONVERGED (' + new Date().toLocaleTimeString() + ')';
-        }
-      } catch (err) {
-        // 로컬 정적 페이지에서 테스트 시의 기본 수식 연산 (임시 계산)
-        const energy = ((strain ** 2) * 1.4 + Math.abs(thermal - 25.0) * 0.08 + 0.15).toFixed(4);
-        const damping = energy > 1.85 ? (Math.tanh(energy - 1.85) * 0.95).toFixed(4) : "0.0000";
-        document.getElementById('sense-energy').innerText = energy;
-        document.getElementById('sense-damping').innerText = damping;
-        document.getElementById('sense-state').innerText = energy > 1.85 ? "EQUILIBRIUM_RECOVERY" : "OPTIMAL_GROUND_STATE";
-        document.getElementById('sense-instruction').innerText = energy > 1.85 ? "긴급 물리 수렴 제어 감쇠장 가동" : "정상 물리 평형 상태 유지";
-        document.getElementById('sense-timestamp').innerText = 'OFFLINE COMPUTATION';
+  try {
+    // 실제 라이브 API 도메인으로 직접 요청 전송
+    const response = await fetch('https://api.neoma-pcam.com/v1/sense/adapt', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    if (response.ok) {
+      const res = await response.json();
+      
+      // 실시간 하드웨어 연산 결과 화면 반영
+      document.getElementById('sense-energy').innerText = res.diagnostics.instability_energy;
+      document.getElementById('sense-damping').innerText = res.adaptive_control.damping_coefficient;
+      document.getElementById('sense-state').innerText = res.adaptive_control.target_state;
+      document.getElementById('sense-latency').innerText = (res.hardware_latency_ms || res.latency_ms) + ' ms';
+      document.getElementById('sense-seal').innerText = res.hardware_seal_id;
+      document.getElementById('sense-instruction').innerText = res.adaptive_control.feedback_instruction;
+      
+      const tsElem = document.getElementById('sense-timestamp');
+      if (tsElem) {
+        tsElem.innerText = 'STATUS: CONVERGED (' + new Date().toLocaleTimeString() + ')';
+        tsElem.style.color = "var(--cyan)";
       }
+    } else {
+      throw new Error('HTTP Status: ' + response.status);
     }
-  </script>
+  } catch (err) {
+    console.warn("로컬 물리 노드 미연결 - 오프라인 모드로 자동 전환:", err);
+    
+    // 오프라인/통신 지연 시 폴백 연산
+    const energy = ((strain ** 2) * 1.4 + Math.abs(thermal - 25.0) * 0.08 + 0.15).toFixed(4);
+    const damping = energy > 1.85 ? (Math.tanh(energy - 1.85) * 0.95).toFixed(4) : "0.0000";
+    
+    document.getElementById('sense-energy').innerText = energy;
+    document.getElementById('sense-damping').innerText = damping;
+    document.getElementById('sense-state').innerText = energy > 1.85 ? "EQUILIBRIUM_RECOVERY" : "OPTIMAL_GROUND_STATE";
+    document.getElementById('sense-latency').innerText = "0.85 ms (sim)";
+    document.getElementById('sense-seal').innerText = "SEAL-ADAPT-FALLBACK";
+    document.getElementById('sense-instruction').innerText = energy > 1.85 ? "긴급 물리 수렴 제어 감쇠장을 가동하여 크랙/응력 집중을 분산하십시오." : "정상 물리 평형 상태 유지 중입니다.";
+    
+    const tsElem = document.getElementById('sense-timestamp');
+    if (tsElem) {
+      tsElem.innerText = 'STATUS: OFFLINE COMPUTED (' + new Date().toLocaleTimeString() + ')';
+      tsElem.style.color = "var(--rose)";
+    }
+  } finally {
+    if (btn) {
+      btn.innerText = "▶ CALL API";
+      btn.disabled = false;
+    }
+  }
+}
+</script>
 </body>
 </html>
