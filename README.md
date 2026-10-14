@@ -18,9 +18,9 @@
 
 ---
 
-NEOMA P-CAM is a dedicated embedded coprocessor engine engineered for **Deterministic Physical Convergence and Real-Time Adaptive Control**.
+NEOMA P-CAM is a dedicated hardware-accelerated coprocessor engine engineered for **Deterministic Physical Convergence and Real-Time Adaptive Control**.
 
-By offloading non-linear dynamic relaxation loops directly to dedicated hardware substrates, P-CAM eliminates iterative computational stalls in simulation workflows and delivers **sub-millisecond physical ground-state convergence and active damping feedback** via a production REST API interface.
+By offloading non-linear dynamic relaxation loops directly to dedicated physical computing substrates, P-CAM eliminates iterative computational stalls in simulation workflows and delivers **sub-millisecond physical ground-state convergence and active damping feedback** via a production REST API interface.
 
 ---
 
@@ -38,8 +38,8 @@ By offloading non-linear dynamic relaxation loops directly to dedicated hardware
         └────────────────────────────────┬────────────────────────────────┘
                                          ▼
                  ┌──────────────────────────────────────────────┐
-                 │    Silicon Hardware Enclave (STM32/ESP32)    │
-                 │   - High-Speed Serial Bus (921,600 Baud)     │
+                 │     Proprietary Silicon Enclave (Isolated)   │
+                 │   - High-Throughput Hardware Interconnect    │
                  │   - Deterministic Convergence Execution      │
                  │   - Cryptographic Hardware Seal Attestation  │
                  └──────────────────────────────────────────────┘
@@ -197,8 +197,8 @@ print("Hardware Seal ID :", data["physical_telemetry"]["hardware_seal_id"])
 
 ## 6. Architecture & Security Notice
 
-* **Hardware Enclave**: Compute nodes interface directly with physical co-processors via high-speed to execute deterministic convergence and cryptographic silicon-level attestation.
-* **Headless Node Gateway**: The platform operates strictly as a black-box compute service. Low-level firmware implementations and silicon register mappings remain protected inside an isolated execution environment.
+* **Hardware Enclave**: Compute nodes interface directly with proprietary physical co-processors via high-throughput internal interconnects to execute deterministic convergence and cryptographic silicon-level attestation.
+* **Headless Node Gateway**: The platform operates strictly as a black-box compute service. Low-level firmware implementations, circuit designs, and silicon register mappings remain protected inside a tamper-resistant, isolated execution environment.
 
 ---
 
