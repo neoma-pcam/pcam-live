@@ -11,10 +11,13 @@
   *Real-time physical convergence state, hardware attestation, and cluster telemetry dashboard.*
 
 * **RapidAPI Hubs (100 Free Requests / Month):**  
-  * 🧬 **Bio-Molecular Docking Hub:**  
-    👉 [NEOMA Bio-Molecular Docking & Physical Convergence](https://rapidapi.com/shs15199702/api/neoma-bio-molecular-docking-physical-convergence)
-  * ⚡ **Physics Reflex Engine Hub:**  
-    👉 [NEOMA Physics Reflex Engine](https://rapidapi.com/shs15199702/api/neoma-p-cam-physics-reflex-engine)
+ * 🧬 **Bio-Molecular Docking Hub**:
+   👉 https://rapidapi.com/shs15199702/api/neoma-bio-molecular-docking-physical-convergence
+ * ⚡ **Physics Reflex Engine Hub**:
+   👉 https://rapidapi.com/shs15199702/api/neoma-p-cam-physics-reflex-engine
+ * 📡 **Field Sensing & Adaptive Control Hub**:
+   👉 https://rapidapi.com/shs15199702/api/neoma-field-sensing-and-adaptive-control
+ 
 
 ---
 
