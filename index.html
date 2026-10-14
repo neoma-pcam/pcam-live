@@ -276,54 +276,54 @@
   <div class="runner-card">
     <div class="runner-title">
       <span>📡 FIELD SENSING & DAMPING RECOVERY (/v1/sense/adapt)</span>
-      <!-- RapidAPI 허브 링크 뱃지 -->
       <a href="https://rapidapi.com/shs15199702/api/neoma-field-sensing-and-adaptive-control" target="_blank" style="color: var(--cyan); font-size: 0.85rem; text-decoration: none; border: 1px solid var(--cyan); padding: 2px 8px; border-radius: 4px;">
-        RapidAPI Hub ↗
+        RAPIDAPI HUB ↗
       </a>
     </div>
     <div class="runner-controls">
-      <input id="strainInput" type="number" step="0.1" class="input-field" value="1.5" placeholder="Measured Strain (변형률)" />
-      <input id="thermalInput" type="number" step="0.5" class="input-field" value="28.5" placeholder="Thermal Flux (열 변동)" />
+      <input id="strainInput" type="number" step="0.1" class="input-field" value="1.5" placeholder="Measured Strain" />
+      <input id="thermalInput" type="number" step="0.5" class="input-field" value="28.5" placeholder="Thermal Flux" />
       <button id="senseBtn" class="btn-run" onclick="executeSenseAdapt()">
         ▶ CALL API
       </button>
     </div>
   </div>
-      
-      <div class="grid">
-        <div class="card">
-          <div class="card-label">Instability Energy</div>
-          <div class="card-value rose-text" id="sense-energy">3.43</div>
-        </div>
-        <div class="card">
-          <div class="card-label">Adaptive Damping Coeff</div>
-          <div class="card-value cyan-text" id="sense-damping">0.8712</div>
-        </div>
-        <div class="card">
-          <div class="card-label">Target State</div>
-          <div class="card-value emerald-text" id="sense-state">EQUILIBRIUM_RECOVERY</div>
-        </div>
-        <div class="card">
-          <div class="card-label">Hardware Reflex Time</div>
-          <div class="card-value cyan-text" id="sense-latency">0.85 ms</div>
-        </div>
-      </div>
 
-      <div class="terminal-card">
-        <div class="terminal-title">
-          <span>ENGINE DIAGNOSTICS & HARDWARE AUDIT</span>
-          <span id="sense-timestamp" style="color: var(--emerald);">STATUS: READY</span>
-        </div>
-        <div class="receipt-row">
-          <span style="color: var(--muted);">Hardware Seal:</span>
-          <span class="hash-seal" id="sense-seal">SEAL-ADAPT-INITIALIZED</span>
-        </div>
-        <div class="receipt-row">
-          <span style="color: var(--muted);">Feedback Action:</span>
-          <span id="sense-instruction" style="color: #cbd5e1;">시스템 대기 중</span>
-        </div>
-      </div>
+  <div class="grid">
+    <div class="card">
+      <div class="card-label">Instability Energy</div>
+      <div class="card-value rose-text" id="sense-energy">3.58</div>
     </div>
+    <div class="card">
+      <div class="card-label">Adaptive Damping Coeff</div>
+      <div class="card-value cyan-text" id="sense-damping">0.8921</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Target State</div>
+      <div class="card-value emerald-text" id="sense-state">EQUILIBRIUM_RECOVERY</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Hardware Reflex Time</div>
+      <div class="card-value cyan-text" id="sense-latency">3.565 ms</div>
+    </div>
+  </div>
+
+  <div class="terminal-card">
+    <div class="terminal-title">
+      <span>ENGINE DIAGNOSTICS & HARDWARE AUDIT</span>
+      <span id="sense-timestamp" style="color: var(--emerald);">STATUS: READY</span>
+    </div>
+    <div class="receipt-row">
+      <span style="color: var(--muted);">Hardware Seal:</span>
+      <span class="hash-seal" id="sense-seal">SEAL-ADAPT-INITIALIZED</span>
+    </div>
+    <div class="receipt-row">
+      <span style="color: var(--muted);">Feedback Action:</span>
+      <span id="sense-instruction" style="color: #cbd5e1;">SYSTEM STANDBY</span>
+    </div>
+  </div>
+</div>
+    
 
     <!-- PANE 2: BIO-MOLECULAR DOCKING -->
     <div id="tab-bio" class="tab-pane">
