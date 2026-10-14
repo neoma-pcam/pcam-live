@@ -1,4 +1,5 @@
 # NEOMA P-CAM: Deterministic Physical Solver & Adaptive Control Engine (v2.0)
+
 🌐 Access Points & Developer Gateways
 Official Node API (Direct Gateway):
 [https://api.neoma-pcam.com](https://api.neoma-pcam.com)
@@ -15,19 +16,18 @@ RapidAPI Hubs (100 Free Requests / Month):
 🧬 Bio-Molecular Docking Hub:
 👉 NEOMA Bio-Molecular Docking & Physical Convergence
 
-⚡ Physics Reflex Engine Hub:
-👉 NEOMA P-CAM Physics Reflex Engine
 
 ---
 
-NEOMA P-CAM은 전용 임베디드 코프로세서 기반의 결정론적 물리 수렴(Deterministic Physical Convergence) 및 실시간 적응 제어(Adaptive Control) 연산 엔진입니다.
+NEOMA P-CAM은 전용 임베디드 코프로세서 기반의 **결정론적 물리 수렴(Deterministic Physical Convergence) 및 실시간 적응 제어(Adaptive Control) 연산 엔진**입니다.
 
-소프트웨어 기반 반복 시뮬레이션의 수렴 정체(Convergence Stall) 문제를 하드웨어 물리 연동 계수로 완화하고, 밀리초 미만 단위의 빠른 상태 수렴 및 능동 감쇠 제어 신호를 REST API 규격으로 제공합니다.
+소프트웨어 기반 반복 시뮬레이션의 수렴 정체(Convergence Stall) 문제를 하드웨어 물리 연동 계수로 완화하고, **밀리초 미만 단위의 빠른 상태 수렴 및 능동 감쇠 제어 신호**를 REST API 규격으로 제공합니다.
 
 ---
 
 ## 1. System Architecture (3-Hub Framework)
 
+```text
                [ Client Application / Python SDK / RapidAPI Gateway ]
                                          │
         ┌────────────────────────────────┼────────────────────────────────┐
@@ -45,7 +45,9 @@ NEOMA P-CAM은 전용 임베디드 코프로세서 기반의 결정론적 물리
                  │   - Hardware Seal ID Cryptographic Lock      │
                  └──────────────────────────────────────────────┘
 
+
 ---
+
 
 ## 2. Core Execution Hubs
 
@@ -99,7 +101,6 @@ print("Damping Factor   :", data["adaptive_control"]["damping_coefficient"])
 print("Hardware Reflex  :", data["hardware_reflex_ms"], "ms")
 print("Hardware Seal ID :", data["hardware_seal_id"])
 
-
 [2] 분자 도킹 결합 수렴 호출:
 
 import requests
@@ -117,7 +118,6 @@ print("Status           :", data["status"])
 print("Binding Affinity :", data["physical_telemetry"]["future_guidance_weights"]["binding_affinity_kcal_mol"], "kcal/mol")
 print("Latency          :", data["physical_telemetry"]["total_latency_ms"], "ms")
 print("Hardware Seal    :", data["physical_telemetry"]["hardware_seal_id"])
-
 ---
 
 ## 5. Direct REST API Specification
@@ -134,8 +134,9 @@ print("Hardware Seal    :", data["physical_telemetry"]["hardware_seal_id"])
   },
   "environment_type": "MATERIAL_STRUCTURAL"
 }
-
+---
 - Response:
+
 {
   "status": "CONVERGED_SUCCESS",
   "engine": "NEOMA Physical Reflex Core v2.0",
@@ -156,6 +157,8 @@ print("Hardware Seal    :", data["physical_telemetry"]["hardware_seal_id"])
     "feedback_instruction": "긴급 물리 수렴 제어 감쇠장을 가동하여 크랙/응력 집중을 분산하십시오."
   }
 }
+---
+
 
 [Endpoint 2: Bio-Molecular Docking]
 - Method: POST
