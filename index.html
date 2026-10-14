@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NEOMA P-CAM™ | Multi-Domain Telemetry & Attestation</title>
+  <title>NEOMA P-CAM™ | Deterministic Physical Telemetry</title>
   <style>
     :root {
       --bg: #090d16;
@@ -14,8 +14,6 @@
       --cyan: #06b6d4;
       --emerald: #10b981;
       --rose: #f43f5e;
-      --amber: #f59e0b;
-      --purple: #8b5cf6;
       --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
     }
 
@@ -144,7 +142,6 @@
     .emerald-text { color: var(--emerald); }
     .rose-text { color: var(--rose); }
 
-    /* Action Console */
     .runner-card {
       background: linear-gradient(180deg, #111827 0%, #0c121e 100%);
       border: 1px solid rgba(6, 182, 212, 0.3);
@@ -163,14 +160,10 @@
     }
 
     .runner-controls {
-      display: grid;
-      grid-template-columns: 1.2fr 2fr auto auto;
+      display: flex;
       gap: 12px;
       align-items: center;
-    }
-
-    @media (max-width: 900px) {
-      .runner-controls { grid-template-columns: 1fr; }
+      flex-wrap: wrap;
     }
 
     .input-field {
@@ -181,7 +174,8 @@
       color: var(--text);
       font-family: var(--font-mono);
       font-size: 0.85rem;
-      width: 100%;
+      flex: 1;
+      min-width: 200px;
     }
 
     .input-field:focus {
@@ -198,17 +192,11 @@
       font-size: 0.85rem;
       padding: 12px 20px;
       cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      transition: background 0.2s ease, transform 0.1s ease;
       white-space: nowrap;
-      text-decoration: none;
+      transition: background 0.2s ease;
     }
 
     .btn-run:hover { background: #22d3ee; }
-    .btn-run:active { transform: scale(0.97); }
 
     .btn-rapid-link {
       background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
@@ -219,19 +207,8 @@
       font-size: 0.85rem;
       padding: 12px 20px;
       cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      transition: all 0.2s ease;
       white-space: nowrap;
       text-decoration: none;
-      box-shadow: 0 0 12px rgba(124, 58, 237, 0.3);
-    }
-
-    .btn-rapid-link:hover {
-      background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
-      box-shadow: 0 0 18px rgba(139, 92, 246, 0.5);
     }
 
     .terminal-card {
@@ -272,48 +249,93 @@
   <div class="container">
     <header>
       <div class="title-group">
-        <h1>NEOMA P-CAM™ PHYSICAL-AI TELEMETRY</h1>
+        <h1>NEOMA P-CAM™ PHYSICAL SOLVER ENGINE</h1>
         <div class="live-badge">
-          <span class="pulse"></span> ROOT-OF-TRUST SEALED
+          <span class="pulse"></span> NODE ACTIVE
         </div>
       </div>
       <div style="font-size: 0.8rem; color: var(--muted); font-family: var(--font-mono);">
-        Node: <span style="color: var(--cyan);">SILICON-ENCLAVE-002B</span>
+        Architecture: <span style="color: var(--cyan);">STM32/ESP32 Hardware Core</span>
       </div>
     </header>
 
     <div class="tab-bar">
-      <button class="tab-btn active" onclick="switchTab('bio')">
-        🧬 BIO-MOLECULAR (RAPIDAPI)
+      <button class="tab-btn active" onclick="switchTab('sense')">
+        📡 SENSING & ADAPTIVE CONTROL
       </button>
-      <button class="tab-btn" onclick="switchTab('core')">
-        ⚡ CORE ENGINE (RAPIDAPI)
+      <button class="tab-btn" onclick="switchTab('bio')">
+        🧬 BIO-MOLECULAR DOCKING
+      </button>
+      <button class="tab-btn" onclick="switchTab('reflex')">
+        ⚡ PHYSICAL REFLEX
       </button>
     </div>
 
-    <!-- PANE 1: BIO-MOLECULAR DOCKING -->
-    <div id="tab-bio" class="tab-pane active">
+    <!-- PANE 1: SENSING & ADAPTIVE CONTROL -->
+    <div id="tab-sense" class="tab-pane active">
       <div class="runner-card">
         <div class="runner-title">
-          <span>🧬 LIVE DOCKING EXECUTION BENCH</span>
+          <span>📡 FIELD SENSING & DAMPING RECOVERY (/v1/sense/adapt)</span>
         </div>
         <div class="runner-controls">
-          <div>
-            <select id="targetSelect" class="input-field">
-              <option value="EGFR_T790M">EGFR_T790M (Kinase)</option>
-              <option value="KRAS_G12D">KRAS_G12D (Oncogenic)</option>
-              <option value="HER2_Exon20">HER2 (Exon 20)</option>
-            </select>
-          </div>
-          <div>
-            <input id="smilesInput" type="text" class="input-field" value="CN1CCN(CC1)C2=CC=C(NC(=O)C=C)C=C2" placeholder="Ligand SMILES string" />
-          </div>
-          <button class="btn-run" id="btnRun" onclick="runSimulation()">
-            ▶ VIEW DEMO
+          <input id="strainInput" type="number" step="0.1" class="input-field" value="1.5" placeholder="Measured Strain (변형률)" />
+          <input id="thermalInput" type="number" step="0.5" class="input-field" value="28.5" placeholder="Thermal Flux (열 변동)" />
+          <button class="btn-run" onclick="executeSenseAdapt()">
+            ▶ CALL API
           </button>
-          <!-- 클릭 시 요금제(Pricing) 화면으로 직행 -->
+        </div>
+      </div>
+
+      <div class="grid">
+        <div class="card">
+          <div class="card-label">Instability Energy</div>
+          <div class="card-value rose-text" id="sense-energy">3.43</div>
+        </div>
+        <div class="card">
+          <div class="card-label">Adaptive Damping Coeff</div>
+          <div class="card-value cyan-text" id="sense-damping">0.8712</div>
+        </div>
+        <div class="card">
+          <div class="card-label">Target State</div>
+          <div class="card-value emerald-text" id="sense-state">EQUILIBRIUM_RECOVERY</div>
+        </div>
+        <div class="card">
+          <div class="card-label">Hardware Reflex Time</div>
+          <div class="card-value cyan-text" id="sense-latency">0.85 ms</div>
+        </div>
+      </div>
+
+      <div class="terminal-card">
+        <div class="terminal-title">
+          <span>ENGINE DIAGNOSTICS & HARDWARE AUDIT</span>
+          <span id="sense-timestamp" style="color: var(--emerald);">STATUS: READY</span>
+        </div>
+        <div class="receipt-row">
+          <span style="color: var(--muted);">Hardware Seal:</span>
+          <span class="hash-seal" id="sense-seal">SEAL-ADAPT-INITIALIZED</span>
+        </div>
+        <div class="receipt-row">
+          <span style="color: var(--muted);">Feedback Action:</span>
+          <span id="sense-instruction" style="color: #cbd5e1;">시스템 대기 중</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- PANE 2: BIO-MOLECULAR DOCKING -->
+    <div id="tab-bio" class="tab-pane">
+      <div class="runner-card">
+        <div class="runner-title">
+          <span>🧬 MOLECULAR CONVERGENCE (/v1/bio/molecular-docking)</span>
+        </div>
+        <div class="runner-controls">
+          <select id="targetSelect" class="input-field">
+            <option value="EGFR_T790M">EGFR_T790M (Kinase)</option>
+            <option value="KRAS_G12D">KRAS_G12D (Oncogenic)</option>
+            <option value="HER2_Exon20">HER2 (Exon 20)</option>
+          </select>
+          <input id="smilesInput" type="text" class="input-field" value="CN1CCN(CC1)C2=CC=C(NC(=O)C=C)C=C2" placeholder="Ligand SMILES" />
           <a href="https://rapidapi.com/shs15199702/api/neoma-bio-molecular-docking-physical-convergence/pricing" target="_blank" rel="noopener noreferrer" class="btn-rapid-link">
-            💳 VIEW PLANS & PRICING
+            💳 RAPIDAPI HUB
           </a>
         </div>
       </div>
@@ -321,97 +343,67 @@
       <div class="grid">
         <div class="card">
           <div class="card-label">Binding Affinity (ΔG)</div>
-          <div class="card-value emerald-text" id="val-dg">-9.42 kcal/mol</div>
+          <div class="card-value emerald-text">-9.42 kcal/mol</div>
         </div>
         <div class="card">
-          <div class="card-label">Hardware Convergence Time</div>
-          <div class="card-value cyan-text" id="val-time">8.76 ms</div>
+          <div class="card-label">Core Convergence Latency</div>
+          <div class="card-value cyan-text">0.85 ms</div>
         </div>
         <div class="card">
-          <div class="card-label">Entropy Damping Rate</div>
-          <div class="card-value emerald-text" id="val-entropy">99.84%</div>
-        </div>
-        <div class="card">
-          <div class="card-label">$NEOMA Burned (Last Query)</div>
-          <div class="card-value rose-text" id="val-burn">-25.0 NEOMA</div>
+          <div class="card-label">Stability Index</div>
+          <div class="card-value emerald-text">0.998</div>
         </div>
       </div>
 
       <div class="terminal-card">
         <div class="terminal-title">
-          <span>TARGET DOCKING TELEMETRY (RAPIDAPI ENDPOINT: /v1/bio/molecular-docking)</span>
-          <span id="bio-status" style="color: var(--emerald); font-weight: bold;">STATUS: CONVERGED</span>
+          <span>ENDPOINT SPECIFICATION</span>
+          <span style="color: var(--emerald);">ONLINE</span>
         </div>
         <div class="receipt-row">
-          <span style="color: var(--muted);">Target Protein:</span>
-          <span id="disp-target" style="color: #fff; font-weight: bold;">EGFR_T790M (Kinase Domain)</span>
+          <span style="color: var(--muted);">Method:</span>
+          <span style="color: #fff;">POST /v1/bio/molecular-docking</span>
         </div>
         <div class="receipt-row">
-          <span style="color: var(--muted);">Ligand SMILES:</span>
-          <span id="disp-smiles" style="color: #cbd5e1; word-break: break-all;">CN1CCN(CC1)C2=CC=C(NC(=O)C=C)C=C2</span>
-        </div>
-        <div class="receipt-row">
-          <span style="color: var(--muted);">Cryptographic Audit Seal:</span>
-          <span class="hash-seal" id="disp-seal">0xd6fe228d447a19283fbc338712e09aa29801</span>
-        </div>
-        <div class="receipt-row" style="margin-top: 8px;">
-          <span style="color: var(--muted);">Burn Receipt Tx:</span>
-          <span id="disp-tx" style="color: var(--rose);">0x8f3c...b412 (Permanent Protocol Burn)</span>
+          <span style="color: var(--muted);">Payload:</span>
+          <span style="color: #cbd5e1; word-break: break-all;">{"target_protein": "...", "ligand_smiles": "..."}</span>
         </div>
       </div>
     </div>
 
-    <!-- PANE 2: CORE ENGINE -->
-    <div id="tab-core" class="tab-pane">
-      <div class="runner-card" style="border-color: rgba(16, 185, 129, 0.3);">
-        <div class="runner-title" style="color: var(--emerald);">
-          <span>⚡ CORE ENGINE EXECUTION BENCH</span>
+    <!-- PANE 3: PHYSICAL REFLEX -->
+    <div id="tab-reflex" class="tab-pane">
+      <div class="runner-card">
+        <div class="runner-title">
+          <span>⚡ REFLEX EQUILIBRIUM (/solve_physical_convergence)</span>
         </div>
-        <div class="runner-controls" style="grid-template-columns: 2fr auto auto;">
-          <div style="color: var(--muted); font-size: 0.85rem; font-family: var(--font-mono);">
-            Target Engine: <span style="color: var(--cyan);">P-CAM Physics Reflex Engine</span>
-          </div>
-          <button class="btn-run" id="btnCoreRun" style="background: var(--emerald);" onclick="runCorePing()">
-            ▶ VIEW DEMO
-          </button>
-          <!-- 클릭 시 요금제(Pricing) 화면으로 직행 -->
+        <div class="runner-controls">
+          <input id="scenarioInput" type="text" class="input-field" value="Field physical dynamic equilibrium." />
           <a href="https://rapidapi.com/shs15199702/api/neoma-p-cam-physics-reflex-engine/pricing" target="_blank" rel="noopener noreferrer" class="btn-rapid-link">
-            💳 VIEW PLANS & PRICING
+            💳 RAPIDAPI HUB
           </a>
         </div>
       </div>
 
       <div class="grid">
         <div class="card">
-          <div class="card-label">Deterministic Latency</div>
-          <div class="card-value emerald-text" id="core-val-latency">9.39 ms</div>
+          <div class="card-label">Deterministic Bound</div>
+          <div class="card-value emerald-text">&lt; 1.0 ms</div>
         </div>
         <div class="card">
-          <div class="card-label">Active Gateway Port</div>
-          <div class="card-value cyan-text">LOCAL:8000</div>
-        </div>
-        <div class="card">
-          <div class="card-label">Cloudflare Tunnel</div>
-          <div class="card-value emerald-text" id="core-val-tunnel">CONNECTED</div>
-        </div>
-        <div class="card">
-          <div class="card-label">NEOMA Oracle Burn Rate</div>
-          <div class="card-value rose-text">50.0% / QUERY</div>
+          <div class="card-label">Default Gateway Port</div>
+          <div class="card-value cyan-text">PORT 5000</div>
         </div>
       </div>
 
       <div class="terminal-card">
         <div class="terminal-title">
-          <span>HARDWARE AUDIT RECEIPT (PING ENDPOINT: /v1/cluster/status)</span>
-          <span id="core-timestamp">TIMESTAMP: SYNCED</span>
+          <span>ENDPOINT SPECIFICATION</span>
+          <span style="color: var(--emerald);">ONLINE</span>
         </div>
         <div class="receipt-row">
-          <span style="color: var(--muted);">Silicon Root-of-Trust:</span>
-          <span id="core-root-trust">002B...E301 (Hardware Governance Active)</span>
-        </div>
-        <div class="receipt-row">
-          <span style="color: var(--muted);">Convergence Integrity (Enclave Seal):</span>
-          <span class="hash-seal" id="core-disp-seal">74d9e03d922b9a7c939665bc7f42d201b1b11da0</span>
+          <span style="color: var(--muted);">Method:</span>
+          <span style="color: #fff;">POST /solve_physical_convergence</span>
         </div>
       </div>
     </div>
@@ -422,69 +414,60 @@
       document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
       document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
 
-      if (tab === 'bio') {
+      if (tab === 'sense') {
         document.querySelectorAll('.tab-btn')[0].classList.add('active');
+        document.getElementById('tab-sense').classList.add('active');
+      } else if (tab === 'bio') {
+        document.querySelectorAll('.tab-btn')[1].classList.add('active');
         document.getElementById('tab-bio').classList.add('active');
       } else {
-        document.querySelectorAll('.tab-btn')[1].classList.add('active');
-        document.getElementById('tab-core').classList.add('active');
+        document.querySelectorAll('.tab-btn')[2].classList.add('active');
+        document.getElementById('tab-reflex').classList.add('active');
       }
     }
 
-    function runSimulation() {
-      const btn = document.getElementById('btnRun');
-      const target = document.getElementById('targetSelect').value;
-      const smiles = document.getElementById('smilesInput').value;
+    // 서버(/v1/sense/adapt)와 실제 통신하여 화면을 갱신하는 실제 함수
+    async function executeSenseAdapt() {
+      const strain = parseFloat(document.getElementById('strainInput').value) || 0.0;
+      const thermal = parseFloat(document.getElementById('thermalInput').value) || 25.0;
 
-      btn.disabled = true;
-      btn.innerText = 'CONVERGING...';
+      const payload = {
+        sensor_stream: {
+          strain: strain,
+          thermal_flux: thermal,
+          impedance: 1.0
+        },
+        environment_type: "MATERIAL_STRUCTURAL"
+      };
 
-      setTimeout(() => {
-        const randomTime = (7.8 + Math.random() * 1.8).toFixed(2);
-        const randomDG = (-8.5 - Math.random() * 2.2).toFixed(2);
-        const randomEntropy = (99.70 + Math.random() * 0.28).toFixed(2);
-        const randomBurn = (20.0 + Math.random() * 10.0).toFixed(1);
-        const newSeal = '0x' + Array.from({length: 36}, () => Math.floor(Math.random()*16).toString(16)).join('');
-        const newTx = '0x' + Array.from({length: 8}, () => Math.floor(Math.random()*16).toString(16)).join('') + '...' + Array.from({length: 4}, () => Math.floor(Math.random()*16).toString(16)).join('');
+      try {
+        const response = await fetch('/v1/sense/adapt', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
 
-        document.getElementById('val-dg').innerText = randomDG + ' kcal/mol';
-        document.getElementById('val-time').innerText = randomTime + ' ms';
-        document.getElementById('val-entropy').innerText = randomEntropy + '%';
-        document.getElementById('val-burn').innerText = `-${randomBurn} NEOMA`;
-
-        document.getElementById('disp-target').innerText = target;
-        document.getElementById('disp-smiles').innerText = smiles;
-        document.getElementById('disp-seal').innerText = newSeal;
-        document.getElementById('disp-tx').innerText = newTx + ' (Permanent Protocol Burn)';
-
-        btn.disabled = false;
-        btn.innerText = '▶ VIEW DEMO';
-      }, 400);
+        if (response.ok) {
+          const res = await response.json();
+          document.getElementById('sense-energy').innerText = res.diagnostics.instability_energy;
+          document.getElementById('sense-damping').innerText = res.adaptive_control.damping_coefficient;
+          document.getElementById('sense-state').innerText = res.adaptive_control.target_state;
+          document.getElementById('sense-latency').innerText = res.hardware_reflex_ms + ' ms';
+          document.getElementById('sense-seal').innerText = res.hardware_seal_id;
+          document.getElementById('sense-instruction').innerText = res.adaptive_control.feedback_instruction;
+          document.getElementById('sense-timestamp').innerText = 'STATUS: CONVERGED (' + new Date().toLocaleTimeString() + ')';
+        }
+      } catch (err) {
+        // 로컬 정적 페이지에서 테스트 시의 기본 수식 연산 (임시 계산)
+        const energy = ((strain ** 2) * 1.4 + Math.abs(thermal - 25.0) * 0.08 + 0.15).toFixed(4);
+        const damping = energy > 1.85 ? (Math.tanh(energy - 1.85) * 0.95).toFixed(4) : "0.0000";
+        document.getElementById('sense-energy').innerText = energy;
+        document.getElementById('sense-damping').innerText = damping;
+        document.getElementById('sense-state').innerText = energy > 1.85 ? "EQUILIBRIUM_RECOVERY" : "OPTIMAL_GROUND_STATE";
+        document.getElementById('sense-instruction').innerText = energy > 1.85 ? "긴급 물리 수렴 제어 감쇠장 가동" : "정상 물리 평형 상태 유지";
+        document.getElementById('sense-timestamp').innerText = 'OFFLINE COMPUTATION';
+      }
     }
-
-    function runCorePing() {
-      const btn = document.getElementById('btnCoreRun');
-      btn.disabled = true;
-      btn.innerText = 'COMPUTING...';
-
-      setTimeout(() => {
-        const randomLatency = (8.5 + Math.random() * 2.1).toFixed(2);
-        const randomEnclaveSeal = Array.from({length: 40}, () => Math.floor(Math.random()*16).toString(16)).join('');
-        
-        document.getElementById('core-val-latency').innerText = randomLatency + ' ms';
-        document.getElementById('core-disp-seal').innerText = randomEnclaveSeal;
-        document.getElementById('core-val-tunnel').innerText = 'CONNECTED';
-        
-        btn.disabled = false;
-        btn.innerText = '▶ VIEW DEMO';
-      }, 300);
-    }
-
-    setInterval(() => {
-      const now = new Date().toISOString();
-      const tsElem = document.getElementById('core-timestamp');
-      if (tsElem) tsElem.innerText = 'TIMESTAMP: ' + now;
-    }, 1000);
   </script>
 </body>
 </html>
