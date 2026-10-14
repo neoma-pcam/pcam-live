@@ -16,7 +16,7 @@
  * ⚡ **Physics Reflex Engine Hub**:
    👉 https://rapidapi.com/shs15199702/api/neoma-p-cam-physics-reflex-engine
  * 📡 **Field Sensing & Adaptive Control Hub**:
-   👉 https://rapidapi.com/shs15199702/api/neoma-field-sensing-and-adaptive-control
+   👉 https://rapidapi.com/shs15199702/api/neoma-field-sensing-adaptive-control
  
 
 ---
