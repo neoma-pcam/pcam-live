@@ -197,7 +197,7 @@ print("Hardware Seal ID :", data["physical_telemetry"]["hardware_seal_id"])
 
 ## 6. Architecture & Security Notice
 
-* **Hardware Enclave**: Compute nodes interface directly with physical co-processors via high-speed internal serial buses (921,600 Baud) to execute deterministic convergence and cryptographic silicon-level attestation.
+* **Hardware Enclave**: Compute nodes interface directly with physical co-processors via high-speed to execute deterministic convergence and cryptographic silicon-level attestation.
 * **Headless Node Gateway**: The platform operates strictly as a black-box compute service. Low-level firmware implementations and silicon register mappings remain protected inside an isolated execution environment.
 
 ---
