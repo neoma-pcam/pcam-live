@@ -479,9 +479,8 @@
       throw new Error('HTTP Status: ' + response.status);
     }
   } catch (err) {
-    console.warn("로컬 물리 노드 미연결 - 오프라인 모드로 자동 전환:", err);
+    console.warn("API Node Unreachable - Fallback Mode:", err);
     
-    // 오프라인/통신 지연 시 폴백 연산
     const energy = ((strain ** 2) * 1.4 + Math.abs(thermal - 25.0) * 0.08 + 0.15).toFixed(4);
     const damping = energy > 1.85 ? (Math.tanh(energy - 1.85) * 0.95).toFixed(4) : "0.0000";
     
@@ -490,17 +489,12 @@
     document.getElementById('sense-state').innerText = energy > 1.85 ? "EQUILIBRIUM_RECOVERY" : "OPTIMAL_GROUND_STATE";
     document.getElementById('sense-latency').innerText = "0.85 ms (sim)";
     document.getElementById('sense-seal').innerText = "SEAL-ADAPT-FALLBACK";
-    document.getElementById('sense-instruction').innerText = energy > 1.85 ? "긴급 물리 수렴 제어 감쇠장을 가동하여 크랙/응력 집중을 분산하십시오." : "정상 물리 평형 상태 유지 중입니다.";
+    document.getElementById('sense-instruction').innerText = energy > 1.85 ? "Engage emergency damping field to disperse critical stress concentration." : "Nominal physical equilibrium maintained.";
     
     const tsElem = document.getElementById('sense-timestamp');
     if (tsElem) {
       tsElem.innerText = 'STATUS: OFFLINE COMPUTED (' + new Date().toLocaleTimeString() + ')';
       tsElem.style.color = "var(--rose)";
-    }
-  } finally {
-    if (btn) {
-      btn.innerText = "▶ CALL API";
-      btn.disabled = false;
     }
   }
 }
