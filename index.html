@@ -200,6 +200,7 @@
     }
 
     .btn-run:hover { background: #22d3ee; }
+    .btn-run:disabled { background: #475569; color: #94a3b8; cursor: not-allowed; }
 
     .btn-rapid-link {
       background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
@@ -276,38 +277,38 @@
 
     <!-- PANE 1: SENSING & ADAPTIVE CONTROL -->
     <div id="tab-sense" class="tab-pane active">
-  <div class="runner-card">
-    <div class="runner-title">
-      <span>📡 FIELD SENSING & DAMPING RECOVERY (/v1/sense/adapt)</span>
-      <a href="https://rapidapi.com/shs15199702/api/neoma-field-sensing-adaptive-control" target="_blank" style="color: var(--cyan); font-size: 0.85rem; text-decoration: none; border: 1px solid var(--cyan); padding: 2px 8px; border-radius: 4px;">
-        RAPIDAPI HUB ↗
-      </a>
-    </div>
-    <div class="runner-controls">
-      <input id="strainInput" type="number" step="0.1" class="input-field" value="1.5" placeholder="Measured Strain" />
-      <input id="thermalInput" type="number" step="0.5" class="input-field" value="28.5" placeholder="Thermal Flux" />
-      <button id="senseBtn" class="btn-run" onclick="executeSenseAdapt()">
-        ▶ CALL API
-      </button>
-    </div>
-  </div>
+      <div class="runner-card">
+        <div class="runner-title">
+          <span>📡 FIELD SENSING & DAMPING RECOVERY (/v1/sense/adapt)</span>
+          <a href="https://rapidapi.com/shs15199702/api/neoma-field-sensing-adaptive-control" target="_blank" style="color: var(--cyan); font-size: 0.85rem; text-decoration: none; border: 1px solid var(--cyan); padding: 2px 8px; border-radius: 4px;">
+            RAPIDAPI HUB ↗
+          </a>
+        </div>
+        <div class="runner-controls">
+          <input id="strainInput" type="number" step="0.1" class="input-field" value="1.5" placeholder="Measured Strain" />
+          <input id="thermalInput" type="number" step="0.5" class="input-field" value="28.5" placeholder="Thermal Flux" />
+          <button id="senseBtn" class="btn-run" onclick="executeSenseAdapt()">
+            ▶ CALL NODE API
+          </button>
+        </div>
+      </div>
 
       <div class="grid">
         <div class="card">
           <div class="card-label">Instability Energy</div>
-          <div class="card-value rose-text" id="sense-energy">3.58</div>
+          <div class="card-value rose-text" id="sense-energy">--</div>
         </div>
         <div class="card">
           <div class="card-label">Adaptive Damping Coeff</div>
-          <div class="card-value cyan-text" id="sense-damping">0.8921</div>
+          <div class="card-value cyan-text" id="sense-damping">--</div>
         </div>
         <div class="card">
           <div class="card-label">Target State</div>
-          <div class="card-value emerald-text" id="sense-state">EQUILIBRIUM_RECOVERY</div>
+          <div class="card-value emerald-text" id="sense-state">IDLE_STANDBY</div>
         </div>
         <div class="card">
           <div class="card-label">Hardware Reflex Time</div>
-          <div class="card-value cyan-text" id="sense-latency">0.85 ms</div>
+          <div class="card-value cyan-text" id="sense-latency">-- ms</div>
         </div>
       </div>
 
@@ -318,7 +319,7 @@
         </div>
         <div class="receipt-row">
           <span style="color: var(--muted);">Hardware Seal:</span>
-          <span class="hash-seal" id="sense-seal">SEAL-ADAPT-INITIALIZED</span>
+          <span class="hash-seal" id="sense-seal">AWAITING_COMPUTATION</span>
         </div>
         <div class="receipt-row">
           <span style="color: var(--muted);">Feedback Action:</span>
@@ -334,14 +335,14 @@
           <span>🧬 MOLECULAR CONVERGENCE (/v1/bio/molecular-docking)</span>
         </div>
         <div class="runner-controls">
-          <select id="targetSelect" class="input-field">
+          <select id="targetSelect" class="input-field" disabled>
             <option value="EGFR_T790M">EGFR_T790M (Kinase)</option>
             <option value="KRAS_G12D">KRAS_G12D (Oncogenic)</option>
             <option value="HER2_Exon20">HER2 (Exon 20)</option>
           </select>
-          <input id="smilesInput" type="text" class="input-field" value="CN1CCN(CC1)C2=CC=C(NC(=O)C=C)C=C2" placeholder="Ligand SMILES" />
+          <input id="smilesInput" type="text" class="input-field" value="CN1CCN(CC1)C2=CC=C(NC(=O)C=C)C=C2" disabled />
           <a href="https://rapidapi.com/shs15199702/api/neoma-bio-molecular-docking-physical-convergence/pricing" target="_blank" rel="noopener noreferrer" class="btn-rapid-link">
-            💳 RAPIDAPI HUB
+            💳 ACCESS VIA RAPIDAPI
           </a>
         </div>
       </div>
@@ -349,22 +350,22 @@
       <div class="grid">
         <div class="card">
           <div class="card-label">Binding Affinity (ΔG)</div>
-          <div class="card-value emerald-text">-9.42 kcal/mol</div>
+          <div class="card-value emerald-text">--</div>
         </div>
         <div class="card">
           <div class="card-label">Core Convergence Latency</div>
-          <div class="card-value cyan-text">0.85 ms</div>
+          <div class="card-value cyan-text">--</div>
         </div>
         <div class="card">
           <div class="card-label">Stability Index</div>
-          <div class="card-value emerald-text">0.998</div>
+          <div class="card-value emerald-text">--</div>
         </div>
       </div>
 
       <div class="terminal-card">
         <div class="terminal-title">
           <span>ENDPOINT SPECIFICATION</span>
-          <span style="color: var(--emerald);">ONLINE</span>
+          <span style="color: var(--cyan);">API REFERENCE ONLY</span>
         </div>
         <div class="receipt-row">
           <span style="color: var(--muted);">Method:</span>
@@ -384,9 +385,9 @@
           <span>⚡ REFLEX EQUILIBRIUM (/solve_physical_convergence)</span>
         </div>
         <div class="runner-controls">
-          <input id="scenarioInput" type="text" class="input-field" value="Field physical dynamic equilibrium." />
+          <input id="scenarioInput" type="text" class="input-field" value="Field physical dynamic equilibrium." disabled />
           <a href="https://rapidapi.com/shs15199702/api/neoma-p-cam-physics-reflex-engine/pricing" target="_blank" rel="noopener noreferrer" class="btn-rapid-link">
-            💳 RAPIDAPI HUB
+            💳 ACCESS VIA RAPIDAPI
           </a>
         </div>
       </div>
@@ -397,15 +398,15 @@
           <div class="card-value emerald-text">&lt; 1.0 ms</div>
         </div>
         <div class="card">
-          <div class="card-label">Default Gateway Port</div>
-          <div class="card-value cyan-text">PORT 5000</div>
+          <div class="card-label">Protocol</div>
+          <div class="card-value cyan-text">REST API via Gateway</div>
         </div>
       </div>
 
       <div class="terminal-card">
         <div class="terminal-title">
           <span>ENDPOINT SPECIFICATION</span>
-          <span style="color: var(--emerald);">ONLINE</span>
+          <span style="color: var(--cyan);">API REFERENCE ONLY</span>
         </div>
         <div class="receipt-row">
           <span style="color: var(--muted);">Method:</span>
@@ -438,7 +439,7 @@
       const thermal = parseFloat(document.getElementById('thermalInput')?.value) || 25.0;
 
       if (btn) {
-        btn.innerText = "⚡ COMPUTING...";
+        btn.innerText = "⚡ COMPUTING ON HARDWARE...";
         btn.disabled = true;
       }
 
@@ -458,44 +459,43 @@
           body: JSON.stringify(payload)
         });
 
-        if (response.ok) {
-          const res = await response.json();
-          document.getElementById('sense-energy').innerText = res.diagnostics.instability_energy;
-          document.getElementById('sense-damping').innerText = res.adaptive_control.damping_coefficient;
-          document.getElementById('sense-state').innerText = res.adaptive_control.target_state;
-          document.getElementById('sense-latency').innerText = (res.hardware_latency_ms || res.latency_ms) + ' ms';
-          document.getElementById('sense-seal').innerText = res.hardware_seal_id;
-          document.getElementById('sense-instruction').innerText = res.adaptive_control.feedback_instruction;
-          
-          const tsElem = document.getElementById('sense-timestamp');
-          if (tsElem) {
-            tsElem.innerText = 'STATUS: CONVERGED (' + new Date().toLocaleTimeString() + ')';
-            tsElem.style.color = "var(--cyan)";
-          }
-        } else {
-          throw new Error('HTTP Status: ' + response.status);
+        if (!response.ok) {
+          throw new Error(`HTTP Error: ${response.status}`);
         }
-      } catch (err) {
-        console.warn("API Node Unreachable - Fallback Mode:", err);
-        
-        const energy = ((strain ** 2) * 1.4 + Math.abs(thermal - 25.0) * 0.08 + 0.15).toFixed(4);
-        const damping = energy > 1.85 ? (Math.tanh(energy - 1.85) * 0.95).toFixed(4) : "0.0000";
-        
-        document.getElementById('sense-energy').innerText = energy;
-        document.getElementById('sense-damping').innerText = damping;
-        document.getElementById('sense-state').innerText = energy > 1.85 ? "EQUILIBRIUM_RECOVERY" : "OPTIMAL_GROUND_STATE";
-        document.getElementById('sense-latency').innerText = "0.85 ms (sim)";
-        document.getElementById('sense-seal').innerText = "SEAL-ADAPT-FALLBACK";
-        document.getElementById('sense-instruction').innerText = energy > 1.85 ? "Engage emergency damping field to disperse critical stress concentration." : "Nominal physical equilibrium maintained.";
+
+        const res = await response.json();
+
+        document.getElementById('sense-energy').innerText = res.diagnostics.instability_energy;
+        document.getElementById('sense-damping').innerText = res.adaptive_control.damping_coefficient;
+        document.getElementById('sense-state').innerText = res.adaptive_control.target_state;
+        document.getElementById('sense-latency').innerText = (res.hardware_latency_ms || res.latency_ms) + ' ms';
+        document.getElementById('sense-seal').innerText = res.hardware_seal_id;
+        document.getElementById('sense-instruction').innerText = res.adaptive_control.feedback_instruction;
         
         const tsElem = document.getElementById('sense-timestamp');
         if (tsElem) {
-          tsElem.innerText = 'STATUS: OFFLINE COMPUTED (' + new Date().toLocaleTimeString() + ')';
+          tsElem.innerText = 'STATUS: CONVERGED VIA HARDWARE (' + new Date().toLocaleTimeString() + ')';
+          tsElem.style.color = "var(--emerald)";
+        }
+
+      } catch (err) {
+        console.error("Hardware Node Unreachable:", err);
+
+        document.getElementById('sense-energy').innerText = "ERR";
+        document.getElementById('sense-damping').innerText = "ERR";
+        document.getElementById('sense-state').innerText = "DISCONNECTED";
+        document.getElementById('sense-latency').innerText = "N/A";
+        document.getElementById('sense-seal').innerText = "NO_SEAL_UNVERIFIED";
+        document.getElementById('sense-instruction').innerText = "Physical node unreachable. Ensure server gateway is online.";
+        
+        const tsElem = document.getElementById('sense-timestamp');
+        if (tsElem) {
+          tsElem.innerText = 'STATUS: NODE OFFLINE / VERIFICATION FAILED';
           tsElem.style.color = "var(--rose)";
         }
       } finally {
         if (btn) {
-          btn.innerText = "▶ CALL API";
+          btn.innerText = "▶ CALL NODE API";
           btn.disabled = false;
         }
       }
