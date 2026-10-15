@@ -81,6 +81,9 @@ Unlike traditional von Neumann software simulators that suffer from iterative co
 
 ## 4. Quickstart: Python Integration
 
+Security & Architecture Notice:
+The neoma-pcam Python package is strictly a Lightweight REST API Client SDK (approx. 3KB). It does NOT contain local physics simulation engines or heavy computational algorithms. Its sole purpose is to securely route telemetry data via HTTP to the isolated NEOMA Hardware Enclave, ensuring your local machine remains completely free from heavy computational overhead.
+
 ### [1] Field Sensing & Adaptive Damping Control
 
 ```python
