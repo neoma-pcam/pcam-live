@@ -1,13 +1,13 @@
 # NEOMA P-CAM: In-Materio Physical AI & Silicon Root-of-Trust Engine (v2.5)
 
-[![Cluster Status](https://img.shields.io/badge/Hardware%20Cluster-ONLINE%20%40%20921600bps-10b981.svg)](https://api.neoma-pcam.com/health)
+[![Cluster Status](https://img.shields.io/badge/Hardware%20Cluster-ONLINE%20(Deterministic%20Fabric)-10b981.svg)](https://api.neoma-pcam.com/health)
 [![Production Gateway](https://img.shields.io/badge/Production%20Gateway-api.neoma--pcam.com-06b6d4.svg)](https://api.neoma-pcam.com/docs)
 [![Deterministic Reflex](https://img.shields.io/badge/Hardware%20Reflex-0.85ms%20Deterministic-8b5cf6.svg)](https://api.neoma-pcam.com/docs)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 
 > **Sub-Millisecond Physical Dynamics Convergence & Cryptographic Silicon Root-of-Trust**
 
-**NEOMA P-CAM (Physical Co-processor Appliance Matrix)** is a dedicated in-materio computing engine engineered for **Real-Time Physical Dynamics Convergence and Non-Linear Field Stabilization**.
+**NEOMA P-CAM (Physical Co-processor Appliance Matrix)** is a proprietary in-materio computing engine engineered for **Real-Time Physical Dynamics Convergence and Non-Linear Field Stabilization**.
 
 Unlike traditional von Neumann software simulators that suffer from iterative computational stalls and exponential scaling bottlenecks, P-CAM offloads dynamic relaxation loops directly to **dedicated physical in-materio co-processing enclaves**. This architecture achieves **sub-millisecond ground-state convergence (0.85ms)**, active dynamic damping, and cryptographically verifiable **Silicon Hardware Execution Seals (`SEAL-003A...`)** through an enterprise production REST API interface.
 
@@ -17,11 +17,11 @@ Unlike traditional von Neumann software simulators that suffer from iterative co
 
 - **Official Production Node API (Direct Gateway):**  
   👉 https://api.neoma-pcam.com  
-  *Direct production endpoint bridged to dedicated hardware-accelerated physical computing units.*
+  *Direct production endpoint bridged directly to dedicated physical computing enclaves.*
 
 - **Interactive OpenAPI Documentation (Swagger UI):**  
   👉 https://api.neoma-pcam.com/docs  
-  *Real-time interactive testing console for physical inference queries.*
+  *Real-time interactive testing console for physical inference queries across all 5 domains.*
 
 - **Live Telemetry & Web Console:**  
   👉 https://neoma-pcam.github.io/pcam-live/  
@@ -29,12 +29,7 @@ Unlike traditional von Neumann software simulators that suffer from iterative co
 
 - **Cluster Health & Silicon Root-of-Trust:**  
   👉 https://api.neoma-pcam.com/health  
-  *Live cluster status, synchronous bus monitor, and silicon proof verification.*
-
-- **RapidAPI Hubs:**  
-  * 📡 **Field Sensing & Adaptive Control Hub**: https://rapidapi.com/shs15199702/api/neoma-field-sensing-adaptive-control
-  * 🧬 **Bio-Molecular Convergence Hub**: https://rapidapi.com/shs15199702/api/neoma-bio-molecular-docking-physical-convergence
-  * ⚡ **Physics Reflex Engine Hub**: https://rapidapi.com/shs15199702/api/neoma-p-cam-physics-reflex-engine
+  *Live cluster status, synchronous bus fabric monitor, and silicon proof verification.*
 
 ---
 
@@ -49,7 +44,7 @@ Unlike traditional von Neumann software simulators that suffer from iterative co
              │   - Deterministic Silicon Seal Verification Enclave       │
              └─────────────────────────────┬─────────────────────────────┘
                                            │
-                         (921,600 bps Synchronous Interconnect)
+                       (Ultra-Low Latency Deterministic Bus Fabric)
                                            ▼
              ┌───────────────────────────────────────────────────────────┐
              │       Proprietary Physical In-Materio Cluster Matrix      │
