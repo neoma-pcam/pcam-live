@@ -145,11 +145,13 @@
       align-items: center;
       gap: 8px;
       transition: all 0.2s ease;
+      cursor: pointer;
     }
 
     .btn-primary {
       background: var(--cyan);
       color: #041018;
+      border: none;
     }
     .btn-primary:hover {
       background: #22d3ee;
@@ -202,7 +204,7 @@
       margin-top: 4px;
     }
 
-    /* Core Enclaves */
+    /* Core Enclaves (클릭 가능한 고성능 카드) */
     .section-title {
       font-size: 20px;
       font-weight: 700;
@@ -224,11 +226,18 @@
       border: 1px solid var(--border);
       border-radius: 12px;
       padding: 24px;
-      transition: all 0.2s;
+      transition: all 0.25s ease;
+      cursor: pointer;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
     }
     .enclave-card:hover {
       border-color: var(--cyan);
-      transform: translateY(-2px);
+      background: var(--card-hover);
+      transform: translateY(-4px);
+      box-shadow: 0 10px 25px -5px rgba(6, 182, 212, 0.2);
     }
 
     .enclave-header {
@@ -257,22 +266,36 @@
     .enclave-desc {
       font-size: 13px;
       color: var(--muted);
-      margin-bottom: 16px;
+      margin-bottom: 18px;
       line-height: 1.5;
     }
 
-    .endpoint-tag {
+    /* 클릭 링크 버튼 */
+    .card-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: auto;
+    }
+
+    .endpoint-link {
       font-family: var(--font-mono);
-      font-size: 12px;
+      font-size: 11px;
       background: #090e17;
-      padding: 6px 10px;
+      padding: 8px 12px;
       border-radius: 6px;
       border: 1px solid var(--border);
-      color: #cbd5e1;
-      display: block;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      color: #38bdf8;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      transition: all 0.2s;
+    }
+    .endpoint-link:hover {
+      border-color: var(--cyan);
+      background: rgba(6, 182, 212, 0.15);
+      color: #fff;
     }
 
     /* Interactive Live Console */
@@ -362,7 +385,7 @@
     </div>
   </section>
 
-  <!-- Telemetry Bar (완벽 은닉된 4대 핵심 지표) -->
+  <!-- Telemetry Bar -->
   <div class="stats-bar">
     <div class="stat-card">
       <div class="stat-label">Hardware Reflex Latency</div>
@@ -386,62 +409,104 @@
     </div>
   </div>
 
-  <!-- Dedicated Compute Enclaves -->
-  <div class="section-title">⚡ Dedicated Physical Co-Processing Enclaves</div>
+  <!-- Dedicated Compute Enclaves (전체 링크 연결 완료) -->
+  <div class="section-title">⚡ Dedicated Physical Co-Processing Enclaves (Click to Test)</div>
   <div class="enclave-grid">
-    <div class="enclave-card">
-      <div class="enclave-header">
-        <span class="enclave-badge">ENCLAVE-01</span>
-        <span style="color: var(--emerald); font-size: 12px;">● ACTIVE</span>
+    
+    <!-- Enclave 01 -->
+    <div class="enclave-card" onclick="selectAndScroll('/v1/predict-bioreactor-kinematics')">
+      <div>
+        <div class="enclave-header">
+          <span class="enclave-badge">ENCLAVE-01</span>
+          <span style="color: var(--emerald); font-size: 12px;">● ACTIVE</span>
+        </div>
+        <div class="enclave-name">Bioreactor Hydrodynamic Stability</div>
+        <div class="enclave-desc">Suppresses mechanical shear stress cascades during bio-synthesis via instantaneous analog dampening.</div>
       </div>
-      <div class="enclave-name">Bioreactor Hydrodynamic Stability</div>
-      <div class="enclave-desc">Suppresses mechanical shear stress cascades during bio-synthesis via instantaneous analog dampening.</div>
-      <span class="endpoint-tag">POST /v1/predict-bioreactor-kinematics</span>
+      <div class="card-actions">
+        <a href="https://api.neoma-pcam.com/docs" target="_blank" class="endpoint-link" onclick="event.stopPropagation();">
+          <span>POST /v1/predict-bioreactor-kinematics</span>
+          <span style="color: var(--cyan); font-weight: bold;">Open API ↗</span>
+        </a>
+      </div>
     </div>
 
-    <div class="enclave-card">
-      <div class="enclave-header">
-        <span class="enclave-badge">ENCLAVE-02</span>
-        <span style="color: var(--emerald); font-size: 12px;">● ACTIVE</span>
+    <!-- Enclave 02 -->
+    <div class="enclave-card" onclick="selectAndScroll('/v1/predict-precision-synthesis')">
+      <div>
+        <div class="enclave-header">
+          <span class="enclave-badge">ENCLAVE-02</span>
+          <span style="color: var(--emerald); font-size: 12px;">● ACTIVE</span>
+        </div>
+        <div class="enclave-name">Exothermic Chemical Synthesis</div>
+        <div class="enclave-desc">Relaxes non-linear enthalpy spikes in chemical reactors to prevent thermodynamic runaway.</div>
       </div>
-      <div class="enclave-name">Exothermic Chemical Synthesis</div>
-      <div class="enclave-desc">Relaxes non-linear enthalpy spikes in chemical reactors to prevent thermodynamic runaway.</div>
-      <span class="endpoint-tag">POST /v1/predict-precision-synthesis</span>
+      <div class="card-actions">
+        <a href="https://api.neoma-pcam.com/docs" target="_blank" class="endpoint-link" onclick="event.stopPropagation();">
+          <span>POST /v1/predict-precision-synthesis</span>
+          <span style="color: var(--cyan); font-weight: bold;">Open API ↗</span>
+        </a>
+      </div>
     </div>
 
-    <div class="enclave-card">
-      <div class="enclave-header">
-        <span class="enclave-badge">ENCLAVE-03</span>
-        <span style="color: var(--emerald); font-size: 12px;">● ACTIVE</span>
+    <!-- Enclave 03 -->
+    <div class="enclave-card" onclick="selectAndScroll('/v1/predict-robotic-compliance')">
+      <div>
+        <div class="enclave-header">
+          <span class="enclave-badge">ENCLAVE-03</span>
+          <span style="color: var(--emerald); font-size: 12px;">● ACTIVE</span>
+        </div>
+        <div class="enclave-name">Robotic Dynamic Compliance</div>
+        <div class="enclave-desc">Neutralizes high-frequency mechanical shockwaves in robotic actuators under 1 millisecond.</div>
       </div>
-      <div class="enclave-name">Robotic Dynamic Compliance</div>
-      <div class="enclave-desc">Neutralizes high-frequency mechanical shockwaves in robotic actuators under 1 millisecond.</div>
-      <span class="endpoint-tag">POST /v1/predict-robotic-compliance</span>
+      <div class="card-actions">
+        <a href="https://api.neoma-pcam.com/docs" target="_blank" class="endpoint-link" onclick="event.stopPropagation();">
+          <span>POST /v1/predict-robotic-compliance</span>
+          <span style="color: var(--cyan); font-weight: bold;">Open API ↗</span>
+        </a>
+      </div>
     </div>
 
-    <div class="enclave-card">
-      <div class="enclave-header">
-        <span class="enclave-badge">ENCLAVE-04</span>
-        <span style="color: var(--emerald); font-size: 12px;">● ACTIVE</span>
+    <!-- Enclave 04 -->
+    <div class="enclave-card" onclick="selectAndScroll('/v1/predict-mobility-dynamics')">
+      <div>
+        <div class="enclave-header">
+          <span class="enclave-badge">ENCLAVE-04</span>
+          <span style="color: var(--emerald); font-size: 12px;">● ACTIVE</span>
+        </div>
+        <div class="enclave-name">Autonomous Mobility Dynamics</div>
+        <div class="enclave-desc">Executes real-time physical equilibrium compensation for high-speed dynamic chassis roll and yaw drift.</div>
       </div>
-      <div class="enclave-name">Autonomous Mobility Dynamics</div>
-      <div class="enclave-desc">Executes real-time physical equilibrium compensation for high-speed dynamic chassis roll and yaw drift.</div>
-      <span class="endpoint-tag">POST /v1/predict-mobility-dynamics</span>
+      <div class="card-actions">
+        <a href="https://api.neoma-pcam.com/docs" target="_blank" class="endpoint-link" onclick="event.stopPropagation();">
+          <span>POST /v1/predict-mobility-dynamics</span>
+          <span style="color: var(--cyan); font-weight: bold;">Open API ↗</span>
+        </a>
+      </div>
     </div>
 
-    <div class="enclave-card">
-      <div class="enclave-header">
-        <span class="enclave-badge">ENCLAVE-05</span>
-        <span style="color: var(--emerald); font-size: 12px;">● ACTIVE</span>
+    <!-- Enclave 05 -->
+    <div class="enclave-card" onclick="selectAndScroll('/v1/predict-battery-energetics')">
+      <div>
+        <div class="enclave-header">
+          <span class="enclave-badge">ENCLAVE-05</span>
+          <span style="color: var(--emerald); font-size: 12px;">● ACTIVE</span>
+        </div>
+        <div class="enclave-name">Electrochemical Energetics</div>
+        <div class="enclave-desc">Mitigates battery thermal runaway propagation via real-time Hamiltonian ion-gradient relaxation.</div>
       </div>
-      <div class="enclave-name">Electrochemical Energetics</div>
-      <div class="enclave-desc">Mitigates battery thermal runaway propagation via real-time Hamiltonian ion-gradient relaxation.</div>
-      <span class="endpoint-tag">POST /v1/predict-battery-energetics</span>
+      <div class="card-actions">
+        <a href="https://api.neoma-pcam.com/docs" target="_blank" class="endpoint-link" onclick="event.stopPropagation();">
+          <span>POST /v1/predict-battery-energetics</span>
+          <span style="color: var(--cyan); font-weight: bold;">Open API ↗</span>
+        </a>
+      </div>
     </div>
+
   </div>
 
   <!-- Interactive Live Console -->
-  <div class="console-section">
+  <div class="console-section" id="live-console">
     <div class="console-header">
       <div style="font-weight: 700; font-size: 16px;">🧪 Live Gateway Attestation Console</div>
       <div style="display: flex; gap: 10px;">
@@ -457,7 +522,7 @@
         </button>
       </div>
     </div>
-    <div class="terminal-box" id="terminal-output">// Click [Execute Convergence Reflex] to send a real-time query to https://api.neoma-pcam.com...</div>
+    <div class="terminal-box" id="terminal-output">// Click any Enclave Card above or press [Execute Convergence Reflex] to run live inference...</div>
   </div>
 
   <!-- Footer -->
@@ -472,7 +537,16 @@
 <script>
   const GATEWAY_BASE = "https://api.neoma-pcam.com";
 
-  // Auto-poll Cluster Health on Load (시리얼 속도 노출 방지)
+  // 카드 클릭 시 콘솔로 이동하여 즉시 하드웨어 질의 실행
+  function selectAndScroll(endpoint) {
+    const select = document.getElementById("domainSelect");
+    select.value = endpoint;
+    const consoleSec = document.getElementById("live-console");
+    consoleSec.scrollIntoView({ behavior: 'smooth' });
+    triggerInference();
+  }
+
+  // Auto-poll Cluster Health on Load
   async function pollClusterHealth() {
     const statusText = document.getElementById("cluster-status-text");
     try {
