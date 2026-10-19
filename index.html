@@ -146,6 +146,16 @@
       cursor: pointer;
     }
 
+    .btn-rapidapi {
+      background: linear-gradient(135deg, #7c3aed, #4f46e5);
+      color: #fff;
+      border: 1px solid rgba(167, 139, 250, 0.4);
+    }
+    .btn-rapidapi:hover {
+      background: linear-gradient(135deg, #8b5cf6, #6366f1);
+      box-shadow: 0 0 25px rgba(124, 58, 237, 0.5);
+    }
+
     .btn-primary {
       background: var(--cyan);
       color: #041018;
@@ -217,7 +227,6 @@
       margin-bottom: 48px;
     }
 
-    /* 클릭 가능한 직관적 카드 */
     .enclave-card {
       background: var(--card-bg);
       border: 1px solid var(--border);
@@ -358,6 +367,9 @@
       dedicated in-materio computing enclaves. Verifiable ground-state convergence with deterministic silicon-level cryptographic attestation.
     </p>
     <div class="action-links">
+      <a href="https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control" target="_blank" class="btn btn-rapidapi">
+        💳 Subscribe on RapidAPI (결제 & 키 발급) ↗
+      </a>
       <a href="https://api.neoma-pcam.com/docs" target="_blank" class="btn btn-primary">
         🚀 Interactive Swagger API Docs
       </a>
@@ -393,11 +405,9 @@
     </div>
   </div>
 
-  <!-- 5대 물리 코어 카드 (카드를 누르면 새 창으로 실제 Swagger UI 시연창이 바로 열림!) -->
   <div class="section-title">⚡ Dedicated Physical Co-Processing Enclaves (Click to Open API)</div>
   <div class="enclave-grid">
     
-    <!-- Enclave 01 -->
     <a href="https://api.neoma-pcam.com/docs" target="_blank" class="enclave-card">
       <div>
         <div class="enclave-header">
@@ -413,7 +423,6 @@
       </div>
     </a>
 
-    <!-- Enclave 02 -->
     <a href="https://api.neoma-pcam.com/docs" target="_blank" class="enclave-card">
       <div>
         <div class="enclave-header">
@@ -429,7 +438,6 @@
       </div>
     </a>
 
-    <!-- Enclave 03 -->
     <a href="https://api.neoma-pcam.com/docs" target="_blank" class="enclave-card">
       <div>
         <div class="enclave-header">
@@ -445,7 +453,6 @@
       </div>
     </a>
 
-    <!-- Enclave 04 -->
     <a href="https://api.neoma-pcam.com/docs" target="_blank" class="enclave-card">
       <div>
         <div class="enclave-header">
@@ -461,7 +468,6 @@
       </div>
     </a>
 
-    <!-- Enclave 05 -->
     <a href="https://api.neoma-pcam.com/docs" target="_blank" class="enclave-card">
       <div>
         <div class="enclave-header">
@@ -479,7 +485,6 @@
 
   </div>
 
-  <!-- Interactive Live Console -->
   <div class="console-section" id="live-console">
     <div class="console-header">
       <div style="font-weight: 700; font-size: 16px;">🧪 Live Gateway Attestation Console</div>
