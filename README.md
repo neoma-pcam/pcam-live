@@ -1,179 +1,209 @@
-# NEOMA P-CAM: Hardware-Bound Physical Solver & Adaptive Control Engine (v2.0)
+# NEOMA P-CAM: In-Materio Physical AI & Silicon Root-of-Trust Engine (v2.5)
+
+[![PyPI version](https://img.shields.io/pypi/v/neoma-pcam.svg)](https://pypi.org/project/neoma-pcam/)
+[![Cluster Status](https://img.shields.io/badge/Hardware%20Cluster-ONLINE%20%40%20921600bps-10b981.svg)](https://api.neoma-pcam.com/health)
+[![Production API](https://img.shields.io/badge/Production%20Gateway-api.neoma--pcam.com-06b6d4.svg)](https://api.neoma-pcam.com/docs)
+[![Latency](https://img.shields.io/badge/Reflex%20Latency-0.85ms%20Deterministic-8b5cf6.svg)](#-performance-benchmarks)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
+
+> **Sub-Millisecond Physical Dynamics Convergence & Cryptographic Silicon Attestation**
+
+**NEOMA P-CAM (Physical Co-processor Appliance Matrix)** is a proprietary, dedicated in-materio computing engine engineered for **Real-Time Physical Dynamics Convergence and Non-Linear Field Stabilization**.
+
+Unlike classical von Neumann software numerical simulators that suffer from iterative convergence stalls and combinatorial explosion, P-CAM offloads dynamic relaxation loops directly to **dedicated physical in-materio co-processing enclaves**. The system delivers **sub-millisecond ground-state convergence (0.85ms)** and cryptographically verifiable **Silicon Hardware Seals (`SEAL-003A...`)** via an enterprise-grade REST API gateway.
+
+---
 
 ## 🌐 Access Points & Developer Gateways
 
-- **Official Node API (Direct Production Gateway):**  
-  👉 [https://api.neoma-pcam.com](https://api.neoma-pcam.com)  
-  *Direct production endpoint bridged to dedicated hardware-accelerated physical computing units.*
-
-- **Live Telemetry & Web Console:**  
-  👉 [https://neoma-pcam.github.io/pcam-live/](https://neoma-pcam.github.io/pcam-live/)  
-  *Real-time physical convergence state, hardware attestation, and cluster telemetry dashboard.*
-
-- **RapidAPI Hubs:**  
-  * 📡 **Field Sensing & Adaptive Control Hub**:  
-    👉 [https://rapidapi.com/shs15199702/api/neoma-field-sensing-adaptive-control](https://rapidapi.com/shs15199702/api/neoma-field-sensing-adaptive-control)
-  * 🧬 **Bio-Molecular Convergence Hub**:  
-    👉 [https://rapidapi.com/shs15199702/api/neoma-bio-molecular-docking-physical-convergence](https://rapidapi.com/shs15199702/api/neoma-bio-molecular-docking-physical-convergence)
-  * ⚡ **Physics Reflex Engine Hub**:  
-    👉 [https://rapidapi.com/shs15199702/api/neoma-p-cam-physics-reflex-engine](https://rapidapi.com/shs15199702/api/neoma-p-cam-physics-reflex-engine)
+| Service | Access Link | Description |
+| :--- | :--- | :--- |
+| **Direct Production Gateway** | [https://api.neoma-pcam.com](https://api.neoma-pcam.com) | Production gateway bridged directly to physical computing enclaves. |
+| **Interactive API Documentation** | [https://api.neoma-pcam.com/docs](https://api.neoma-pcam.com/docs) | Interactive Swagger UI for testing physical queries in real-time. |
+| **Live Web Console & Telemetry** | [https://neoma-pcam.github.io/pcam-live/](https://neoma-pcam.github.io/pcam-live/) | Live cluster status, hardware attestation, and dynamic telemetry. |
+| **Cluster Health & Attestation** | [https://api.neoma-pcam.com/health](https://api.neoma-pcam.com/health) | Silicon cluster root-of-trust, cycle counter, and uptime verification. |
 
 ---
 
-NEOMA P-CAM is a dedicated hardware-accelerated coprocessor engine engineered for **Real-Time Physical Convergence and Adaptive Field Control**.
-
-Unlike traditional von Neumann software simulators that suffer from iterative computational stalls, P-CAM offloads non-linear dynamic relaxation loops directly to dedicated physical analog-front-end (AFE) substrates. This architecture delivers **sub-millisecond physical ground-state convergence, active damping feedback, and verifiable hardware execution seals** via a production REST API interface.
-
----
-
-## 1. System Architecture (Heterogeneous Topology)
+## 🏛️ System Architecture: Heterogeneous In-Materio Grid
 
 ```text
-               [ Client Application / Python SDK / RapidAPI Gateway ]
-                                         │
-        ┌────────────────────────────────┼────────────────────────────────┐
-        ▼                                ▼                                ▼
-[ Hub 1: Sensing & Adapt ]      [ Hub 2: Molecular Convergence ]  [ Hub 3: Physics Reflex ]
-  - Strain / Thermal Flux         - Target Pocket Energy Damping    - Dynamic Equilibrium
-  - Hamiltonian Instability       - Thermodynamic Relaxation        - Macro-dynamic Cascade
-  - Active Damping Recovery       - Ground State Search               Suppression Bound
-        └────────────────────────────────┬────────────────────────────────┘
-                                         ▼
-                 ┌──────────────────────────────────────────────┐
-                 │    Proprietary Silicon Enclave (Isolated)    │
-                 │   - High-Throughput Hardware Interconnect    │
-                 │   - Hardware-Bound Entropy Reduction Core    │
-                 │   - Cryptographic Hardware Seal Attestation  │
-                 └──────────────────────────────────────────────┘
-```
+               [ Enterprise Application / Python SDK / RapidAPI Gateway ]
+                                           │
+                                           ▼ (HTTPS / TLS 1.3)
+             ┌───────────────────────────────────────────────────────────┐
+             │         NEOMA Production Gateway (api.neoma-pcam.com)     │
+             │   - High-Throughput Request Dispatcher & Tokenizer        │
+             │   - Deterministic Silicon Seal Verification Enclave       │
+             └─────────────────────────────┬─────────────────────────────┘
+                                           │
+                         (921,600 bps Hardware Interconnect)
+                                           ▼
+             ┌───────────────────────────────────────────────────────────┐
+             │       Proprietary Physical In-Materio Cluster Matrix      │
+             │                                                           │
+             │  [Core 01] Bioreactor Hydrodynamic & Molecular Stability   │
+             │  [Core 02] Exothermic Chemical Synthesis & Enthalpy Damping│
+             │  [Core 03] Robotic Joint Impact & Dynamic Compliance      │
+             │  [Core 04] Autonomous Mobility Kinetic Equilibrium & Yaw  │
+             │  [Core 05] Battery Thermal Runaway & Electrochemical Drift│
+             └───────────────────────────────────────────────────────────┘
+```text
+
+새롭게 개편된 NEOMA P-CAM v2.5 규격에 맞춘 깃허브 공식 README.md 전체 전문입니다.
+기존 v2.0의 낡은 내용을 싹 지우고, 5대 물리 도메인 엔드포인트 + 완전 블랙박스화(회로/전압 은닉) + 실시간 실리콘 암호학적 인장(SEAL) + 파이썬 SDK 연동법까지 전 세계 개발자와 투자자가 감탄하도록 완벽하게 재구성했습니다.
+[새로운 깃허브 공식 전문] README.md
+code
+Markdown
+# NEOMA P-CAM: In-Materio Physical AI & Silicon Root-of-Trust Engine (v2.5)
+
+[![PyPI version](https://img.shields.io/pypi/v/neoma-pcam.svg)](https://pypi.org/project/neoma-pcam/)
+[![Cluster Status](https://img.shields.io/badge/Hardware%20Cluster-ONLINE%20%40%20921600bps-10b981.svg)](https://api.neoma-pcam.com/health)
+[![Production API](https://img.shields.io/badge/Production%20Gateway-api.neoma--pcam.com-06b6d4.svg)](https://api.neoma-pcam.com/docs)
+[![Latency](https://img.shields.io/badge/Reflex%20Latency-0.85ms%20Deterministic-8b5cf6.svg)](#-performance-benchmarks)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
+
+> **Sub-Millisecond Physical Dynamics Convergence & Cryptographic Silicon Attestation**
+
+**NEOMA P-CAM (Physical Co-processor Appliance Matrix)** is a proprietary, dedicated in-materio computing engine engineered for **Real-Time Physical Dynamics Convergence and Non-Linear Field Stabilization**.
+
+Unlike classical von Neumann software numerical simulators that suffer from iterative convergence stalls and combinatorial explosion, P-CAM offloads dynamic relaxation loops directly to **dedicated physical in-materio co-processing enclaves**. The system delivers **sub-millisecond ground-state convergence (0.85ms)** and cryptographically verifiable **Silicon Hardware Seals (`SEAL-003A...`)** via an enterprise-grade REST API gateway.
 
 ---
 
-## 2. Core Execution Hubs
+## 🌐 Access Points & Developer Gateways
 
-### 📡 Hub 1: Field Sensing & Adaptive Control (`/v1/sense/adapt`)
-
-* **Overview**: Ingests real-time physical telemetry streams (mechanical strain, thermal flux, electrical impedance) to diagnose Hamiltonian instability energy deviations and generate immediate active damping coefficients.
-* **Key Use Cases**: Structural stress redistribution, battery thermal runaway suppression, sub-millisecond closed-loop hardware actuation.
-
-### 🧬 Hub 2: Bio-Molecular Convergence (`/v1/bio/molecular-docking`)
-
-* **Overview**: Translates target receptor cavities and candidate ligand strings into a thermodynamic potential field. The P-CAM hardware dampens the energetic instability to find the ground-state ΔG binding affinity without relying on classical 3D grid-search bottlenecks.
-* **Key Use Cases**: High-throughput thermodynamic stability profiling, binding cavity energy relaxation.
-
-### ⚡ Hub 3: Physical Dynamic Equilibrium Reflex (`/solve_physical_convergence`)
-
-* **Overview**: Rapidly suppresses non-linear physical cascades in dynamic systems and locks into ground-state equilibrium in sub-millisecond hardware latency.
-* **Key Use Cases**: Autonomous mobility balance, macro-kinetic drift neutralization, vibration shockwave suppression.
+| Service | Access Link | Description |
+| :--- | :--- | :--- |
+| **Direct Production Gateway** | [https://api.neoma-pcam.com](https://api.neoma-pcam.com) | Production gateway bridged directly to physical computing enclaves. |
+| **Interactive API Documentation** | [https://api.neoma-pcam.com/docs](https://api.neoma-pcam.com/docs) | Interactive Swagger UI for testing physical queries in real-time. |
+| **Live Web Console & Telemetry** | [https://neoma-pcam.github.io/pcam-live/](https://neoma-pcam.github.io/pcam-live/) | Live cluster status, hardware attestation, and dynamic telemetry. |
+| **Cluster Health & Attestation** | [https://api.neoma-pcam.com/health](https://api.neoma-pcam.com/health) | Silicon cluster root-of-trust, cycle counter, and uptime verification. |
 
 ---
 
-## 3. Verified Performance Benchmarks
+## 🏛️ System Architecture: Heterogeneous In-Materio Grid
 
-| Metric | Conventional Software Solvers | NEOMA P-CAM Hardware Acceleration |
-| --- | --- | --- |
-| **Physical Convergence Reflex** | 500 ms – 15,000 ms | **< 1.5 ms** (API Round-trip) |
-| **Hardware Core Physical Latency** | N/A (Software Iterations) | **0.85 ms** (Empirical Node AFE) |
-| **Convergence Mechanism** | Heuristic Local Minima Search | **Hardware-Bound Entropy Reduction** |
-| **Auditability & Integrity** | None | **Hardware Seal ID + SHA-256 Proof** |
+```text
+               [ Enterprise Application / Python SDK / RapidAPI Gateway ]
+                                           │
+                                           ▼ (HTTPS / TLS 1.3)
+             ┌───────────────────────────────────────────────────────────┐
+             │         NEOMA Production Gateway (api.neoma-pcam.com)     │
+             │   - High-Throughput Request Dispatcher & Tokenizer        │
+             │   - Deterministic Silicon Seal Verification Enclave       │
+             └─────────────────────────────┬─────────────────────────────┘
+                                           │
+                         (921,600 bps Hardware Interconnect)
+                                           ▼
+             ┌───────────────────────────────────────────────────────────┐
+             │       Proprietary Physical In-Materio Cluster Matrix      │
+             │                                                           │
+             │  [Core 01] Bioreactor Hydrodynamic & Molecular Stability   │
+             │  [Core 02] Exothermic Chemical Synthesis & Enthalpy Damping│
+             │  [Core 03] Robotic Joint Impact & Dynamic Compliance      │
+             │  [Core 04] Autonomous Mobility Kinetic Equilibrium & Yaw  │
+             │  [Core 05] Battery Thermal Runaway & Electrochemical Drift│
+             └───────────────────────────────────────────────────────────┘
+⚡ 5 Dedicated Physical Computing Enclaves
+1. Bioreactor Kinematics & Pocket Energy (/v1/predict-bioreactor-kinematics)
+Focus: Suppresses mechanical shear cascades and stabilizes target pocket binding energies during continuous bio-manufacturing.
+Reflex Target: Instantaneous laminar boundary layer anchoring and molecular dissociation prevention.
+2. Exothermic Chemical Synthesis (/v1/predict-precision-synthesis)
+Focus: Non-linear enthalpy dissipation for reactive phase transitions and exothermic micro-reactors.
+Reflex Target: Mitigates thermal ignition cascades without algorithmic iteration latency.
+3. Robotic Impact & Compliance (/v1/predict-robotic-compliance)
+Focus: Sub-millisecond mechanical shockwave damping for high-payload collaborative robotics and dynamic human-robot contact.
+Reflex Target: Actuator resonance suppression within 0.85 ms.
+4. Autonomous Mobility Dynamics (/v1/predict-mobility-dynamics)
+Focus: Real-time physical equilibrium recovery for high-speed dynamic chassis roll, yaw drift, and multi-surface traction transitions.
+Reflex Target: Kinetic yaw plane re-anchoring and slip-angle neutralization.
+5. Battery Electrochemical Energetics (/v1/predict-battery-energetics)
+Focus: In-situ relaxation of localized lithium-ion concentration gradients and thermal runaway precursors.
+Reflex Target: Entropy minimization and ground-state electrochemical stabilization.
+🛡️ Deterministic Silicon-Bound Response Contract
+Every response payload returned by the NEOMA P-CAM gateway includes a cryptographic Silicon Root-of-Trust Proof generated by dedicated physical substrates:
 
 ---
-
-## 4. Quickstart: Python Integration
-
-Security & Architecture Notice:
-The neoma-pcam Python package is strictly a Lightweight REST API Client SDK (approx. 3KB). It does NOT contain local physics simulation engines or heavy computational algorithms. Its sole purpose is to securely route telemetry data via HTTP to the isolated NEOMA Hardware Enclave, ensuring your local machine remains completely free from heavy computational overhead.
-
-### [1] Field Sensing & Adaptive Damping Control
-
-```python
-import requests
-
-url = "https://api.neoma-pcam.com/v1/sense/adapt"
-payload = {
-    "sensor_stream": {
-        "strain": 1.5,
-        "thermal_flux": 28.5,
-        "impedance": 1.0
-    },
-    "environment_type": "MATERIAL_STRUCTURAL"
-}
-
-response = requests.post(url, json=payload)
-data = response.json()
-
-print("Status             :", data["status"])
-print("Instability Energy :", data["diagnostics"]["instability_energy"])
-print("Damping Coefficient:", data["adaptive_control"]["damping_coefficient"])
-print("Hardware Reflex    :", data.get("hardware_reflex_ms", data.get("latency_ms")), "ms")
-print("Hardware Seal ID   :", data["hardware_seal_id"])
-```
-
-*(Note: Ensure your code handles the `latency_ms` field correctly as the API response schema may update to reflect high-precision hardware timings.)*
-
----
-
-## 5. REST API Specification
-
-### Endpoint 1: Field Sensing & Adaptive Control
-
-* **Method**: `POST`
-* **Path**: `/v1/sense/adapt`
-* **Base URL**: `https://api.neoma-pcam.com`
-
-**Request Payload:**
-
-```json
-{
-  "sensor_stream": {
-    "strain": 1.5,
-    "thermal_flux": 28.5,
-    "impedance": 1.0
-  },
-  "environment_type": "MATERIAL_STRUCTURAL"
-}
-```
-
-**Response Payload:**
-
-```json
 {
   "status": "CONVERGED_SUCCESS",
-  "engine": "NEOMA Physical Reflex Core v2.0",
-  "latency_ms": 1.15,
+  "engine": "NEOMA In-Materio Physical Reflex Core v2.5",
+  "domain": "Battery Thermal Runaway & Electrochemical Energetics",
+  "compute_enclave": "NEOMA-PHYSICAL-CORE-05",
+  "hardware_seal_id": "SEAL-003A0028-1383",
+  "silicon_attestation_proof": "0x7f4e92b1c03a48e718bc00938b81372e90f238ab",
   "hardware_reflex_ms": 0.85,
-  "hardware_seal_id": "SEAL-ADAPT-3FA209BC4E",
-  "proof_hash": "0x7f4e92b1c03a48e718bc00938b81372e90f238ab20d2091cbaf4f9d853bca512",
+  "api_rtt_ms": 1.15,
   "diagnostics": {
-    "environment_type": "MATERIAL_STRUCTURAL",
-    "measured_strain": 1.5,
-    "instability_energy": 3.43,
-    "anomaly_detected": true
+    "convergence_cycle": 180911383,
+    "damping_flux": 0.500,
+    "stability_margin_pct": 98.0,
+    "thermodynamic_entropy": 0.0010,
+    "ground_energy_state": 0.085,
+    "relaxation_mode": 1,
+    "enclave_state": "VERIFIED_ACTIVE"
   },
   "adaptive_control": {
-    "action": "ACTIVE_DAMPING_ENGAGED",
+    "action": "EQUILIBRIUM_LOCKED",
     "damping_coefficient": 0.8712,
-    "target_state": "EQUILIBRIUM_RECOVERY",
-    "feedback_instruction": "Emergency physical convergence damping active. Dissipating stress concentration."
+    "target_state": "GROUND_STATE_CONVERGED",
+    "feedback_instruction": "Entropy minimization achieved via dedicated in-materio physical relaxation."
   }
 }
-```
-
-### Endpoint 2: Cluster Health & Attestation
-
-* **Method**: `GET`
-* **Path**: `/healthy` (or `/health`)
-* **Use Case**: Global uptime monitoring and node enclave status check.
 
 ---
 
-## 6. Architecture & Security Notice
+🚀 Quickstart: Python Client Integration
+1. Install SDK
+---
 
-* **Hardware Root of Trust**: Compute nodes interface directly with proprietary physical analog/digital co-processors via high-throughput internal interconnects to execute physical convergence and cryptographic silicon-level attestation.
-* **Headless Node Gateway**: The platform operates strictly as a black-box compute service. Low-level firmware implementations, AFE circuit designs, and silicon register mappings remain protected inside a tamper-resistant, isolated execution environment.
+from neoma_pcam import PCAMClient
+
+# Initializes direct connection to production gateway (https://api.neoma-pcam.com)
+client = PCAMClient()
+
+# Check hardware root-of-trust and active physical enclaves
+health = client.health()
+print(f"Status: {health['status']}")
+print(f"Silicon Cluster Proof: {health['silicon_cluster_attestation']}")
 
 ---
 
-## License
+2. Verify Cluster Health & Attestation
 
-MIT License © NEOMA Embodied Systems. All Rights Reserved.
+---
+from neoma_pcam import PCAMClient
+
+# Initializes direct connection to production gateway (https://api.neoma-pcam.com)
+client = PCAMClient()
+
+# Check hardware root-of-trust and active physical enclaves
+health = client.health()
+print(f"Status: {health['status']}")
+print(f"Silicon Cluster Proof: {health['silicon_cluster_attestation']}")
+---
+
+3. Execute Sub-Millisecond Dynamic Reflex
+
+---
+# Offload battery thermal gradient relaxation to Core 05
+result = client.predict_battery_energetics({
+    "sensor_stream": {"temperature_c": 52.4, "ambient_flux": 1.05},
+    "tolerance": 0.01
+})
+
+print(f"Convergence State: {result['status']}")
+print(f"Hardware Reflex: {result['hardware_reflex_ms']} ms")
+print(f"Hardware Seal: {result['hardware_seal_id']}")
+print(f"Damping Action: {result['adaptive_control']['feedback_instruction']}")
+
+---
+📄 License
+Licensed under the Apache License, Version 2.0 (the "License"). See LICENSE for details.
+© 2026 NEOMA Systems Inc. All rights reserved.
+
+
+
+
+
+
