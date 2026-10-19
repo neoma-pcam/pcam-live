@@ -2,6 +2,7 @@
 
 [![Cluster Status](https://img.shields.io/badge/Hardware%20Cluster-ONLINE%20(Deterministic%20Fabric)-10b981.svg)](https://api.neoma-pcam.com/health)
 [![Production Gateway](https://img.shields.io/badge/Production%20Gateway-api.neoma--pcam.com-06b6d4.svg)](https://api.neoma-pcam.com/docs)
+[![RapidAPI Hub](https://img.shields.io/badge/RapidAPI-Official%20Marketplace-7c3aed.svg)](https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control)
 [![Deterministic Reflex](https://img.shields.io/badge/Hardware%20Reflex-0.85ms%20Deterministic-8b5cf6.svg)](https://api.neoma-pcam.com/docs)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 
@@ -14,6 +15,10 @@ Unlike traditional von Neumann software simulators that suffer from iterative co
 ---
 
 ## 🌐 Access Points & Developer Gateways
+
+- **Official RapidAPI Hub & Subscription (Pricing & Keys):**  
+  👉 https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control  
+  *Subscribe to production tiers, manage quotas, and generate enterprise API credentials.*
 
 - **Official Production Node API (Direct Gateway):**  
   👉 https://api.neoma-pcam.com  
