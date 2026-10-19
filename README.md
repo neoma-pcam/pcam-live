@@ -48,7 +48,7 @@ Unlike classical von Neumann software numerical simulators that suffer from iter
              │  [Core 04] Autonomous Mobility Kinetic Equilibrium & Yaw  │
              │  [Core 05] Battery Thermal Runaway & Electrochemical Drift│
              └───────────────────────────────────────────────────────────┘
-```text
+
 
 새롭게 개편된 NEOMA P-CAM v2.5 규격에 맞춘 깃허브 공식 README.md 전체 전문입니다.
 기존 v2.0의 낡은 내용을 싹 지우고, 5대 물리 도메인 엔드포인트 + 완전 블랙박스화(회로/전압 은닉) + 실시간 실리콘 암호학적 인장(SEAL) + 파이썬 SDK 연동법까지 전 세계 개발자와 투자자가 감탄하도록 완벽하게 재구성했습니다.
