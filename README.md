@@ -40,6 +40,7 @@ Unlike traditional von Neumann software simulators that suffer from iterative co
 
 ## 🏛️ System Architecture (Heterogeneous In-Materio Grid)
 
+```text
                [ Enterprise Client / Python SDK / RapidAPI Gateway ]
                                          │
                                          ▼ (HTTPS / TLS 1.3)
@@ -62,6 +63,7 @@ Unlike traditional von Neumann software simulators that suffer from iterative co
              │  [Core 05] Battery Thermal Runaway & Electrochemical Drift│
              │  [Core 06] 🌟 GP-PCAM: Universal Non-Linear Co-Solver     │
              └───────────────────────────────────────────────────────────┘
+```
 
 ---
 
@@ -102,7 +104,8 @@ Unlike traditional von Neumann software simulators that suffer from iterative co
 ## 🛡️ Deterministic Silicon-Bound Response Contract
 
 Every inference response returned by the NEOMA P-CAM gateway is cryptographically anchored to physical hardware substrates:
----
+
+```json
 {
   "timestamp_iso": "2026-10-20T05:48:24.299207Z",
   "status": "CONVERGED_SUCCESS",
@@ -131,6 +134,7 @@ Every inference response returned by the NEOMA P-CAM gateway is cryptographicall
     "slm_interpreted_instruction": "Arbitrary N-dimensional non-linear state vector converged to global Hamiltonian minimum without iterative stall."
   }
 }
+```
 
 ---
 
@@ -138,10 +142,13 @@ Every inference response returned by the NEOMA P-CAM gateway is cryptographicall
 
 ### 1. Installation
 
+```bash
 pip install neoma-pcam --upgrade
+```
 
 ### 2. Verify Hardware Root-of-Trust
 
+```python
 from neoma_pcam import PCAMClient
 
 # Connects directly to production gateway (https://api.neoma-pcam.com)
@@ -151,9 +158,11 @@ client = PCAMClient()
 health = client.health()
 print("Status:", health["status"])
 print("Active Cores:", health["hardware_cores_active"])
+```
 
 ### 3. Execute Sub-Millisecond Universal Physical Convergence
 
+```python
 import requests
 
 url = "https://api.neoma-pcam.com/v1/solve-universal-equilibrium"
@@ -172,6 +181,7 @@ print("Hardware Reflex :", data["hardware_reflex_ms"], "ms")
 print("Cognitive Brain :", data["cognitive_brain"])
 print("Converged Vector:", data["diagnostics"]["converged_state_vector"])
 print("SLM Explanation :", data["adaptive_control"]["slm_interpreted_instruction"])
+```
 
 ---
 
