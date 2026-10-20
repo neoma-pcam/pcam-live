@@ -216,6 +216,7 @@ print("Cognitive Brain :", data["cognitive_brain"])
 print("Converged Vector:", data["diagnostics"]["converged_state_vector"])
 print("SLM Explanation :", data["adaptive_control"]["slm_interpreted_instruction"])
 ```
+Markdown
 ## 🧪 Run the Robotics Example
 
 Clone the repository and run the trajectory stabilization demo:
@@ -224,24 +225,16 @@ Clone the repository and run the trajectory stabilization demo:
 git clone [https://github.com/neoma-pcam/pcam-live.git](https://github.com/neoma-pcam/pcam-live.git)
 cd pcam-live
 python examples/robot_trajectory_stabilization.py
+🔒 Security & Black-Box Enclave Architecture
+Isolated Execution Environment: Low-level silicon registers, analog front-ends (AFE), and internal bus mappings operate strictly within a tamper-resistant black-box execution enclave.
 
+Cryptographic Silicon Seals: Each inference transaction is bound to a deterministic, tamper-proof hardware execution token (attestation_proof) salted by the cluster's physical relaxation cycle.
 
----
+Zero Software Simulation Fallback: If the physical computing fabric is disconnected or experiences state decoherence, the gateway returns explicit enclave diagnostic warnings rather than deceptive software approximations.
 
-## 🔒 Security & Black-Box Enclave Architecture
+Automated Golden Physics Vault: Continuous physical-SLM inference pairs are immutably archived into secure structured datasets for proprietary fine-tuning and enterprise data licensing.
 
-- **Isolated Execution Environment:** Low-level silicon registers, analog front-ends (AFE), and internal bus mappings operate strictly within a tamper-resistant black-box execution enclave.
-- **Cryptographic Silicon Seals:** Each inference transaction is bound to a deterministic, tamper-proof hardware execution token (`attestation_proof`) salted by the cluster's physical relaxation cycle.
-- **Zero Software Simulation Fallback:** If the physical computing fabric is disconnected or experiences state decoherence, the gateway returns explicit enclave diagnostic warnings rather than deceptive software approximations.
-- **Automated Golden Physics Vault:** Continuous physical-SLM inference pairs are immutably archived into secure structured datasets for proprietary fine-tuning and enterprise data licensing.
-
----
----
-
-## 🔒 Proprietary Notice
-
-All algorithms, architectures, and hardware endpoints related to **GP-PCAM** are proprietary assets of NEOMA Systems Inc. Unauthorized reverse engineering, model cloning, or unauthorized commercial exploitation is strictly prohibited.
-
----
+🔒 Proprietary Notice
+All algorithms, architectures, and hardware endpoints related to GP-PCAM are proprietary assets of NEOMA Systems Inc. Unauthorized reverse engineering, model cloning, or unauthorized commercial exploitation is strictly prohibited.
 
 © 2026 NEOMA Systems Inc. All rights reserved.
