@@ -236,11 +236,11 @@ python examples/robot_trajectory_stabilization.py
 - **Automated Golden Physics Vault:** Continuous physical-SLM inference pairs are immutably archived into secure structured datasets for proprietary fine-tuning and enterprise data licensing.
 
 ---
+---
 
-## 📄 License & Intellectual Property
+## 🔒 Proprietary Notice
 
-* **Client SDK & Examples:** Licensed under the [Apache License, Version 2.0](LICENSE).
-* **P-CAM Core Engine & Hardware Fabric:** Proprietary and Confidential. All rights reserved. Unauthorized reverse engineering, silicon probing, or model duplication is strictly prohibited.
+All algorithms, architectures, and hardware endpoints related to **GP-PCAM** are proprietary assets of NEOMA Systems Inc. Unauthorized reverse engineering, model cloning, or unauthorized commercial exploitation is strictly prohibited.
 
 ---
 
