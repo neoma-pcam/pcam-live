@@ -101,10 +101,28 @@ Unlike traditional von Neumann software simulators that suffer from iterative co
 
 ## 🚀 Quick Start: GP-PCAM Universal Physical Solver
 
-연구자 및 독립 개발자를 위한 초저지연(0.85ms) 하드웨어 평형 솔버 마이크로 엔드포인트입니다.
-월 50회 무료 테스트 및 마이크로 플랜($30/mo)을 지원합니다.
+Ultra-low latency (0.85ms) deterministic hardware equilibrium solver API designed for researchers and independent developers. Eliminates software numerical simulation loops, providing deterministic physical state convergence.
 
-[![Try on RapidAPI](https://img.shields.io/badge/RapidAPI-Universal_Solver_Test_Now-blue?style=for-the-badge&logo=rapidapi)](새로_만드신_RapidAPI_엔드포인트_주소)
+Includes **50 free calls/month** and an accessible micro-tier ($30/mo).
+
+[![Try on RapidAPI](https://img.shields.io/badge/RapidAPI-Universal_Solver_Test_Now-blue?style=for-the-badge&logo=rapidapi)](https://rapidapi.com/shs15199702/api/gp-pcam-universal-physical-solver/playground/Solve%20Universal%20Equilibrium)
+
+### 3-Line Python Example
+```python
+import requests
+
+url = "[https://gp-pcam-universal-physical-solver.p.rapidapi.com/v1/solve-universal-equilibrium](https://gp-pcam-universal-physical-solver.p.rapidapi.com/v1/solve-universal-equilibrium)"
+headers = {
+    "X-RapidAPI-Key": "YOUR_RAPIDAPI_KEY",
+    "Content-Type": "application/json"
+}
+payload = {
+    "perturbation_vector": [0.05, -0.12, 0.33, 0.0]  # Example input state
+}
+
+response = requests.post(url, json=payload, headers=headers)
+print(response.json())
+
 
 ### 3-Line Python Example
 ```python
