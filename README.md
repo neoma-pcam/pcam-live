@@ -237,7 +237,6 @@ python examples/robot_trajectory_stabilization.py
 
 ---
 
-## 📄 License
-Licensed under the Apache License, Version 2.0 (the "License"). See LICENSE for details.
+
 
 © 2026 NEOMA Systems Inc. All rights reserved.
