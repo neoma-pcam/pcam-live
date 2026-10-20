@@ -237,7 +237,10 @@ python examples/robot_trajectory_stabilization.py
 
 ---
 
+## 📄 License & Intellectual Property
 
+* **Client SDK & Examples:** Licensed under the [Apache License, Version 2.0](LICENSE).
+* **P-CAM Core Engine & Hardware Fabric:** Proprietary and Confidential. All rights reserved. Unauthorized reverse engineering, silicon probing, or model duplication is strictly prohibited.
 
 ---
 
