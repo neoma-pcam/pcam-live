@@ -102,7 +102,7 @@ Unlike traditional von Neumann software simulators that suffer from iterative co
 ## 🛡️ Deterministic Silicon-Bound Response Contract
 
 Every inference response returned by the NEOMA P-CAM gateway is cryptographically anchored to physical hardware substrates:
-
+---
 {
   "timestamp_iso": "2026-10-20T05:48:24.299207Z",
   "status": "CONVERGED_SUCCESS",
