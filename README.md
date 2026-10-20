@@ -216,6 +216,15 @@ print("Cognitive Brain :", data["cognitive_brain"])
 print("Converged Vector:", data["diagnostics"]["converged_state_vector"])
 print("SLM Explanation :", data["adaptive_control"]["slm_interpreted_instruction"])
 ```
+## 🧪 Run the Robotics Example
+
+Clone the repository and run the trajectory stabilization demo:
+
+```bash
+git clone [https://github.com/neoma-pcam/pcam-live.git](https://github.com/neoma-pcam/pcam-live.git)
+cd pcam-live
+python examples/robot_trajectory_stabilization.py
+
 
 ---
 
