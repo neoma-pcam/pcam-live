@@ -216,7 +216,6 @@ print("Cognitive Brain :", data["cognitive_brain"])
 print("Converged Vector:", data["diagnostics"]["converged_state_vector"])
 print("SLM Explanation :", data["adaptive_control"]["slm_interpreted_instruction"])
 ```
-Markdown
 ## 🧪 Run the Robotics Example
 
 Clone the repository and run the trajectory stabilization demo:
