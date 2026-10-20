@@ -99,6 +99,22 @@ Unlike traditional von Neumann software simulators that suffer from iterative co
 - **Core Focus:** General-Purpose Physical Computing (GP-PCAM) for arbitrary N-dimensional non-linear perturbation vectors.
 - **Reflex Action:** Ingests dynamic state vectors and relaxes them directly to the global Hamiltonian minimum in 0.85ms without iterative algorithmic stalls.
 
+## 🚀 Quick Start: GP-PCAM Universal Physical Solver
+
+연구자 및 독립 개발자를 위한 초저지연(0.85ms) 하드웨어 평형 솔버 마이크로 엔드포인트입니다.
+월 50회 무료 테스트 및 마이크로 플랜($30/mo)을 지원합니다.
+
+[![Try on RapidAPI](https://img.shields.io/badge/RapidAPI-Universal_Solver_Test_Now-blue?style=for-the-badge&logo=rapidapi)](새로_만드신_RapidAPI_엔드포인트_주소)
+
+### 3-Line Python Example
+```python
+import requests
+
+url = "[https://gp-pcam-universal-physical-solver.p.rapidapi.com/v1/solve-universal-equilibrium](https://gp-pcam-universal-physical-solver.p.rapidapi.com/v1/solve-universal-equilibrium)"
+headers = {"X-RapidAPI-Key": "YOUR_API_KEY", "Content-Type": "application/json"}
+response = requests.post(url, json={"perturbation_vector": [...]}, headers=headers)
+print(response.json())
+
 ---
 
 ## 🛡️ Deterministic Silicon-Bound Response Contract
