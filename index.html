@@ -40,7 +40,7 @@
       margin-bottom: 40px;
       display: flex;
       justify-content: space-between;
-      align-items: flex-start;
+      align-items: center;
       flex-wrap: wrap;
       gap: 16px;
     }
@@ -72,16 +72,52 @@
       max-width: 650px;
     }
 
-    .status-panel {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      padding: 10px 18px;
-      border-radius: 8px;
+    .header-actions {
       display: flex;
       align-items: center;
       gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn-rapidapi {
+      background: #7c3aed;
+      color: #ffffff;
+      text-decoration: none;
       font-family: var(--font-mono);
-      font-size: 13px;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 9px 16px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+      box-shadow: 0 0 15px rgba(124, 58, 237, 0.3);
+    }
+
+    .btn-rapidapi:hover {
+      background: #6d28d9;
+      transform: translateY(-2px);
+      box-shadow: 0 0 20px rgba(124, 58, 237, 0.5);
+    }
+
+    .status-panel {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      padding: 8px 14px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      text-decoration: none;
+      color: var(--text);
+      transition: border-color 0.2s;
+    }
+
+    .status-panel:hover {
+      border-color: var(--emerald);
     }
 
     .pulse-dot {
@@ -163,6 +199,11 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+      transition: border-color 0.2s;
+    }
+
+    .core-card:hover {
+      border-color: var(--border);
     }
 
     .core-header {
@@ -197,18 +238,33 @@
     .core-spec {
       font-size: 12px;
       color: var(--muted);
-      margin-bottom: 12px;
+      margin-bottom: 16px;
     }
 
-    .core-path {
+    /* 실제 클릭 가능한 스웨거 이동 버튼 */
+    .core-btn {
       font-family: var(--font-mono);
       font-size: 11px;
-      color: #cbd5e1;
-      background: rgba(0, 0, 0, 0.4);
-      padding: 6px 10px;
+      font-weight: 600;
+      color: #93c5fd;
+      background: rgba(15, 23, 42, 0.8);
+      padding: 8px 12px;
       border-radius: 6px;
       border: 1px solid #334155;
-      overflow-x: auto;
+      text-decoration: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .core-btn:hover {
+      background: rgba(6, 182, 212, 0.15);
+      border-color: var(--cyan);
+      color: #ffffff;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(6, 182, 212, 0.2);
     }
 
     .terminal-container {
@@ -304,9 +360,17 @@
         </p>
       </div>
 
-      <div class="status-panel">
-        <div class="pulse-dot"></div>
-        <div>GATEWAY: <span style="color:var(--emerald);">ACTIVE</span> [HARDWARE ENCLAVE]</div>
+      <div class="header-actions">
+        <!-- 래피드API 이동 버튼 -->
+        <a href="https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control" target="_blank" class="btn-rapidapi">
+          ⚡ RapidAPI Hub ↗
+        </a>
+
+        <!-- 라이브 헬스체크 링크 -->
+        <a href="https://api.neoma-pcam.com/health" target="_blank" class="status-panel">
+          <div class="pulse-dot"></div>
+          <div>GATEWAY: <span style="color:var(--emerald);">ACTIVE</span></div>
+        </a>
       </div>
     </header>
 
@@ -337,12 +401,13 @@
       </div>
     </div>
 
-    <!-- 6대 물리 코어 매트릭스 -->
+    <!-- 6대 물리 코어 매트릭스 (스웨거 바로가기 버튼 적용) -->
     <div class="section-title">
       <span>⚙️</span> Dedicated Physical Reflex Enclaves
     </div>
 
     <div class="core-grid">
+      <!-- CORE 01 -->
       <div class="core-card">
         <div>
           <div class="core-header">
@@ -352,9 +417,13 @@
           <div class="core-name">Bioreactor Hydrodynamics</div>
           <div class="core-spec">Cavity field stabilization & structural boundary relaxation.</div>
         </div>
-        <div class="core-path">POST /v1/predict-bioreactor-kinematics</div>
+        <a href="https://api.neoma-pcam.com/docs#/default/predict_bioreactor_v1_predict_bioreactor_kinematics_post" target="_blank" class="core-btn">
+          <span>POST /v1/predict-bioreactor-kinematics</span>
+          <span>↗</span>
+        </a>
       </div>
 
+      <!-- CORE 02 -->
       <div class="core-card">
         <div>
           <div class="core-header">
@@ -364,9 +433,13 @@
           <div class="core-name">Precision Chemical Synthesis</div>
           <div class="core-spec">Exothermic boundary stabilization & reactive state alignment.</div>
         </div>
-        <div class="core-path">POST /v1/predict-precision-synthesis</div>
+        <a href="https://api.neoma-pcam.com/docs#/default/predict_synthesis_v1_predict_precision_synthesis_post" target="_blank" class="core-btn">
+          <span>POST /v1/predict-precision-synthesis</span>
+          <span>↗</span>
+        </a>
       </div>
 
+      <!-- CORE 03 -->
       <div class="core-card">
         <div>
           <div class="core-header">
@@ -376,9 +449,13 @@
           <div class="core-name">Robotic Dynamic Compliance</div>
           <div class="core-spec">Kinematic shockwave neutralization & high-frequency resonance damping.</div>
         </div>
-        <div class="core-path">POST /v1/predict-robotic-compliance</div>
+        <a href="https://api.neoma-pcam.com/docs#/default/predict_robotics_v1_predict_robotic_compliance_post" target="_blank" class="core-btn">
+          <span>POST /v1/predict-robotic-compliance</span>
+          <span>↗</span>
+        </a>
       </div>
 
+      <!-- CORE 04 -->
       <div class="core-card">
         <div>
           <div class="core-header">
@@ -388,9 +465,13 @@
           <div class="core-name">Autonomous Mobility Dynamics</div>
           <div class="core-spec">Chassis yaw counter-balancing & instantaneous dynamic slip recovery.</div>
         </div>
-        <div class="core-path">POST /v1/predict-mobility-dynamics</div>
+        <a href="https://api.neoma-pcam.com/docs#/default/predict_mobility_v1_predict_mobility_dynamics_post" target="_blank" class="core-btn">
+          <span>POST /v1/predict-mobility-dynamics</span>
+          <span>↗</span>
+        </a>
       </div>
 
+      <!-- CORE 05 -->
       <div class="core-card">
         <div>
           <div class="core-header">
@@ -400,9 +481,13 @@
           <div class="core-name">Battery Thermal Energetics</div>
           <div class="core-spec">Electrochemical entropy arrest & runaway cascade mitigation.</div>
         </div>
-        <div class="core-path">POST /v1/predict-battery-energetics</div>
+        <a href="https://api.neoma-pcam.com/docs#/default/predict_battery_v1_predict_battery_energetics_post" target="_blank" class="core-btn">
+          <span>POST /v1/predict-battery-energetics</span>
+          <span>↗</span>
+        </a>
       </div>
 
+      <!-- CORE 06 (UNIVERSAL) -->
       <div class="core-card" style="border-color: rgba(6, 182, 212, 0.4); background: #0c1829;">
         <div>
           <div class="core-header">
@@ -412,7 +497,10 @@
           <div class="core-name">Universal Physical Solver</div>
           <div class="core-spec">Global equilibrium discovery across arbitrary complex non-linear boundaries.</div>
         </div>
-        <div class="core-path" style="border-color:var(--cyan);">POST /v1/solve-universal-equilibrium</div>
+        <a href="https://api.neoma-pcam.com/docs#/default/solve_universal_v1_solve_universal_equilibrium_post" target="_blank" class="core-btn" style="border-color:var(--cyan); color:#67e8f9;">
+          <span>POST /v1/solve-universal-equilibrium</span>
+          <span>↗</span>
+        </a>
       </div>
     </div>
 
@@ -453,7 +541,7 @@
     <span class="terminal-key">"action"</span>: <span class="terminal-str">"EQUILIBRIUM_LOCKED"</span>,
     <span class="terminal-key">"damping_coefficient"</span>: <span class="terminal-val">0.8712</span>,
     <span class="terminal-key">"target_state"</span>: <span class="terminal-str">"GROUND_STATE_CONVERGED"</span>,
-    <span class="terminal-key">"slm_interpreted_instruction"</span>: <span class="terminal-str">"Complex physical system stabilized to global Hamiltonian ground-state equilibrium without numerical stall."</span>
+    <span class="terminal-key">"slm_interpreted_instruction"</span>: <span class="terminal-str">"Complex physical system boundary stabilized to global Hamiltonian ground-state equilibrium without numerical stall."</span>
   }
 }</pre>
       </div>
@@ -467,6 +555,7 @@
       <div class="footer-links">
         <a href="https://api.neoma-pcam.com/docs" target="_blank">Swagger API UI</a>
         <a href="https://api.neoma-pcam.com/health" target="_blank">Health Monitor</a>
+        <a href="https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control" target="_blank">RapidAPI Hub</a>
       </div>
     </footer>
   </div>
