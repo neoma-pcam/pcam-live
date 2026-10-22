@@ -40,29 +40,32 @@ Unlike traditional von Neumann software simulators that suffer from iterative co
 
 ## 🏛️ System Architecture (Heterogeneous In-Materio Grid)
 
-```text
-               [ Enterprise Client / Python SDK / RapidAPI Gateway ]
-                                         │
-                                         ▼ (HTTPS / TLS 1.3)
-             ┌───────────────────────────────────────────────────────────┐
-             │         NEOMA Production Gateway (api.neoma-pcam.com)     │
-             │   - High-Throughput Request Dispatcher & Tokenizer        │
-             │   - Dual-SLM Cognitive Explanation (Llama 3.1 & Phi-3)    │
-             │   - Deterministic Silicon Seal Verification Enclave       │
-             └─────────────────────────────┬─────────────────────────────┘
-                                           │
-                       (Ultra-Low Latency Deterministic Bus Fabric)
-                                           ▼
-             ┌───────────────────────────────────────────────────────────┐
-             │       Proprietary Physical In-Materio Cluster Matrix      │
-             │                                                           │
-             │  [Core 01] Bioreactor Hydrodynamic & Molecular Stability   │
-             │  [Core 02] Exothermic Chemical Synthesis & Enthalpy Damping│
-             │  [Core 03] Robotic Joint Impact & Dynamic Compliance      │
-             │  [Core 04] Autonomous Mobility Kinetic Equilibrium & Yaw  │
-             │  [Core 05] Battery Thermal Runaway & Electrochemical Drift│
-             │  [Core 06] 🌟 GP-PCAM: Universal Non-Linear Co-Solver     │
-             └───────────────────────────────────────────────────────────┘
+```[ Enterprise Client / Python SDK / RapidAPI / Swagger UI ]
+                                          │
+                                          ▼ (HTTPS / TLS 1.3 via Cloudflare Tunnel)
+             ┌────────────────────────────────────────────────────────────┐
+             │          NEOMA Production Gateway (api.neoma-pcam.com)     │
+             │   - High-Throughput Request Dispatcher & State Masking     │
+             │   - Zero-RAM Asynchronous Cloud AI Bridge                  │
+             │   - Deterministic PUF Silicon Seal & HMAC Attestation      │
+             │   - Automated Golden Physics Asset Vault Logger            │
+             └──────────────┬───────────────────────────────▲─────────────┘
+                            │                               │
+       (Deterministic Bus   │                               │ (Async HTTPS / REST
+        @ 921,600 bps)      │                               │  Ultra-Low Latency)
+                            ▼                               ▼
+       ┌────────────────────────────────────────┐   ┌───────────────────────────┐
+       │ Proprietary Physical In-Materio Matrix │   │  Google Gemini Cloud AI   │
+       │    (Sub-Millisecond Analog Enclave)    │   │  (Gemini 1.5 Flash Core)  │
+       │                                        │   │                           │
+       │ [Core 01] Bioreactor Molecular Damping │   │ - Zero Laptop RAM Footprint│
+       │ [Core 02] Synthesis & Enthalpy Relax   │   │ - Domain-Specialized Physical│
+       │ [Core 03] Robotic Compliance & Impact  │   │   Ground-State Reasoning  │
+       │ [Core 04] Mobility Kinetic Equilibrium │   │ - Automated Real-time Flux│
+       │ [Core 05] Battery Thermal Drift Arrest │   │   Engineering Synthesis   │
+       │ [Core 06] 🌟 GP-PCAM Universal Solver  │   │                           │
+       └────────────────────────────────────────┘   └───────────────────────────┘
+
 ```
 
 ---
