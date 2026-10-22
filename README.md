@@ -40,7 +40,8 @@ Unlike traditional von Neumann software simulators that suffer from iterative co
 
 ## 🏛️ System Architecture (Heterogeneous In-Materio Grid)
 
-```[ Enterprise Client / Python SDK / RapidAPI / Swagger UI ]
+```
+[ Enterprise Client / Python SDK / RapidAPI / Swagger UI ]
                                           │
                                           ▼ (HTTPS / TLS 1.3 via Cloudflare Tunnel)
              ┌────────────────────────────────────────────────────────────┐
