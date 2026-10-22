@@ -80,7 +80,7 @@
     }
 
     .btn-rapidapi {
-      background: #7c3aed;
+      background: #2563eb;
       color: #ffffff;
       text-decoration: none;
       font-family: var(--font-mono);
@@ -92,13 +92,13 @@
       align-items: center;
       gap: 6px;
       transition: all 0.2s ease;
-      box-shadow: 0 0 15px rgba(124, 58, 237, 0.3);
+      box-shadow: 0 0 15px rgba(37, 99, 235, 0.3);
     }
 
     .btn-rapidapi:hover {
-      background: #6d28d9;
+      background: #1d4ed8;
       transform: translateY(-2px);
-      box-shadow: 0 0 20px rgba(124, 58, 237, 0.5);
+      box-shadow: 0 0 20px rgba(37, 99, 235, 0.5);
     }
 
     .status-panel {
@@ -241,7 +241,6 @@
       margin-bottom: 16px;
     }
 
-    /* 실제 클릭 가능한 스웨거 이동 버튼 */
     .core-btn {
       font-family: var(--font-mono);
       font-size: 11px;
@@ -265,6 +264,22 @@
       color: #ffffff;
       transform: translateY(-1px);
       box-shadow: 0 4px 12px rgba(6, 182, 212, 0.2);
+    }
+
+    /* 6번 코어 전용 래피드 버튼 스타일 */
+    .core-rapid-link {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: #38bdf8;
+      text-decoration: none;
+      display: inline-block;
+      margin-top: 8px;
+      transition: color 0.2s;
+    }
+
+    .core-rapid-link:hover {
+      color: #7dd3fc;
+      text-decoration: underline;
     }
 
     .terminal-container {
@@ -361,9 +376,9 @@
       </div>
 
       <div class="header-actions">
-        <!-- 래피드API 이동 버튼 -->
-        <a href="https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control" target="_blank" class="btn-rapidapi">
-          ⚡ RapidAPI Hub ↗
+        <!-- 🌟 [수정] 1번째 API (Universal Solver: 50회 무료 / 월 $30) 직통 버튼 -->
+        <a href="https://rapidapi.com/shs15199702/api/gp-pcam-universal-physical-solver" target="_blank" class="btn-rapidapi">
+          ⚡ Universal Solver ($30/mo) ↗
         </a>
 
         <!-- 라이브 헬스체크 링크 -->
@@ -401,7 +416,7 @@
       </div>
     </div>
 
-    <!-- 6대 물리 코어 매트릭스 (스웨거 바로가기 버튼 적용) -->
+    <!-- 6대 물리 코어 매트릭스 -->
     <div class="section-title">
       <span>⚙️</span> Dedicated Physical Reflex Enclaves
     </div>
@@ -497,10 +512,18 @@
           <div class="core-name">Universal Physical Solver</div>
           <div class="core-spec">Global equilibrium discovery across arbitrary complex non-linear boundaries.</div>
         </div>
-        <a href="https://api.neoma-pcam.com/docs#/default/solve_universal_v1_solve_universal_equilibrium_post" target="_blank" class="core-btn" style="border-color:var(--cyan); color:#67e8f9;">
-          <span>POST /v1/solve-universal-equilibrium</span>
-          <span>↗</span>
-        </a>
+        <div>
+          <a href="https://api.neoma-pcam.com/docs#/default/solve_universal_v1_solve_universal_equilibrium_post" target="_blank" class="core-btn" style="border-color:var(--cyan); color:#67e8f9;">
+            <span>POST /v1/solve-universal-equilibrium</span>
+            <span>↗</span>
+          </a>
+          <!-- 🌟 [신설] 6번 코어에서 바로 1번째 API ($30/월)로 구독하러 가는 직통 링크 -->
+          <div style="text-align: right; margin-top: 6px;">
+            <a href="https://rapidapi.com/shs15199702/api/gp-pcam-universal-physical-solver" target="_blank" class="core-rapid-link">
+              ⚡ Subscribe on RapidAPI ($30/mo micro-tier) ↗
+            </a>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -555,7 +578,8 @@
       <div class="footer-links">
         <a href="https://api.neoma-pcam.com/docs" target="_blank">Swagger API UI</a>
         <a href="https://api.neoma-pcam.com/health" target="_blank">Health Monitor</a>
-        <a href="https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control" target="_blank">RapidAPI Hub</a>
+        <a href="https://rapidapi.com/shs15199702/api/gp-pcam-universal-physical-solver" target="_blank" style="color:#60a5fa;">Universal Solver ($30/mo)</a>
+        <a href="https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control" target="_blank">Enterprise Hub</a>
       </div>
     </footer>
   </div>
