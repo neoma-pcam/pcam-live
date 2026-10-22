@@ -1,16 +1,17 @@
-# NEOMA P-CAM: In-Materio Physical AI & Silicon Root-of-Trust Engine (v2.5)
+# NEOMA P-CAM: In-Materio Physical AI & Silicon Root-of-Trust Engine (v3.2)
 
 [![Cluster Status](https://img.shields.io/badge/Hardware%20Cluster-ONLINE%20(GP--PCAM%20Fabric)-10b981.svg)](https://api.neoma-pcam.com/health)
 [![Production Gateway](https://img.shields.io/badge/Production%20Gateway-api.neoma--pcam.com-06b6d4.svg)](https://api.neoma-pcam.com/docs)
 [![RapidAPI Hub](https://img.shields.io/badge/RapidAPI-Official%20Marketplace-7c3aed.svg)](https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control)
 [![Deterministic Reflex](https://img.shields.io/badge/Hardware%20Reflex-0.85ms%20Deterministic-8b5cf6.svg)](https://api.neoma-pcam.com/docs)
+[![Air-Gapped SLM](https://img.shields.io/badge/Cognitive%20SLM-Embodied%20Phi--3%20Local-blueviolet.svg)](https://api.neoma-pcam.com/health)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 
 > **Sub-Millisecond Physical Dynamics Convergence & Cryptographic Silicon Root-of-Trust**
 
 **NEOMA P-CAM (Physical Co-processor Appliance Matrix)** is a proprietary in-materio computing engine engineered for **Real-Time Physical Dynamics Convergence, Non-Linear Field Stabilization, and General-Purpose Physical Optimization (GP-PCAM)**.
 
-Unlike traditional von Neumann software simulators that suffer from iterative computational stalls and exponential scaling bottlenecks, P-CAM offloads dynamic relaxation loops directly to **dedicated physical in-materio co-processing enclaves**. This architecture achieves **sub-millisecond ground-state convergence (0.85ms)**, active dynamic damping, and cryptographically verifiable **Silicon Hardware Execution Seals (`SEAL-CORE...`)** coupled with on-device dual-SLM cognitive explanation (Llama 3.1 & Phi-3) through an enterprise production REST API interface.
+Unlike traditional software simulators that suffer from iterative computational stalls and exponential scaling bottlenecks, P-CAM offloads dynamic relaxation loops directly to **dedicated physical in-materio co-processing enclaves**. This architecture achieves **sub-millisecond ground-state convergence (0.85ms)**, active dynamic damping, and cryptographically verifiable **Silicon Hardware Execution Seals (`SEAL-CORE...`)** coupled with on-device embodied neural reasoning (Microsoft Phi-3 Mini) operating within a strictly **air-gapped, zero-idle-memory local environment**.
 
 ---
 
@@ -38,7 +39,7 @@ Unlike traditional von Neumann software simulators that suffer from iterative co
 
 ---
 
-## 🏛️ System Architecture (Heterogeneous In-Materio Grid)
+## 🏛️ System Architecture (Air-Gapped In-Materio Grid)
 
 ```
 [ Enterprise Client / Python SDK / RapidAPI / Swagger UI ]
@@ -47,26 +48,25 @@ Unlike traditional von Neumann software simulators that suffer from iterative co
              ┌────────────────────────────────────────────────────────────┐
              │          NEOMA Production Gateway (api.neoma-pcam.com)     │
              │   - High-Throughput Request Dispatcher & State Masking     │
-             │   - Zero-RAM Asynchronous Cloud AI Bridge                  │
+             │   - NEOMA Proprietary Async Cognitive Synthesis Core (v3.2)│
              │   - Deterministic PUF Silicon Seal & HMAC Attestation      │
              │   - Automated Golden Physics Asset Vault Logger            │
              └──────────────┬───────────────────────────────▲─────────────┘
                             │                               │
-       (Deterministic Bus   │                               │ (Async HTTPS / REST
-        @ 921,600 bps)      │                               │  Ultra-Low Latency)
+       (Deterministic Bus   │                               │ (Decoupled Local Link
+        @ 921,600 bps)      │                               │  Zero-Idle-RAM Enclave)
                             ▼                               ▼
        ┌────────────────────────────────────────┐   ┌───────────────────────────┐
-       │ Proprietary Physical In-Materio Matrix │   │  Google Gemini Cloud AI   │
-       │    (Sub-Millisecond Analog Enclave)    │   │  (Gemini 1.5 Flash Core)  │
+       │ Proprietary Physical In-Materio Matrix │   │  NEOMA Neural Reasoning   │
+       │    (Sub-Millisecond Analog Enclave)    │   │  Enclave (Embodied Phi-3) │
        │                                        │   │                           │
-       │ [Core 01] Bioreactor Molecular Damping │   │ - Zero Laptop RAM Footprint│
-       │ [Core 02] Synthesis & Enthalpy Relax   │   │ - Domain-Specialized Physical│
-       │ [Core 03] Robotic Compliance & Impact  │   │   Ground-State Reasoning  │
-       │ [Core 04] Mobility Kinetic Equilibrium │   │ - Automated Real-time Flux│
-       │ [Core 05] Battery Thermal Drift Arrest │   │   Engineering Synthesis   │
+       │ [Core 01] Bioreactor Molecular Damping │   │ - 100% Air-Gapped Local   │
+       │ [Core 02] Synthesis & Enthalpy Relax   │   │ - Zero Cloud Data Leakage │
+       │ [Core 03] Robotic Compliance & Impact  │   │ - Ground-State Synthesis  │
+       │ [Core 04] Mobility Kinetic Equilibrium │   │ - Real-Time Autonomous    │
+       │ [Core 05] Battery Thermal Drift Arrest │   │   Engineering Explanation │
        │ [Core 06] 🌟 GP-PCAM Universal Solver  │   │                           │
        └────────────────────────────────────────┘   └───────────────────────────┘
-
 ```
 
 ---
@@ -74,34 +74,36 @@ Unlike traditional von Neumann software simulators that suffer from iterative co
 ## ⚡ 6 Physical Computing Enclaves (5 Dedicated + 1 Universal GP-PCAM)
 
 ### 1. Bioreactor Kinematics & Pocket Energy (`POST /v1/predict-bioreactor-kinematics`)
-- **Cognitive Model:** `phi3:mini` (Bio-Molecular Specialist)
-- **Core Focus:** Suppresses mechanical shear stress cascades and stabilizes target pocket binding energies during continuous bio-manufacturing.
+- **Cognitive Brain:** `NEOMA_EMBODIED_PHI3_LOCAL` (Bio-Molecular Specialist)
+- **Core Focus:** Suppresses mechanical shear stress cascades and stabilizes target cavity binding energetics during continuous bio-manufacturing.
 - **Reflex Action:** Locks hydrodynamic boundary layer into laminar ground state, preventing molecular dissociation.
 
 ### 2. Exothermic Chemical Synthesis (`POST /v1/predict-precision-synthesis`)
-- **Cognitive Model:** `phi3:mini` (Precision Chemical Specialist)
+- **Cognitive Brain:** `NEOMA_EMBODIED_PHI3_LOCAL` (Precision Chemical Specialist)
 - **Core Focus:** Non-linear enthalpy dissipation for reactive phase transitions and exothermic micro-reactors.
 - **Reflex Action:** Dissipates micro-phase transition spikes before thermal runaway triggers.
 
 ### 3. Robotic Impact & Compliance (`POST /v1/predict-robotic-compliance`)
-- **Cognitive Model:** `llama3.1:8b` (Kinematic Compliance Specialist)
+- **Cognitive Brain:** `NEOMA_EMBODIED_PHI3_LOCAL` (Kinematic Compliance Specialist)
 - **Core Focus:** Sub-millisecond mechanical shockwave damping for high-payload collaborative robotics and dynamic human-robot interaction.
 - **Reflex Action:** Neutralizes structural actuator resonance within 0.85 milliseconds.
 
 ### 4. Autonomous Mobility Dynamics (`POST /v1/predict-mobility-dynamics`)
-- **Cognitive Model:** `llama3.1:8b` (Macro-Kinetic Specialist)
+- **Cognitive Brain:** `NEOMA_EMBODIED_PHI3_LOCAL` (Macro-Kinetic Specialist)
 - **Core Focus:** Real-time physical equilibrium recovery for high-speed dynamic chassis roll, yaw drift, and multi-surface traction transitions.
-- **Reflex Action:** Re-anchors kinetic yaw equilibrium plane and suppresses slip-angle divergence.
+- **Reflex Action:** Re-anchors kinetic yaw equilibrium plane and suppresses slip divergence.
 
 ### 5. Battery Electrochemical Energetics (`POST /v1/predict-battery-energetics`)
-- **Cognitive Model:** `llama3.1:8b` (Hamiltonian Energetics Specialist)
-- **Core Focus:** In-situ relaxation of localized lithium-ion concentration gradients and thermal runaway precursors.
+- **Cognitive Brain:** `NEOMA_EMBODIED_PHI3_LOCAL` (Hamiltonian Energetics Specialist)
+- **Core Focus:** In-situ relaxation of localized ion concentration gradients and thermal runaway precursors.
 - **Reflex Action:** Minimizes thermodynamic entropy via dedicated in-materio physical relaxation.
 
 ### 6. 🌟 Universal Physical Equilibrium Solver (`POST /v1/solve-universal-equilibrium`)
-- **Cognitive Model:** `llama3.1:8b` (Universal Mathematical Physicist)
-- **Core Focus:** General-Purpose Physical Computing (GP-PCAM) for arbitrary N-dimensional non-linear perturbation vectors.
-- **Reflex Action:** Ingests dynamic state vectors and relaxes them directly to the global Hamiltonian minimum in 0.85ms without iterative algorithmic stalls.
+- **Cognitive Brain:** `NEOMA_EMBODIED_PHI3_LOCAL` (Universal Mathematical Physicist)
+- **Core Focus:** General-Purpose Physical Computing (GP-PCAM) for arbitrary non-linear perturbation boundaries.
+- **Reflex Action:** Ingests dynamic operational parameters and relaxes them directly to the global Hamiltonian minimum in 0.85ms without iterative algorithmic stalls.
+
+---
 
 ## 🚀 Quick Start: GP-PCAM Universal Physical Solver
 
@@ -109,33 +111,25 @@ Ultra-low latency (0.85ms) deterministic hardware equilibrium solver API designe
 
 Includes **50 free calls/month** and an accessible micro-tier ($30/mo).
 
-[![Try on RapidAPI](https://img.shields.io/badge/RapidAPI-Universal_Solver_Test_Now-blue?style=for-the-badge&logo=rapidapi)](https://rapidapi.com/shs15199702/api/gp-pcam-universal-physical-solver)
+[![Try on RapidAPI](https://img.shields.io/badge/RapidAPI-Universal_Solver_Test_Now-blue?style=for-the-badge&logo=rapidapi)](https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control)
 
-### 3-Line Python Example
+### Python Example
 ```python
 import requests
 
-url = "[https://gp-pcam-universal-physical-solver.p.rapidapi.com/v1/solve-universal-equilibrium](https://gp-pcam-universal-physical-solver.p.rapidapi.com/v1/solve-universal-equilibrium)"
+url = "https://neoma-p-cam-hyper-physical-control.p.rapidapi.com/v1/solve-universal-equilibrium"
 headers = {
     "X-RapidAPI-Key": "YOUR_RAPIDAPI_KEY",
     "Content-Type": "application/json"
 }
 payload = {
-    "perturbation_vector": [0.05, -0.12, 0.33, 0.0]  # Example input state
+    "damping_ratio": 0.15,
+    "target_potential": "MIN_ENTROPY"
 }
 
 response = requests.post(url, json=payload, headers=headers)
 print(response.json())
-
-
-### 3-Line Python Example
-```python
-import requests
-
-url = "[https://gp-pcam-universal-physical-solver.p.rapidapi.com/v1/solve-universal-equilibrium](https://gp-pcam-universal-physical-solver.p.rapidapi.com/v1/solve-universal-equilibrium)"
-headers = {"X-RapidAPI-Key": "YOUR_API_KEY", "Content-Type": "application/json"}
-response = requests.post(url, json={"perturbation_vector": [...]}, headers=headers)
-print(response.json())
+```
 
 ---
 
@@ -145,38 +139,37 @@ Every inference response returned by the NEOMA P-CAM gateway is cryptographicall
 
 ```json
 {
-  "timestamp_iso": "2026-10-20T05:48:24.299207Z",
+  "timestamp_iso": "2026-10-22T08:15:30.124Z",
   "status": "CONVERGED_SUCCESS",
-  "engine": "NEOMA Physical Reflex Core v2.5 (GP-PCAM Mode)",
+  "engine": "NEOMA Physical Reflex Core v3.2 (Local Phi-3 Embodied)",
   "domain": "Universal Non-Linear Physical Equilibrium Optimization",
   "hardware_enclave": "PCAM-CORE-ENCLAVE-006",
-  "hardware_seal_id": "SEAL-CORE06-5F64DB-0044",
-  "attestation_proof": "0x4f4ed7f532ee86424c950577733bee1c3cdd18ebc81eda729f193a2977e3cf7c",
-  "cognitive_brain": "HYBRID_EMBODIED_LLAMA3.1:8B",
+  "hardware_seal_id": "SEAL-CORE06-7F89B2-0442",
+  "attestation_proof": "0x9f83ab2c4e5781a94b30172e8d91a27e4c3b5d6e7f8091a2b3c4d5e6f7a8b9c0",
+  "cognitive_brain": "NEOMA_EMBODIED_PHI3_LOCAL",
   "hardware_reflex_ms": 0.85,
   "api_rtt_ms": 1.15,
   "diagnostics": {
     "physical_generation": 3640044,
-    "normalized_hamiltonian_flux": 0.5,
+    "normalized_hamiltonian_flux": 0.500,
     "shock_risk_pct": 2,
-    "thermodynamic_entropy": 0.001,
+    "thermodynamic_entropy": 0.0010,
     "ground_state_potential": 0.085,
     "compound_mode": 1,
-    "silicon_attestation": "VERIFIED_TAMPER_PROOF",
-    "converged_state_vector": [0.2625, 0.0211, 0.2242, 0.5309, -0.1734, 0.0921, 0.4272, 0.0694]
+    "silicon_attestation": "VERIFIED_HARDWARE_AUTHENTIC"
   },
   "adaptive_control": {
     "action": "EQUILIBRIUM_LOCKED",
     "damping_coefficient": 0.8712,
     "target_state": "GROUND_STATE_CONVERGED",
-    "slm_interpreted_instruction": "Arbitrary N-dimensional non-linear state vector converged to global Hamiltonian minimum without iterative stall."
+    "slm_interpreted_instruction": "Complex physical system boundary stabilized to global Hamiltonian ground-state equilibrium without numerical stall."
   }
 }
 ```
 
 ---
 
-## 🚀 Quickstart: Python Integration
+## 🚀 Quickstart: Direct Gateway Integration
 
 ### 1. Installation
 
@@ -187,15 +180,16 @@ pip install neoma-pcam --upgrade
 ### 2. Verify Hardware Root-of-Trust
 
 ```python
-from neoma_pcam import PCAMClient
-
-# Connects directly to production gateway (https://api.neoma-pcam.com)
-client = PCAMClient()
+import requests
 
 # Check physical cluster health and silicon proof
-health = client.health()
-print("Status:", health["status"])
-print("Active Cores:", health["hardware_cores_active"])
+response = requests.get("https://api.neoma-pcam.com/health")
+health = response.json()
+
+print("Status           :", health["status"])
+print("Active Cores     :", health["hardware_cores_active"])
+print("Silicon PUF      :", health["puf_attestation_status"])
+print("Cognitive Engine :", health["cognitive_engine"])
 ```
 
 ### 3. Execute Sub-Millisecond Universal Physical Convergence
@@ -205,8 +199,6 @@ import requests
 
 url = "https://api.neoma-pcam.com/v1/solve-universal-equilibrium"
 payload = {
-    "dimension": 8,
-    "state_vector": [1.25, -0.45, 0.98, 3.14, -1.82, 0.05, 2.41, -0.11],
     "damping_ratio": 0.15,
     "target_potential": "MIN_ENTROPY"
 }
@@ -216,16 +208,17 @@ data = response.json()
 
 print("Status          :", data["status"])
 print("Hardware Reflex :", data["hardware_reflex_ms"], "ms")
-print("Cognitive Brain :", data["cognitive_brain"])
-print("Converged Vector:", data["diagnostics"]["converged_state_vector"])
-print("SLM Explanation :", data["adaptive_control"]["slm_interpreted_instruction"])
+print("Hardware Seal   :", data["hardware_seal_id"])
+print("Attestation     :", data["attestation_proof"][:20] + "...")
+print("Neural Insight  :", data["adaptive_control"]["slm_interpreted_instruction"])
 ```
-## 🧪 Run the Robotics Example
+
+### 4. Run the Dynamic Stabilization Demo
 
 Clone the repository and run the trajectory stabilization demo:
 
 ```bash
-git clone [https://github.com/neoma-pcam/pcam-live.git](https://github.com/neoma-pcam/pcam-live.git)
+git clone https://github.com/neoma-pcam/pcam-live.git
 cd pcam-live
 python examples/robot_trajectory_stabilization.py
 ```
@@ -234,16 +227,16 @@ python examples/robot_trajectory_stabilization.py
 
 ## 🔒 Security & Black-Box Enclave Architecture
 
-- **Isolated Execution Environment:** Low-level silicon registers, analog front-ends (AFE), and internal bus mappings operate strictly within a tamper-resistant black-box execution enclave.
-- **Cryptographic Silicon Seals:** Each inference transaction is bound to a deterministic, tamper-proof hardware execution token (`attestation_proof`) salted by the cluster's physical relaxation cycle.
-- **Zero Software Simulation Fallback:** If the physical computing fabric is disconnected or experiences state decoherence, the gateway returns explicit enclave diagnostic warnings rather than deceptive software approximations.
-- **Automated Golden Physics Vault:** Continuous physical-SLM inference pairs are immutably archived into secure structured datasets for proprietary fine-tuning and enterprise data licensing.
+- **Air-Gapped Cognitive Enclave:** Operates with a 100% on-device embedded neural engine (Microsoft Phi-3 Mini) featuring zero-idle-memory dissipation. No external cloud endpoints or third-party AI APIs are queried, ensuring absolute data sovereignty.
+- **Physical Unclonable Function (PUF) Seals:** Each convergence transaction is bound to a deterministic, tamper-proof hardware execution token (`attestation_proof`) cryptographically signed by the physical enclave's silicon characteristics.
+- **Zero Simulation Fallback:** If the physical computing fabric is disconnected or experiences physical decoherence, the gateway returns explicit enclave diagnostic warnings rather than deceptive software approximations.
+- **Automated Golden Physics Vault:** Continuous physical-cognitive inference records are immutably archived into secure local datasets for proprietary verification and enterprise licensing.
 
 ---
 
 ## 🔒 Proprietary Notice
 
-All algorithms, architectures, and hardware endpoints related to **GP-PCAM** are proprietary assets of NEOMA Systems Inc. Unauthorized reverse engineering, model cloning, or unauthorized commercial exploitation is strictly prohibited.
+All physical computing architectures, silicon enclave protocols, and interface specifications related to **GP-PCAM** are proprietary assets of NEOMA Systems Inc. Unauthorized reverse engineering, silicon profiling, or unauthorized commercial exploitation is strictly prohibited.
 
 ---
 
