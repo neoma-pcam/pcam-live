@@ -111,7 +111,7 @@ Ultra-low latency (0.85ms) deterministic hardware equilibrium solver API designe
 
 Includes **50 free calls/month** and an accessible micro-tier ($30/mo).
 
-[![Try on RapidAPI](https://img.shields.io/badge/RapidAPI-Universal_Solver_Test_Now-blue?style=for-the-badge&logo=rapidapi)](https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control)
+[![Try on RapidAPI](https://img.shields.io/badge/RapidAPI-Universal_Solver_Test_Now-blue?style=for-the-badge&logo=rapidapi)](https://rapidapi.com/shs15199702/api/gp-pcam-universal-physical-solver)
 
 ### Python Example
 ```python
