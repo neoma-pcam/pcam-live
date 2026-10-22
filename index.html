@@ -15,7 +15,8 @@
       --muted: #94a3b8;
       --cyan: #06b6d4;
       --emerald: #10b981;
-      --purple: #8b5cf6;
+      --purple: #7c3aed;
+      --blue: #2563eb;
       --amber: #f59e0b;
       --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
     }
@@ -69,33 +70,59 @@
       color: var(--muted);
       font-size: 14px;
       margin-top: 6px;
-      max-width: 650px;
+      max-width: 600px;
     }
 
     .header-actions {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
       flex-wrap: wrap;
     }
 
-    .btn-rapidapi {
-      background: #2563eb;
+    /* 1. 메인 엔터프라이즈 허브 버튼 (보라색) */
+    .btn-main-hub {
+      background: var(--purple);
       color: #ffffff;
       text-decoration: none;
       font-family: var(--font-mono);
       font-size: 12px;
       font-weight: 700;
-      padding: 9px 16px;
+      padding: 9px 15px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+      box-shadow: 0 0 15px rgba(124, 58, 237, 0.35);
+      border: 1px solid rgba(167, 139, 250, 0.3);
+    }
+
+    .btn-main-hub:hover {
+      background: #6d28d9;
+      transform: translateY(-2px);
+      box-shadow: 0 0 20px rgba(124, 58, 237, 0.6);
+    }
+
+    /* 2. 유니버설 솔버 마이크로 버튼 (파란색) */
+    .btn-universal-hub {
+      background: var(--blue);
+      color: #ffffff;
+      text-decoration: none;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 700;
+      padding: 9px 15px;
       border-radius: 8px;
       display: flex;
       align-items: center;
       gap: 6px;
       transition: all 0.2s ease;
       box-shadow: 0 0 15px rgba(37, 99, 235, 0.3);
+      border: 1px solid rgba(96, 165, 250, 0.3);
     }
 
-    .btn-rapidapi:hover {
+    .btn-universal-hub:hover {
       background: #1d4ed8;
       transform: translateY(-2px);
       box-shadow: 0 0 20px rgba(37, 99, 235, 0.5);
@@ -104,11 +131,11 @@
     .status-panel {
       background: var(--card-bg);
       border: 1px solid var(--border);
-      padding: 8px 14px;
+      padding: 8px 12px;
       border-radius: 8px;
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
       font-family: var(--font-mono);
       font-size: 12px;
       text-decoration: none;
@@ -266,7 +293,6 @@
       box-shadow: 0 4px 12px rgba(6, 182, 212, 0.2);
     }
 
-    /* 6번 코어 전용 래피드 버튼 스타일 */
     .core-rapid-link {
       font-family: var(--font-mono);
       font-size: 11px;
@@ -376,8 +402,13 @@
       </div>
 
       <div class="header-actions">
-        <!-- 🌟 [수정] 1번째 API (Universal Solver: 50회 무료 / 월 $30) 직통 버튼 -->
-        <a href="https://rapidapi.com/shs15199702/api/gp-pcam-universal-physical-solver" target="_blank" class="btn-rapidapi">
+        <!-- 🌟 [버튼 1] 메인 엔터프라이즈 5대 도메인 허브 (보라색 메인 버튼) -->
+        <a href="https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control" target="_blank" class="btn-main-hub">
+          🏛️ Enterprise Hub ↗
+        </a>
+
+        <!-- 🌟 [버튼 2] 1번째 범용 솔버 마이크로 티어 ($30/mo) (파란색 버튼) -->
+        <a href="https://rapidapi.com/shs15199702/api/gp-pcam-universal-physical-solver" target="_blank" class="btn-universal-hub">
           ⚡ Universal Solver ($30/mo) ↗
         </a>
 
@@ -517,7 +548,7 @@
             <span>POST /v1/solve-universal-equilibrium</span>
             <span>↗</span>
           </a>
-          <!-- 🌟 [신설] 6번 코어에서 바로 1번째 API ($30/월)로 구독하러 가는 직통 링크 -->
+          <!-- 6번 코어에서 바로 1번째 API ($30/월)로 구독하러 가는 직통 링크 -->
           <div style="text-align: right; margin-top: 6px;">
             <a href="https://rapidapi.com/shs15199702/api/gp-pcam-universal-physical-solver" target="_blank" class="core-rapid-link">
               ⚡ Subscribe on RapidAPI ($30/mo micro-tier) ↗
@@ -548,12 +579,12 @@
   <span class="terminal-key">"status"</span>: <span class="terminal-str">"CONVERGED_SUCCESS"</span>,
   <span class="terminal-key">"engine"</span>: <span class="terminal-str">"NEOMA Physical Reflex Core v3.2 (Proprietary Enclave)"</span>,
   <span class="terminal-key">"domain"</span>: <span class="terminal-str">"Universal Physical Equilibrium Optimization"</span>,
-  <span class="terminal-key">"hardware_seal_id"</span>: <span class="terminal-str">"SEAL-CORE06-7F89B2-0442"</span>,
+  <span class="terminal-key">"hardware_seal_id"</span>: <span class="terminal-str">"SEAL-CORE06-7F89B2"</span>,
   <span class="terminal-key">"attestation_proof"</span>: <span class="terminal-str">"0x9f83ab2c4e5781a94b30172e8d91a27e4c3b5d6e7f8091a2b3c4d5e6f7a8b9c0"</span>,
   <span class="terminal-key">"cognitive_brain"</span>: <span class="terminal-str">"NEOMA_COGNITIVE_ENCLAVE_LOCAL"</span>,
-  <span class="terminal-key">"hardware_reflex_ms"</span>: <span class="terminal-val">0.85</span>,
+  <span class="terminal-key">"hardware_reflex_ms"</span>: <span class="terminal-val">0.8521</span>,
   <span class="terminal-key">"diagnostics"</span>: {
-    <span class="terminal-key">"physical_generation"</span>: <span class="terminal-val">3640044</span>,
+    <span class="terminal-key">"physical_generation"</span>: <span class="terminal-val">5410185</span>,
     <span class="terminal-key">"normalized_hamiltonian_flux"</span>: <span class="terminal-val">0.500</span>,
     <span class="terminal-key">"shock_risk_pct"</span>: <span class="terminal-val">2</span>,
     <span class="terminal-key">"thermodynamic_entropy"</span>: <span class="terminal-val">0.0010</span>,
@@ -570,7 +601,7 @@
       </div>
     </div>
 
-    <!-- 푸터 -->
+    <!-- 푸터 (양대 API 모두 명시) -->
     <footer>
       <div>
         © 2026 NEOMA Systems Inc. Closed Silicon Enclave Architecture.
@@ -579,7 +610,7 @@
         <a href="https://api.neoma-pcam.com/docs" target="_blank">Swagger API UI</a>
         <a href="https://api.neoma-pcam.com/health" target="_blank">Health Monitor</a>
         <a href="https://rapidapi.com/shs15199702/api/gp-pcam-universal-physical-solver" target="_blank" style="color:#60a5fa;">Universal Solver ($30/mo)</a>
-        <a href="https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control" target="_blank">Enterprise Hub</a>
+        <a href="https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control" target="_blank" style="color:#c084fc;">Enterprise Hub</a>
       </div>
     </footer>
   </div>
