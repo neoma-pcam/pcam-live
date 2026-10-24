@@ -80,7 +80,6 @@
       flex-wrap: wrap;
     }
 
-    /* 1. 메인 엔터프라이즈 허브 버튼 (보라색) */
     .btn-main-hub {
       background: var(--purple);
       color: #ffffff;
@@ -104,7 +103,6 @@
       box-shadow: 0 0 20px rgba(124, 58, 237, 0.6);
     }
 
-    /* 2. 유니버설 솔버 마이크로 버튼 (파란색) */
     .btn-universal-hub {
       background: var(--blue);
       color: #ffffff;
@@ -229,10 +227,6 @@
       transition: border-color 0.2s;
     }
 
-    .core-card:hover {
-      border-color: var(--border);
-    }
-
     .core-header {
       display: flex;
       justify-content: space-between;
@@ -300,7 +294,6 @@
       text-decoration: none;
       display: inline-block;
       margin-top: 8px;
-      transition: color 0.2s;
     }
 
     .core-rapid-link:hover {
@@ -393,7 +386,7 @@
     <header>
       <div>
         <div class="brand-title">
-          NEOMA P-CAM™ <span class="badge">GP-PCAM v3.2</span>
+          NEOMA P-CAM™ <span class="badge">GP-PCAM v3.5</span>
         </div>
         <p class="brand-desc">
           Proprietary Physical Reflex Engine & Cryptographic Silicon Root-of-Trust.
@@ -402,12 +395,12 @@
       </div>
 
       <div class="header-actions">
-        <!-- 🌟 [버튼 1] 메인 엔터프라이즈 5대 도메인 허브 (보라색 메인 버튼) -->
+        <!-- 1번째 메인 엔터프라이즈 허브 -->
         <a href="https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control" target="_blank" class="btn-main-hub">
           🏛️ Enterprise Hub ↗
         </a>
 
-        <!-- 🌟 [버튼 2] 1번째 범용 솔버 마이크로 티어 ($30/mo) (파란색 버튼) -->
+        <!-- 2번째 유니버설 솔버 마이크로 티어 -->
         <a href="https://rapidapi.com/shs15199702/api/gp-pcam-universal-physical-solver" target="_blank" class="btn-universal-hub">
           ⚡ Universal Solver ($30/mo) ↗
         </a>
@@ -447,7 +440,7 @@
       </div>
     </div>
 
-    <!-- 6대 물리 코어 매트릭스 -->
+    <!-- 6대 물리 코어 매트릭스 (새로운 신규 엔드포인트 완벽 반영) -->
     <div class="section-title">
       <span>⚙️</span> Dedicated Physical Reflex Enclaves
     </div>
@@ -463,8 +456,8 @@
           <div class="core-name">Bioreactor Hydrodynamics</div>
           <div class="core-spec">Cavity field stabilization & structural boundary relaxation.</div>
         </div>
-        <a href="https://api.neoma-pcam.com/docs#/default/predict_bioreactor_v1_predict_bioreactor_kinematics_post" target="_blank" class="core-btn">
-          <span>POST /v1/predict-bioreactor-kinematics</span>
+        <a href="https://api.neoma-pcam.com/docs#/default/bioreactor_endpoint_v1_bioreactor_kinematics_post" target="_blank" class="core-btn">
+          <span>POST /v1/bioreactor-kinematics</span>
           <span>↗</span>
         </a>
       </div>
@@ -479,8 +472,8 @@
           <div class="core-name">Precision Chemical Synthesis</div>
           <div class="core-spec">Exothermic boundary stabilization & reactive state alignment.</div>
         </div>
-        <a href="https://api.neoma-pcam.com/docs#/default/predict_synthesis_v1_predict_precision_synthesis_post" target="_blank" class="core-btn">
-          <span>POST /v1/predict-precision-synthesis</span>
+        <a href="https://api.neoma-pcam.com/docs#/default/synthesis_endpoint_v1_precision_synthesis_post" target="_blank" class="core-btn">
+          <span>POST /v1/precision-synthesis</span>
           <span>↗</span>
         </a>
       </div>
@@ -495,8 +488,8 @@
           <div class="core-name">Robotic Dynamic Compliance</div>
           <div class="core-spec">Kinematic shockwave neutralization & high-frequency resonance damping.</div>
         </div>
-        <a href="https://api.neoma-pcam.com/docs#/default/predict_robotics_v1_predict_robotic_compliance_post" target="_blank" class="core-btn">
-          <span>POST /v1/predict-robotic-compliance</span>
+        <a href="https://api.neoma-pcam.com/docs#/default/robotic_endpoint_v1_robotic_compliance_post" target="_blank" class="core-btn">
+          <span>POST /v1/robotic-compliance</span>
           <span>↗</span>
         </a>
       </div>
@@ -511,8 +504,8 @@
           <div class="core-name">Autonomous Mobility Dynamics</div>
           <div class="core-spec">Chassis yaw counter-balancing & instantaneous dynamic slip recovery.</div>
         </div>
-        <a href="https://api.neoma-pcam.com/docs#/default/predict_mobility_v1_predict_mobility_dynamics_post" target="_blank" class="core-btn">
-          <span>POST /v1/predict-mobility-dynamics</span>
+        <a href="https://api.neoma-pcam.com/docs#/default/mobility_endpoint_v1_mobility_dynamics_post" target="_blank" class="core-btn">
+          <span>POST /v1/mobility-dynamics</span>
           <span>↗</span>
         </a>
       </div>
@@ -527,8 +520,8 @@
           <div class="core-name">Battery Thermal Energetics</div>
           <div class="core-spec">Electrochemical entropy arrest & runaway cascade mitigation.</div>
         </div>
-        <a href="https://api.neoma-pcam.com/docs#/default/predict_battery_v1_predict_battery_energetics_post" target="_blank" class="core-btn">
-          <span>POST /v1/predict-battery-energetics</span>
+        <a href="https://api.neoma-pcam.com/docs#/default/battery_endpoint_v1_battery_energetics_post" target="_blank" class="core-btn">
+          <span>POST /v1/battery-energetics</span>
           <span>↗</span>
         </a>
       </div>
@@ -544,11 +537,10 @@
           <div class="core-spec">Global equilibrium discovery across arbitrary complex non-linear boundaries.</div>
         </div>
         <div>
-          <a href="https://api.neoma-pcam.com/docs#/default/solve_universal_v1_solve_universal_equilibrium_post" target="_blank" class="core-btn" style="border-color:var(--cyan); color:#67e8f9;">
+          <a href="https://api.neoma-pcam.com/docs#/default/universal_endpoint_v1_solve_universal_equilibrium_post" target="_blank" class="core-btn" style="border-color:var(--cyan); color:#67e8f9;">
             <span>POST /v1/solve-universal-equilibrium</span>
             <span>↗</span>
           </a>
-          <!-- 6번 코어에서 바로 1번째 API ($30/월)로 구독하러 가는 직통 링크 -->
           <div style="text-align: right; margin-top: 6px;">
             <a href="https://rapidapi.com/shs15199702/api/gp-pcam-universal-physical-solver" target="_blank" class="core-rapid-link">
               ⚡ Subscribe on RapidAPI ($30/mo micro-tier) ↗
@@ -575,18 +567,19 @@
       </div>
       <div class="terminal-body">
         <pre class="terminal-code">{
-  <span class="terminal-key">"timestamp_iso"</span>: <span class="terminal-str">"2026-10-22T08:15:30.124Z"</span>,
+  <span class="terminal-key">"timestamp_iso"</span>: <span class="terminal-str">"2026-10-23T15:26:08.155634Z"</span>,
   <span class="terminal-key">"status"</span>: <span class="terminal-str">"CONVERGED_SUCCESS"</span>,
-  <span class="terminal-key">"engine"</span>: <span class="terminal-str">"NEOMA Physical Reflex Core v3.2 (Proprietary Enclave)"</span>,
+  <span class="terminal-key">"service_edition"</span>: <span class="terminal-str">"GP-PCAM Universal Physical Solver"</span>,
+  <span class="terminal-key">"engine"</span>: <span class="terminal-str">"NEOMA Physical Reflex Core v3.5 (Proprietary Enclave)"</span>,
   <span class="terminal-key">"domain"</span>: <span class="terminal-str">"Universal Physical Equilibrium Optimization"</span>,
   <span class="terminal-key">"hardware_seal_id"</span>: <span class="terminal-str">"SEAL-CORE06-7F89B2"</span>,
   <span class="terminal-key">"attestation_proof"</span>: <span class="terminal-str">"0x9f83ab2c4e5781a94b30172e8d91a27e4c3b5d6e7f8091a2b3c4d5e6f7a8b9c0"</span>,
   <span class="terminal-key">"cognitive_brain"</span>: <span class="terminal-str">"NEOMA_COGNITIVE_ENCLAVE_LOCAL"</span>,
   <span class="terminal-key">"hardware_reflex_ms"</span>: <span class="terminal-val">0.8521</span>,
   <span class="terminal-key">"diagnostics"</span>: {
-    <span class="terminal-key">"physical_generation"</span>: <span class="terminal-val">5410185</span>,
-    <span class="terminal-key">"normalized_hamiltonian_flux"</span>: <span class="terminal-val">0.500</span>,
-    <span class="terminal-key">"shock_risk_pct"</span>: <span class="terminal-val">2</span>,
+    <span class="terminal-key">"physical_generation"</span>: <span class="terminal-val">14873721</span>,
+    <span class="terminal-key">"hamiltonian_ground_flux"</span>: <span class="terminal-val">0.500</span>,
+    <span class="terminal-key">"perturbation_risk_pct"</span>: <span class="terminal-val">2</span>,
     <span class="terminal-key">"thermodynamic_entropy"</span>: <span class="terminal-val">0.0010</span>,
     <span class="terminal-key">"ground_state_potential"</span>: <span class="terminal-val">0.085</span>,
     <span class="terminal-key">"silicon_attestation"</span>: <span class="terminal-str">"VERIFIED_HARDWARE_AUTHENTIC"</span>
@@ -601,7 +594,7 @@
       </div>
     </div>
 
-    <!-- 푸터 (양대 API 모두 명시) -->
+    <!-- 푸터 -->
     <footer>
       <div>
         © 2026 NEOMA Systems Inc. Closed Silicon Enclave Architecture.
