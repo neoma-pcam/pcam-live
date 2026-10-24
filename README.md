@@ -57,12 +57,11 @@ Unlike conventional software simulators that suffer from computational lag, iter
              │   - Automated Golden Physics Asset Vault Logger            │
              └──────────────┬───────────────────────────────▲─────────────┘
                             │                               │
-       (Deterministic Bus   │                               │ (Sealed Internal Link
-        @ 921,600 bps)      │                               │  Deterministic Isolation)
+       (Deterministic Bus)  │                               │ (Sealed Internal Link-Deterministic Isolation)
                             ▼                               ▼
        ┌────────────────────────────────────────┐   ┌───────────────────────────┐
        │     NEOMA Physical Reflex Enclaves     │   │  NEOMA Cognitive Enclave  │
-       │    (Sub-Millisecond Analog Enclave)    │   │  (Autonomous Reasoning)   │
+       │    (Sub-Millisecond Enclave)           │   │  (Autonomous Reasoning)   │
        │                                        │   │                           │
        │ [Enclave 01] Bioreactor Hydrodynamics  │   │ - 100% Sealed Local Core  │
        │ [Enclave 02] Precision Synthesis State │   │ - Zero Cloud Data Leakage │
