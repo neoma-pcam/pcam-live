@@ -5,7 +5,8 @@
 [![RapidAPI Enterprise](https://img.shields.io/badge/RapidAPI-Enterprise%20Hub-7c3aed.svg)](https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control)
 [![Universal Solver](https://img.shields.io/badge/RapidAPI-Universal%20Solver%20($30/mo)-2563eb.svg)](https://rapidapi.com/shs15199702/api/gp-pcam-universal-physical-solver)
 [![Silicon Attestation](https://img.shields.io/badge/Hardware%20PUF-Cryptographically%20Signed-blueviolet.svg)](https://api.neoma-pcam.com/health)
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
+[![SDK License](https://img.shields.io/badge/Client%20SDK-Apache%202.0-blue.svg)](LICENSE)
+[![Core Architecture](https://img.shields.io/badge/Enclave%20Core-Proprietary-red.svg)](#-proprietary-notice)
 
 > **Sub-Millisecond Physical Dynamics Convergence & Cryptographic Silicon Root-of-Trust**
 
@@ -57,11 +58,12 @@ Unlike conventional software simulators that suffer from computational lag, iter
              │   - Automated Golden Physics Asset Vault Logger            │
              └──────────────┬───────────────────────────────▲─────────────┘
                             │                               │
-       (Deterministic Bus)  │                               │ (Sealed Internal Link-Deterministic Isolation)
+       (Deterministic       │                               │ (Sealed Internal Link
+        Synchronous Fabric) │                               │  Deterministic Isolation)
                             ▼                               ▼
        ┌────────────────────────────────────────┐   ┌───────────────────────────┐
        │     NEOMA Physical Reflex Enclaves     │   │  NEOMA Cognitive Enclave  │
-       │    (Sub-Millisecond Enclave)           │   │  (Autonomous Reasoning)   │
+       │   (Sub-Millisecond Physical Enclave)   │   │  (Autonomous Reasoning)   │
        │                                        │   │                           │
        │ [Enclave 01] Bioreactor Hydrodynamics  │   │ - 100% Sealed Local Core  │
        │ [Enclave 02] Precision Synthesis State │   │ - Zero Cloud Data Leakage │
@@ -105,8 +107,10 @@ headers = {
     "Content-Type": "application/json"
 }
 payload = {
-    "damping_ratio": 0.15,
-    "target_potential": "MIN_ENTROPY"
+    "flux_potential_v": 0.082,
+    "gradient_velocity": 520,
+    "gradient_acceleration": 16000,
+    "active_strain": 1.55
 }
 
 response = requests.post(url, json=payload, headers=headers)
@@ -177,8 +181,10 @@ import requests
 
 url = "https://api.neoma-pcam.com/v1/solve-universal-equilibrium"
 payload = {
-    "damping_ratio": 0.15,
-    "target_potential": "MIN_ENTROPY"
+    "flux_potential_v": 0.082,
+    "gradient_velocity": 520,
+    "gradient_acceleration": 16000,
+    "active_strain": 1.55
 }
 
 response = requests.post(url, json=payload)
@@ -208,13 +214,14 @@ For custom on-premise appliances, physical co-processor licensing, or technical 
 
 - **Official Website:** https://neoma-pcam.com
 - **Technical & Partnership Inquiry:** [contact@neoma-pcam.com](mailto:contact@neoma-pcam.com)
+- **Developer & Engineering Core:** [engineering@neoma-pcam.com](mailto:engineering@neoma-pcam.com)
 - **Executive Office:** [ceo@neoma-pcam.com](mailto:ceo@neoma-pcam.com)
 
 ---
 
 ## 🔒 Proprietary Notice
 
-All physical computing architectures, silicon enclave protocols, and interface specifications related to **GP-PCAM** are proprietary assets of NEOMA Systems Inc. Unauthorized reverse engineering, silicon profiling, or unauthorized commercial exploitation is strictly prohibited.
+All physical computing architectures, silicon enclave protocols, and interface specifications related to **GP-PCAM** are proprietary assets of NEOMA Systems Inc. Unauthorized reverse engineering, silicon profiling, or unauthorized commercial exploitation is strictly prohibited. Client SDKs and open examples are governed under the Apache 2.0 license.
 
 ---
 
