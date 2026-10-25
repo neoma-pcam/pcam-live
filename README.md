@@ -199,6 +199,20 @@ print("Hardware Seal   :", data["hardware_seal_id"])
 print("Attestation     :", data["attestation_proof"][:24] + "...")
 print("Neural Insight  :", data["adaptive_control"]["slm_interpreted_instruction"])
 ```
+---
+
+## 🤖 ROS 2 Robotic Dynamic Compliance Integration
+
+Clone the repository directly into your ROS 2 workspace (`colcon_ws/src`) and build:
+
+```bash
+cd ~/colcon_ws/src
+git clone https://github.com/neoma-pcam/pcam-live.git
+cd ..
+colcon build --packages-select pcam_ros2
+source install/setup.bash
+ros2 run pcam_ros2 compliance_node
+
 
 ---
 
