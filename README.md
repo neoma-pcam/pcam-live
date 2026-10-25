@@ -7,8 +7,7 @@
 [![Silicon Attestation](https://img.shields.io/badge/Hardware%20PUF-Cryptographically%20Signed-blueviolet.svg)](https://api.neoma-pcam.com/health)
 [![SDK License](https://img.shields.io/badge/Client%20SDK-Apache%202.0-blue.svg)](LICENSE)
 [![Core Architecture](https://img.shields.io/badge/Enclave%20Core-Proprietary-red.svg)](#-proprietary-notice)
-
-
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23644655.svg)](https://doi.org/10.5281/zenodo.23644655)
 > 💡 **Have a diverging simulation or resonance issue?**  
 > Submit your problem parameters on our [Free Hardware Solver Desk](https://github.com/neoma-pcam/pcam-live/issues/new?template=solve_request.md) — our P-CAM silicon enclave will solve and post your ground-state convergence result within seconds.
 > 
