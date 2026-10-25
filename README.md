@@ -8,6 +8,10 @@
 [![SDK License](https://img.shields.io/badge/Client%20SDK-Apache%202.0-blue.svg)](LICENSE)
 [![Core Architecture](https://img.shields.io/badge/Enclave%20Core-Proprietary-red.svg)](#-proprietary-notice)
 
+
+> 💡 **Have a diverging simulation or resonance issue?**  
+> Submit your problem parameters on our [Free Hardware Solver Desk](https://github.com/neoma-pcam/pcam-live/issues/new?template=solve_request.md) — our P-CAM silicon enclave will solve and post your ground-state convergence result within seconds.
+> 
 > **Sub-Millisecond Physical Dynamics Convergence & Cryptographic Silicon Root-of-Trust**
 
 **NEOMA P-CAM (Physical Co-processor Appliance Matrix)** is an enterprise hardware computing engine engineered for **Real-Time Physical Dynamics Convergence, Non-Linear Boundary Stabilization, and General-Purpose Physical Optimization (GP-PCAM)**.
