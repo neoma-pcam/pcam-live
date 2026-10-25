@@ -4,13 +4,11 @@
 [![Production Gateway](https://img.shields.io/badge/Production%20Gateway-api.neoma--pcam.com-06b6d4.svg)](https://api.neoma-pcam.com/docs)
 [![RapidAPI Enterprise](https://img.shields.io/badge/RapidAPI-Enterprise%20Hub-7c3aed.svg)](https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control)
 [![Universal Solver](https://img.shields.io/badge/RapidAPI-Universal%20Solver%20($30/mo)-2563eb.svg)](https://rapidapi.com/shs15199702/api/gp-pcam-universal-physical-solver)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23644655.svg)](https://doi.org/10.5281/zenodo.23644655)
 [![Silicon Attestation](https://img.shields.io/badge/Hardware%20PUF-Cryptographically%20Signed-blueviolet.svg)](https://api.neoma-pcam.com/health)
 [![SDK License](https://img.shields.io/badge/Client%20SDK-Apache%202.0-blue.svg)](LICENSE)
 [![Core Architecture](https://img.shields.io/badge/Enclave%20Core-Proprietary-red.svg)](#-proprietary-notice)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23644655.svg)](https://doi.org/10.5281/zenodo.23644655)
-> 💡 **Have a diverging simulation or resonance issue?**  
-> Submit your problem parameters on our [Free Hardware Solver Desk](https://github.com/neoma-pcam/pcam-live/issues/new?template=solve_request.md) — our P-CAM silicon enclave will solve and post your ground-state convergence result within seconds.
-> 
+
 > **Sub-Millisecond Physical Dynamics Convergence & Cryptographic Silicon Root-of-Trust**
 
 **NEOMA P-CAM (Physical Co-processor Appliance Matrix)** is an enterprise hardware computing engine engineered for **Real-Time Physical Dynamics Convergence, Non-Linear Boundary Stabilization, and General-Purpose Physical Optimization (GP-PCAM)**.
@@ -199,6 +197,7 @@ print("Hardware Seal   :", data["hardware_seal_id"])
 print("Attestation     :", data["attestation_proof"][:24] + "...")
 print("Neural Insight  :", data["adaptive_control"]["slm_interpreted_instruction"])
 ```
+
 ---
 
 ## 🤖 ROS 2 Robotic Dynamic Compliance Integration
@@ -213,9 +212,11 @@ colcon build --packages-select pcam_ros2
 source install/setup.bash
 ros2 run pcam_ros2 compliance_node
 ```
-Target Topic: Streams 0.85ms hardware-converged damping parameters over /robot/pcam/optimal_damping (std_msgs/Float64).
-Silicon Seal: Publishes authentic hardware PUF execution tokens over /robot/pcam/silicon_seal (std_msgs/String).
-Hardware Reflex: Direct 0.84ms–0.87ms physical convergence via https://api.neoma-pcam.com/v1/robotic-compliance.
+
+- **Target Topic:** Streams 0.85ms hardware-converged damping parameters over `/robot/pcam/optimal_damping` (`std_msgs/Float64`).
+- **Silicon Seal:** Publishes authentic hardware PUF execution tokens over `/robot/pcam/silicon_seal` (`std_msgs/String`).
+- **Hardware Reflex:** Direct 0.84ms–0.87ms physical convergence via `https://api.neoma-pcam.com/v1/robotic-compliance`.
+
 ---
 
 ## 🔒 Security & Black-Box Enclave Architecture
