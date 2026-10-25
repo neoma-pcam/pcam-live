@@ -213,7 +213,9 @@ colcon build --packages-select pcam_ros2
 source install/setup.bash
 ros2 run pcam_ros2 compliance_node
 ```
-
+Target Topic: Streams 0.85ms hardware-converged damping parameters over /robot/pcam/optimal_damping (std_msgs/Float64).
+Silicon Seal: Publishes authentic hardware PUF execution tokens over /robot/pcam/silicon_seal (std_msgs/String).
+Hardware Reflex: Direct 0.84ms–0.87ms physical convergence via https://api.neoma-pcam.com/v1/robotic-compliance.
 ---
 
 ## 🔒 Security & Black-Box Enclave Architecture
