@@ -1,0 +1,54 @@
+name: P-CAM Autonomous Hardware Solver Bot
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  issues: write
+
+jobs:
+  solve-and-reply:
+    if: contains(github.event.issue.labels.*.name, 'pcam-solver') || contains(github.event.issue.title, '[SOLVE REQUEST]')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Problem to P-CAM Laptop Hardware
+        id: pcam
+        run: |
+          RESPONSE=$(curl -s -X POST "https://api.neoma-pcam.com/v1/solve-universal-equilibrium" \
+            -H "Content-Type: application/json" \
+            -d '{"damping_ratio": 0.15, "target_potential": "MIN_ENTROPY"}')
+          
+          echo "pcam_response<<EOF" >> $GITHUB_OUTPUT
+          echo "$RESPONSE" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Auto-Comment with Physical Solution
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const response = JSON.parse(`${{ steps.pcam.outputs.pcam_response }}`);
+            const commentBody = `### ⚡ NEOMA P-CAM Hardware Attestation Result
+
+            Your non-linear physical system boundary has been processed directly by the **P-CAM Physical Enclave**.
+
+            - **Status:** \`${response.status}\`
+            - **Hardware Reflex Time:** \`${response.hardware_reflex_ms} ms\`
+            - **Physical Enclave:** \`${response.hardware_enclave}\`
+            - **Silicon Seal ID:** \`${response.hardware_seal_id}\`
+            - **Attestation Proof:** \`${response.attestation_proof}\`
+            - **Ground-State Potential:** \`${response.diagnostics.ground_state_potential} V\`
+
+            > **Adaptive Control Insight:**  
+            > *${response.adaptive_control.slm_interpreted_instruction}*
+
+            ---
+            *For high-throughput batch processing, continuous real-time control, or API keys, subscribe to the official tier:*  
+            👉 **[Subscribe on RapidAPI ($30/mo micro-tier)](https://rapidapi.com/shs15199702/api/gp-pcam-universal-physical-solver)**`;
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: commentBody
+            });
