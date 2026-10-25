@@ -82,12 +82,12 @@ All 5 dedicated industrial enclaves and the universal co-solver are driven by sy
 
 | Enclave ID | Domain Focus | Verified Latency | Physical Ground Potential | Silicon Execution Seal | Target Endpoint |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **ENCLAVE-01** | Bioreactor Hydrodynamic Equilibrium | **0.8476 ms** | 0.085 V | `SEAL-CORE01-C09717` | `POST /v1/bioreactor-kinematics` |
-| **ENCLAVE-02** | Precision Synthesis Thermal Stabilization | **0.8702 ms** | 0.085 V | `SEAL-CORE02-3FCE9A` | `POST /v1/precision-synthesis` |
-| **ENCLAVE-03** | Robotic Dynamic Compliance & Impact | **0.8452 ms** | 0.085 V | `SEAL-CORE03-4AB333` | `POST /v1/robotic-compliance` |
-| **ENCLAVE-04** | Autonomous Mobility Dynamic Yaw Recovery | **0.8584 ms** | 0.085 V | `SEAL-CORE04-FF3CC4` | `POST /v1/mobility-dynamics` |
-| **ENCLAVE-05** | Battery Thermal Energetics & Runaway Arrest| **0.8534 ms** | 0.085 V | `SEAL-CORE05-EE2474` | `POST /v1/battery-energetics` |
-| **ENCLAVE-06** | Universal Physical Equilibrium Solver | **0.8521 ms** | 0.085 V | `SEAL-CORE06-7F89B2` | `POST /v1/solve-universal-equilibrium` |
+| **ENCLAVE-01** | Bioreactor Hydrodynamic Equilibrium | **0.8476 ms** | 0.085  | `SEAL-CORE01-C09717` | `POST /v1/bioreactor-kinematics` |
+| **ENCLAVE-02** | Precision Synthesis Thermal Stabilization | **0.8702 ms** | 0.085  | `SEAL-CORE02-3FCE9A` | `POST /v1/precision-synthesis` |
+| **ENCLAVE-03** | Robotic Dynamic Compliance & Impact | **0.8452 ms** | 0.085  | `SEAL-CORE03-4AB333` | `POST /v1/robotic-compliance` |
+| **ENCLAVE-04** | Autonomous Mobility Dynamic Yaw Recovery | **0.8584 ms** | 0.085  | `SEAL-CORE04-FF3CC4` | `POST /v1/mobility-dynamics` |
+| **ENCLAVE-05** | Battery Thermal Energetics & Runaway Arrest| **0.8534 ms** | 0.085  | `SEAL-CORE05-EE2474` | `POST /v1/battery-energetics` |
+| **ENCLAVE-06** | Universal Physical Equilibrium Solver | **0.8521 ms** | 0.085  | `SEAL-CORE06-7F89B2` | `POST /v1/solve-universal-equilibrium` |
 
 ---
 
