@@ -217,7 +217,63 @@ ros2 run pcam_ros2 compliance_node
 - **Target Topic:** Streams 0.85ms hardware-converged damping parameters over `/robot/pcam/optimal_damping` (`std_msgs/Float64`).
 - **Silicon Seal:** Publishes authentic hardware PUF execution tokens over `/robot/pcam/silicon_seal` (`std_msgs/String`).
 - **Hardware Reflex:** Direct 0.84ms–0.87ms physical convergence via `https://api.neoma-pcam.com/v1/robotic-compliance`.
+---
 
+## 🤖 Autonomous AI Agent Integration (LangChain & LlamaIndex)
+
+Empower your LLM agents (GPT-4o, Claude 3.5, etc.) with real physical reality grounding. Eliminates mathematical hallucination by offloading non-linear physical equilibrium directly to the P-CAM hardware enclave via RapidAPI:
+
+```bash
+git clone https://github.com/neoma-pcam/pcam-live.git
+cd pcam-live/agents
+python example_agent_demo.py
+```
+
+### 3-Line Agent Tool Usage
+```python
+from pcam_agent_tool import PCAMPhysicalSolverTool
+
+# Requires a valid RapidAPI Key (50 free calls included)
+solver = PCAMPhysicalSolverTool(rapidapi_key="YOUR_RAPIDAPI_KEY")
+result = solver.run(
+    flux_potential_v=0.082,
+    gradient_velocity=520,
+    gradient_acceleration=16000,
+    active_strain=1.55,
+)
+
+print("Hardware Reflex :", result["hardware_reflex_ms"], "ms")
+print("Silicon Seal    :", result["hardware_seal_id"])
+print("Damping Action  :", result["damping_coefficient"])
+```
+
+👉 **Need an API Key?** [Get your key on RapidAPI ($30/mo micro-tier with 50 free calls)](https://rapidapi.com/shs15199702/api/gp-pcam-universal-physical-solver)
+---
+
+## ⚡ Anthropic Claude Desktop MCP (Model Context Protocol) Integration
+
+Seamlessly connects Anthropic Claude Desktop or Frontier LLM Agents directly to the live P-CAM physical hardware enclave.
+
+### 1-Click Claude Desktop Configuration
+Add the following configuration to your `claude_desktop_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "pcam-physical-solver": {
+      "command": "python",
+      "args": ["-m", "agents.pcam_mcp_server"],
+      "env": {
+        "RAPIDAPI_KEY": "YOUR_PURCHASED_RAPIDAPI_KEY"
+      }
+    }
+  }
+}
+```
+
+- **Physical Grounding:** Eliminates hallucination by executing 0.85ms hardware-level physical equilibrium convergence.
+- **Paywall Protected:** Execution requires a valid RapidAPI Key, preventing unauthorized compute drain.
+👉 [Get your RapidAPI Key ($30/mo micro-tier)](https://rapidapi.com/shs15199702/api/gp-pcam-universal-physical-solver)
 ---
 ---
 
