@@ -8,7 +8,7 @@
 [![Silicon Attestation](https://img.shields.io/badge/Hardware%20PUF-Cryptographically%20Signed-blueviolet.svg)](https://api.neoma-pcam.com/health)
 [![SDK License](https://img.shields.io/badge/Client%20SDK-Apache%202.0-blue.svg)](LICENSE)
 [![Core Architecture](https://img.shields.io/badge/Enclave%20Core-Proprietary-red.svg)](#-proprietary-notice)
-[![Benchmark](https://img.shields.io/badge/Physical%20Benchmark-100%25%20Verified%20(10%2F10)-success.svg)](pcam_hardware_benchmark_report.md)
+
 
 > **Sub-Millisecond Physical Dynamics Convergence & Cryptographic Silicon Root-of-Trust**
 
