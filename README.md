@@ -301,11 +301,11 @@ To definitively verify that the execution payload originates from an authentic *
 ```python
 """
 ==============================================================================
-NEOMA P-CAM 003 Hardware Acceleration & Physical Invariant Audit
-- Target: Independent Researchers, System Auditors, External Evaluators
+NEOMA P-CAM 003 Physical Acceleration & Hardware Invariant Benchmark
+- Target Audience: Independent Researchers, System Auditors, External Evaluators
 - Protocol: Parametric Ill-Conditioned Physical Lattice (Known-Answer Test)
-- Baseline: Local Workstation CPU (Standard Numerical Iteration)
-- Target Server: Remote NEOMA P-CAM Hardware Enclave Core
+- Baseline: Local Workstation CPU (Standard Numerical Iteration / LAPACK)
+- Target: Remote NEOMA P-CAM 003 Hardware Enclave Core (Live Cloud API)
 ==============================================================================
 """
 
@@ -316,41 +316,51 @@ import urllib.error
 import numpy as np
 
 # ==============================================================================
-# ▼ [검사자 설정 영역] - 아래 값을 자유롭게 변경하여 독립 검증을 수행하십시오.
+# ▼ [AUDITOR CONFIGURATION] - Modify values below freely for independent audit.
 # ==============================================================================
-# 복합 물리 매질 절점 수 (Lattice Node Scale: 512, 1024, 2048)
+
+# 1. Complex Physical Lattice Scale (Lattice Node Count: 512, 1024, 2048)
+#    - 1024 nodes require ~1 billion scalar operations (1 GFLOP) on standard CPUs.
 LATTICE_NODES = 1024
 
-# 검사자 고유 난수 시드 (원하는 임의의 정수를 넣으면 전 세계 유일한 물리 문제가 생성됨)
+# 2. Auditor Secret Random Seed (Any integer)
+#    - Changing this seed instantly synthesizes a globally unique physical problem.
 AUDITOR_SEED = 7919
 
-# 연속 실시간 제어 한계선 (Hard Real-Time Deadline: 12.0 ms)
+# 3. Hard Real-Time Dynamic Control Deadline (Physical Rupture Boundary)
+#    - Maximum allowable latency for continuous physical stability: 12.0 ms
 REALTIME_LIMIT_MS = 12.0
 
-# 검증 대상 P-CAM 엔드포인트
+# 4. Target Remote P-CAM 003 Enclave Endpoint
 TARGET_SERVER_URL = "https://api.neoma-pcam.com/api/v1/solve"
+
+# ==============================================================================
+# ▲ [END OF CONFIGURATION] - Do not modify the audit protocol below.
 # ==============================================================================
 
 
 def generate_physical_lattice_challenge(nodes: int, seed: int):
-    """검사자 로컬 메모리에서만 물리 참값(phi_true)을 생성하고 결합 경계조건(K, f)을 합성"""
+    """
+    Synthesizes a unique physical coupling matrix and boundary flux vector
+    while isolating the true ground-state potential (phi_true) in local memory.
+    """
     np.random.seed(seed)
     
-    # [1] 검사자만이 알고 있는 기저 전위 참값 (-1.0V ~ 1.0V 대역)
+    # [1] True physical ground-state potential vector (-1.0V to +1.0V window)
     phi_true = np.random.uniform(-1.0, 1.0, size=(nodes,)).astype(np.float64)
     
-    # [2] 강한 비선형 섭동이 결합된 강성 매트릭스 K 합성 (대칭 양의 정부호 물리계)
+    # [2] Ill-conditioned, symmetric positive-definite physical coupling matrix K
     M = np.random.randn(nodes, nodes)
     K = np.dot(M.T, M) + (1e-4 * np.eye(nodes))
     
-    # [3] 외란 경계 플럭스 f = K * phi_true 도출
+    # [3] Boundary perturbation flux vector f = K * phi_true
     f = np.dot(K, phi_true)
     
     return K, f, phi_true
 
 
 def solve_local_cpu(K: np.ndarray, f: np.ndarray):
-    """검사자 로컬 CPU 단독 수치해석 연산"""
+    """Executes standard von Neumann CPU baseline numerical solver (LAPACK)."""
     t_start = time.perf_counter_ns()
     phi_cpu = np.linalg.solve(K, f)
     t_end = time.perf_counter_ns()
@@ -360,7 +370,10 @@ def solve_local_cpu(K: np.ndarray, f: np.ndarray):
 
 
 def request_pcam_hardware(K: np.ndarray, f: np.ndarray):
-    """원격 P-CAM 하드웨어 엔클레이브로 물리 결합 조건 전송 및 수렴 전위 수신"""
+    """
+    Dispatches boundary coupling parameters to the remote P-CAM 003 physical enclave
+    and measures pure hardware convergence latency.
+    """
     payload = json.dumps({
         "scale": len(f),
         "boundary_coupling": K.tolist(),
@@ -370,7 +383,8 @@ def request_pcam_hardware(K: np.ndarray, f: np.ndarray):
     req = urllib.request.Request(
         TARGET_SERVER_URL,
         data=payload,
-        headers={"Content-Type": "application/json"}
+        headers={"Content-Type": "application/json"},
+        method="POST"
     )
     
     t_start = time.perf_counter_ns()
@@ -383,65 +397,76 @@ def request_pcam_hardware(K: np.ndarray, f: np.ndarray):
             phi_pcam = np.array(data["solution"], dtype=np.float64)
             hw_core_ms = float(data.get("core_time_ms", 0.0))
             return phi_pcam, roundtrip_ms, hw_core_ms, True
+    except urllib.error.URLError as e:
+        print(f"\n[ERROR] Failed to reach P-CAM 003 Enclave ({TARGET_SERVER_URL}): {e.reason}")
+        return None, 0.0, 0.0, False
     except Exception as e:
-        print(f"\n[오류] P-CAM 서버 접속 실패: {e}")
+        print(f"\n[ERROR] Exception during hardware dispatch: {str(e)}")
         return None, 0.0, 0.0, False
 
 
 def run_comparative_audit():
     print("=" * 80)
-    print(" [독립 감사관 프로토콜] 로컬 워크스테이션 CPU vs P-CAM 003 물리 가속 실측 대조")
-    print(f" * 다절점 결합 규모 : {LATTICE_NODES} 절점 매질 (총 {LATTICE_NODES * LATTICE_NODES:,}개 결합 파라미터)")
-    print(f" * 검사자 고유 시드 : #{AUDITOR_SEED}")
-    print(f" * 실시간 제어 한계 : {REALTIME_LIMIT_MS:.1f} ms (물리 제어 파괴 한계선)")
+    print(" [INDEPENDENT AUDIT PROTOCOL] Local CPU Baseline vs. P-CAM 003 Physical Enclave")
+    print(f" * Multi-Node Coupling Scale: {LATTICE_NODES} Lattice Nodes ({LATTICE_NODES * LATTICE_NODES:,} Coupling Elements)")
+    print(f" * Auditor Secret Seed      : #{AUDITOR_SEED}")
+    print(f" * Hard Real-Time Threshold : {REALTIME_LIMIT_MS:.1f} ms (Physical Rupture Deadline)")
     print("=" * 80)
 
-    # 1. 문제 생성
-    print("\n[단계 1] 연구자 로컬 머신에서 고유 물리 문제 및 비밀 참값(phi_true) 생성...")
+    # Step 1: Synthesize Problem
+    print("\n[Step 1] Synthesizing physical lattice challenge and unrevealed ground-truth (phi_true)...")
     K, f, phi_true = generate_physical_lattice_challenge(LATTICE_NODES, AUDITOR_SEED)
-    print("    └─ 생성 완료: phi_true는 검사자 PC에만 보관되며 절대 외부로 전송되지 않습니다.")
+    print("    └─ Done: phi_true is strictly isolated in local memory and NEVER transmitted.")
 
-    # 2. 로컬 CPU 연산
-    print("\n[단계 2] 연구자 로컬 CPU 기준 연산 실행 중...")
+    # Step 2: Local CPU Solver Execution
+    print("\n[Step 2] Executing local CPU baseline solver (LAPACK dgesv)...")
     phi_cpu, cpu_time_ms = solve_local_cpu(K, f)
     cpu_res = np.linalg.norm(np.dot(K, phi_cpu) - f) / np.linalg.norm(f)
     cpu_err = np.linalg.norm(phi_cpu - phi_true) / np.linalg.norm(phi_true)
-    print(f"    └─ 로컬 CPU 코어 소요 시간: {cpu_time_ms:.4f} ms")
-    print(f"    └─ 잔차 오차 (||K*phi - f|| / ||f||): {cpu_res:.2e}")
+    print(f"    └─ Local CPU Execution Latency: {cpu_time_ms:.4f} ms")
+    print(f"    └─ Relative Residual Error   : {cpu_res:.4e}")
 
-    # 3. P-CAM 호출
-    print("\n[단계 3] 원격 P-CAM 003 물리 엔클레이브로 문제 전송 및 반환 계측...")
+    # Step 3: Dispatch to P-CAM 003 Physical Enclave
+    print("\n[Step 3] Dispatching boundary coupling conditions to remote P-CAM 003 Enclave...")
     phi_pcam, roundtrip_ms, hw_core_ms, success = request_pcam_hardware(K, f)
     if not success:
         return
 
-    # 4. 정밀도 분석
+    # Step 4: Metric & Concordance Analysis
     pcam_res = np.linalg.norm(np.dot(K, phi_pcam) - f) / np.linalg.norm(f)
     pcam_err = np.linalg.norm(phi_pcam - phi_true) / np.linalg.norm(phi_true)
     speedup = cpu_time_ms / hw_core_ms if hw_core_ms > 0 else 0.0
 
-    # 5. 결과 리포트 출력
+    # Step 5: Comparative Audit Report Table
     print("\n" + "=" * 80)
-    print(" [독립 감사 대조 분석 보고서]")
+    print("                 EMPIRICAL COMPARATIVE AUDIT REPORT")
     print("=" * 80)
-    print(f" 검증 지표                  | 연구자 로컬 CPU (기준치)  | P-CAM 003 (물리 가속)")
+    print(f" Verification Metric        | Local Workstation CPU     | P-CAM 003 Physical Enclave")
     print("-" * 80)
-    print(f" 정답 일치율 (True-Phi)     | {100.0 - (cpu_err * 100):.6f}%       | {100.0 - (pcam_err * 100):.6f}%")
-    print(f" 상대 잔차 오차 (Residual)  | {cpu_res:.4e}        | {pcam_res:.4e}")
-    print(f" 순수 코어 연산 지연        | {cpu_time_ms:.4f} ms          | {hw_core_ms:.4f} ms")
-    print(f" 실시간 제어 한계(12ms)     | {'데드라인 초과 (FAIL)' if cpu_time_ms > REALTIME_LIMIT_MS else '만족 (PASS)'}    | {'데드라인 만족 (PASS)' if hw_core_ms <= REALTIME_LIMIT_MS else '초과 (FAIL)'}")
-    print(f" 왕복 네트워크 지연 (총합)  | -                         | {roundtrip_ms:.4f} ms")
+    print(f" Ground-Truth Match (Phi)   | {100.0 - (cpu_err * 100):.6f}%       | {100.0 - (pcam_err * 100):.6f}%")
+    print(f" Relative Residual (||Kx-f||)| {cpu_res:.4e}        | {pcam_res:.4e}")
+    print(f" Pure Core Latency          | {cpu_time_ms:.4f} ms          | {hw_core_ms:.4f} ms")
+    print(f" Real-Time Boundary (12ms)  | {'FAIL (Timeout)' if cpu_time_ms > REALTIME_LIMIT_MS else 'PASS (Bounded)'}         | {'PASS (Bounded)' if hw_core_ms <= REALTIME_LIMIT_MS else 'FAIL (Timeout)'}")
+    print(f" Round-Trip Network Latency | -                         | {roundtrip_ms:.4f} ms")
     print("-" * 80)
 
-    # 6. 최종 판정문
-    print("\n[기술 감사 판정 결과]")
+    # Step 6: Definitive Engineering Verdict
+    print("\n[TECHNICAL AUDIT VERDICT]")
+    
+    # Integrity Check
     if pcam_err < 1e-4:
-        print(" [PASS] 1. 물리적 무결성: P-CAM 003이 도출한 해는 검사자가 숨겨둔 참값과 일치합니다.")
+        print(" [PASS] 1. Mathematical Invariance: P-CAM solution rigorously matches auditor's secret ground-truth.")
+    else:
+        print(" [FAIL] 1. Accuracy tolerance exceeded.")
+
+    # Real-Time Physical Controllability
     if hw_core_ms <= REALTIME_LIMIT_MS and cpu_time_ms > REALTIME_LIMIT_MS:
-        print(f" [PASS] 2. 실시간 제어성 입증: 로컬 CPU는 12ms 한계({cpu_time_ms:.1f}ms)를 넘어 파괴를 막지 못하지만,")
-        print("        P-CAM 003은 물리 제어 데드라인 내부 안착을 달성했습니다.")
+        print(f" [PASS] 2. Real-Time Physical Viability: Local CPU violates the 12ms deadline ({cpu_time_ms:.1f} ms),")
+        print("        which induces dynamic divergence. P-CAM settles strictly within the stability threshold.")
+    
+    # Core Speedup Verification
     if speedup > 1.0:
-        print(f" [PASS] 3. 가속 배율 검증: 로컬 CPU 대비 약 {speedup:.1f}배의 하드웨어 연산 우위 확인.")
+        print(f" [PASS] 3. Hardware Core Acceleration: Confirmed {speedup:.1f}x empirical speed advantage over CPU.")
     print("=" * 80)
 
 
