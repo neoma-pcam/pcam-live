@@ -6,7 +6,7 @@ Directly links PyBaMM electrochemical simulations to the P-CAM physical hardware
 import time
 import requests
 
-GATEWAY_URL = "https://api.neoma-pcam.com/v1/battery-energetics"
+GATEWAY_URL = "https://gp-pcam-universal-physical-solver.p.rapidapi.com/v1/battery-energetics"
 
 
 def query_pcam_battery_energetics(
