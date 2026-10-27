@@ -181,7 +181,7 @@ print("Cognitive Engine :", health["cognitive_engine"])
 ```python
 import requests
 
-url = "https://api.neoma-pcam.com/v1/solve-universal-equilibrium"
+url = "https://gp-pcam-universal-physical-solver.p.rapidapi.com/v1/solve-universal-equilibrium"
 payload = {
     "flux_potential_v": 0.082,
     "gradient_velocity": 520,
@@ -331,8 +331,8 @@ AUDITOR_SEED = 7919
 #    - Maximum allowable latency for continuous physical stability: 12.0 ms
 REALTIME_LIMIT_MS = 12.0
 
-# 4. Target Remote P-CAM 003 Enclave Endpoint
-TARGET_SERVER_URL = "https://api.neoma-pcam.com/api/v1/solve"
+# 4. Target Remote P-CAM 006 Enclave Endpoint
+TARGET_SERVER_URL = "https://gp-pcam-universal-physical-solver.p.rapidapi.com/v1/solve-universal-equilibrium"
 
 # ==============================================================================
 # ▲ [END OF CONFIGURATION] - Do not modify the audit protocol below.
