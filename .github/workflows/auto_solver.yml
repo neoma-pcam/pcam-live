@@ -15,7 +15,7 @@ jobs:
       - name: Send Problem to P-CAM Laptop Hardware
         id: pcam
         run: |
-          RESPONSE=$(curl -s -X POST "https://api.neoma-pcam.com/v1/solve-universal-equilibrium" \
+          RESPONSE=$(curl -s -X POST "https://https://gp-pcam-universal-physical-solver.p.rapidapi.com/v1/solve-universal-equilibrium" \
             -H "Content-Type: application/json" \
             -d '{"damping_ratio": 0.15, "target_potential": "MIN_ENTROPY"}')
           
