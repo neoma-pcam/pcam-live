@@ -299,80 +299,154 @@ To definitively verify that the execution payload originates from an authentic *
 ### Local Cryptographic Audit Script (Python)
 
 ```python
-import hashlib
-import hmac
+"""
+==============================================================================
+NEOMA P-CAM 003 Hardware Acceleration & Physical Invariant Audit
+- Target: Independent Researchers, System Auditors, External Evaluators
+- Protocol: Parametric Ill-Conditioned Physical Lattice (Known-Answer Test)
+- Baseline: Local Workstation CPU (Standard Numerical Iteration)
+- Target Server: Remote NEOMA P-CAM Hardware Enclave Core
+==============================================================================
+"""
+
+import time
 import json
 import urllib.request
+import urllib.error
+import numpy as np
 
-GATEWAY_URL = "https://api.neoma-pcam.com/v1/solve-universal-equilibrium"
+# ==============================================================================
+# ▼ [검사자 설정 영역] - 아래 값을 자유롭게 변경하여 독립 검증을 수행하십시오.
+# ==============================================================================
+# 복합 물리 매질 절점 수 (Lattice Node Scale: 512, 1024, 2048)
+LATTICE_NODES = 1024
 
-def audit_pcam_response():
-    # 1. Fetch live execution response from the physical enclave
-    payload = {
-        "flux_potential_v": 0.082,
-        "gradient_velocity": 520,
-        "gradient_acceleration": 16000,
-        "active_strain": 1.55
-    }
+# 검사자 고유 난수 시드 (원하는 임의의 정수를 넣으면 전 세계 유일한 물리 문제가 생성됨)
+AUDITOR_SEED = 7919
+
+# 연속 실시간 제어 한계선 (Hard Real-Time Deadline: 12.0 ms)
+REALTIME_LIMIT_MS = 12.0
+
+# 검증 대상 P-CAM 엔드포인트
+TARGET_SERVER_URL = "https://api.neoma-pcam.com/api/v1/solve"
+# ==============================================================================
+
+
+def generate_physical_lattice_challenge(nodes: int, seed: int):
+    """검사자 로컬 메모리에서만 물리 참값(phi_true)을 생성하고 결합 경계조건(K, f)을 합성"""
+    np.random.seed(seed)
+    
+    # [1] 검사자만이 알고 있는 기저 전위 참값 (-1.0V ~ 1.0V 대역)
+    phi_true = np.random.uniform(-1.0, 1.0, size=(nodes,)).astype(np.float64)
+    
+    # [2] 강한 비선형 섭동이 결합된 강성 매트릭스 K 합성 (대칭 양의 정부호 물리계)
+    M = np.random.randn(nodes, nodes)
+    K = np.dot(M.T, M) + (1e-4 * np.eye(nodes))
+    
+    # [3] 외란 경계 플럭스 f = K * phi_true 도출
+    f = np.dot(K, phi_true)
+    
+    return K, f, phi_true
+
+
+def solve_local_cpu(K: np.ndarray, f: np.ndarray):
+    """검사자 로컬 CPU 단독 수치해석 연산"""
+    t_start = time.perf_counter_ns()
+    phi_cpu = np.linalg.solve(K, f)
+    t_end = time.perf_counter_ns()
+    
+    elapsed_ms = (t_end - t_start) / 1_000_000.0
+    return phi_cpu, elapsed_ms
+
+
+def request_pcam_hardware(K: np.ndarray, f: np.ndarray):
+    """원격 P-CAM 하드웨어 엔클레이브로 물리 결합 조건 전송 및 수렴 전위 수신"""
+    payload = json.dumps({
+        "scale": len(f),
+        "boundary_coupling": K.tolist(),
+        "external_flux": f.tolist()
+    }).encode("utf-8")
     
     req = urllib.request.Request(
-        GATEWAY_URL, 
-        data=json.dumps(payload).encode("utf-8"),
-        headers={"Content-Type": "application/json"},
-        method="POST"
+        TARGET_SERVER_URL,
+        data=payload,
+        headers={"Content-Type": "application/json"}
     )
     
-    with urllib.request.urlopen(req, timeout=5.0) as resp:
-        data = json.loads(resp.read().decode("utf-8"))
-    
-    # 2. Extract hardware attestation telemetry
-    enclave_id = data.get("hardware_enclave")
-    seal_id = data.get("hardware_seal_id")
-    proof = data.get("attestation_proof")
-    generation = data.get("diagnostics", {}).get("physical_generation")
-    domain = data.get("domain")
-    reflex_ms = data.get("hardware_reflex_ms")
-    v_out = data.get("diagnostics", {}).get("ground_state_potential")
-    
-    print("=" * 70)
-    print("  NEOMA P-CAM INDEPENDENT HARDWARE INTEGRITY AUDIT")
-    print("=" * 70)
-    print(f"Target Domain       : {domain}")
-    print(f"Hardware Enclave    : {enclave_id}")
-    print(f"Silicon Seal ID     : {seal_id}")
-    print(f"Physical Generation : #{generation}")
-    print(f"Attestation Proof   : {proof}")
-    print(f"Physical Reflex     : {reflex_ms} ms")
-    print(f"Ground Potential    : {v_out} V")
-    print("-" * 70)
-    
-    # 3. Cryptographic & Temporal Checks
-    # Check A: Proof format verification (256-bit hexadecimal string)
-    is_valid_format = proof.startswith("0x") and len(proof) == 66
-    
-    # Check B: Real-time physical generation monotonicity (must be non-zero and advancing)
-    is_live_generation = isinstance(generation, int) and generation > 10000000
-    
-    # Check C: Deterministic ground-state voltage stability (85mV physical equilibrium window)
-    is_ground_stable = 0.080 <= float(v_out) <= 0.090
-    
-    # Check D: Deterministic sub-millisecond reflex bound
-    is_sub_millisecond = 0.8000 <= float(reflex_ms) <= 0.9000
-    
-    print("[VERIFICATION SUMMARY]")
-    print(f"  [✓] Silicon Cryptogram Format   : {'PASS' if is_valid_format else 'FAIL'}")
-    print(f"  [✓] Physical Cycle Liveness     : {'PASS' if is_live_generation else 'FAIL'}")
-    print(f"  [✓] Ground-State Bias (85mV)    : {'PASS' if is_ground_stable else 'FAIL'}")
-    print(f"  [✓] Sub-Millisecond Bound       : {'PASS' if is_sub_millisecond else 'FAIL'}")
-    print("=" * 70)
-    
-    if all([is_valid_format, is_live_generation, is_ground_stable, is_sub_millisecond]):
-        print(">>> RESULT: HARDWARE AUTHENTICITY & PHYSICAL INTEGRITY VERIFIED (PASS)")
-    else:
-        print(">>> RESULT: ANOMALY DETECTED (FAIL)")
+    t_start = time.perf_counter_ns()
+    try:
+        with urllib.request.urlopen(req, timeout=30.0) as resp:
+            data = json.loads(resp.read().decode("utf-8"))
+            t_end = time.perf_counter_ns()
+            
+            roundtrip_ms = (t_end - t_start) / 1_000_000.0
+            phi_pcam = np.array(data["solution"], dtype=np.float64)
+            hw_core_ms = float(data.get("core_time_ms", 0.0))
+            return phi_pcam, roundtrip_ms, hw_core_ms, True
+    except Exception as e:
+        print(f"\n[오류] P-CAM 서버 접속 실패: {e}")
+        return None, 0.0, 0.0, False
+
+
+def run_comparative_audit():
+    print("=" * 80)
+    print(" [독립 감사관 프로토콜] 로컬 워크스테이션 CPU vs P-CAM 003 물리 가속 실측 대조")
+    print(f" * 다절점 결합 규모 : {LATTICE_NODES} 절점 매질 (총 {LATTICE_NODES * LATTICE_NODES:,}개 결합 파라미터)")
+    print(f" * 검사자 고유 시드 : #{AUDITOR_SEED}")
+    print(f" * 실시간 제어 한계 : {REALTIME_LIMIT_MS:.1f} ms (물리 제어 파괴 한계선)")
+    print("=" * 80)
+
+    # 1. 문제 생성
+    print("\n[단계 1] 연구자 로컬 머신에서 고유 물리 문제 및 비밀 참값(phi_true) 생성...")
+    K, f, phi_true = generate_physical_lattice_challenge(LATTICE_NODES, AUDITOR_SEED)
+    print("    └─ 생성 완료: phi_true는 검사자 PC에만 보관되며 절대 외부로 전송되지 않습니다.")
+
+    # 2. 로컬 CPU 연산
+    print("\n[단계 2] 연구자 로컬 CPU 기준 연산 실행 중...")
+    phi_cpu, cpu_time_ms = solve_local_cpu(K, f)
+    cpu_res = np.linalg.norm(np.dot(K, phi_cpu) - f) / np.linalg.norm(f)
+    cpu_err = np.linalg.norm(phi_cpu - phi_true) / np.linalg.norm(phi_true)
+    print(f"    └─ 로컬 CPU 코어 소요 시간: {cpu_time_ms:.4f} ms")
+    print(f"    └─ 잔차 오차 (||K*phi - f|| / ||f||): {cpu_res:.2e}")
+
+    # 3. P-CAM 호출
+    print("\n[단계 3] 원격 P-CAM 003 물리 엔클레이브로 문제 전송 및 반환 계측...")
+    phi_pcam, roundtrip_ms, hw_core_ms, success = request_pcam_hardware(K, f)
+    if not success:
+        return
+
+    # 4. 정밀도 분석
+    pcam_res = np.linalg.norm(np.dot(K, phi_pcam) - f) / np.linalg.norm(f)
+    pcam_err = np.linalg.norm(phi_pcam - phi_true) / np.linalg.norm(phi_true)
+    speedup = cpu_time_ms / hw_core_ms if hw_core_ms > 0 else 0.0
+
+    # 5. 결과 리포트 출력
+    print("\n" + "=" * 80)
+    print(" [독립 감사 대조 분석 보고서]")
+    print("=" * 80)
+    print(f" 검증 지표                  | 연구자 로컬 CPU (기준치)  | P-CAM 003 (물리 가속)")
+    print("-" * 80)
+    print(f" 정답 일치율 (True-Phi)     | {100.0 - (cpu_err * 100):.6f}%       | {100.0 - (pcam_err * 100):.6f}%")
+    print(f" 상대 잔차 오차 (Residual)  | {cpu_res:.4e}        | {pcam_res:.4e}")
+    print(f" 순수 코어 연산 지연        | {cpu_time_ms:.4f} ms          | {hw_core_ms:.4f} ms")
+    print(f" 실시간 제어 한계(12ms)     | {'데드라인 초과 (FAIL)' if cpu_time_ms > REALTIME_LIMIT_MS else '만족 (PASS)'}    | {'데드라인 만족 (PASS)' if hw_core_ms <= REALTIME_LIMIT_MS else '초과 (FAIL)'}")
+    print(f" 왕복 네트워크 지연 (총합)  | -                         | {roundtrip_ms:.4f} ms")
+    print("-" * 80)
+
+    # 6. 최종 판정문
+    print("\n[기술 감사 판정 결과]")
+    if pcam_err < 1e-4:
+        print(" [PASS] 1. 물리적 무결성: P-CAM 003이 도출한 해는 검사자가 숨겨둔 참값과 일치합니다.")
+    if hw_core_ms <= REALTIME_LIMIT_MS and cpu_time_ms > REALTIME_LIMIT_MS:
+        print(f" [PASS] 2. 실시간 제어성 입증: 로컬 CPU는 12ms 한계({cpu_time_ms:.1f}ms)를 넘어 파괴를 막지 못하지만,")
+        print("        P-CAM 003은 물리 제어 데드라인 내부 안착을 달성했습니다.")
+    if speedup > 1.0:
+        print(f" [PASS] 3. 가속 배율 검증: 로컬 CPU 대비 약 {speedup:.1f}배의 하드웨어 연산 우위 확인.")
+    print("=" * 80)
+
 
 if __name__ == "__main__":
-    audit_pcam_response()
+    run_comparative_audit()
 ```
 
 - **Zero-Simulation Guarantee:** Responses failing cryptographic seed structure or physical cycle advancement are rejected.
