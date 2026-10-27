@@ -312,7 +312,7 @@ git clone https://github.com/neoma-pcam/pcam-live.git
 cd ..
 colcon build --packages-select pcam_driver
 source install/setup.bash
-driver run pcam_driver compliance_node
+ros2 run pcam_driver compliance_node
 ```
 
 - **Target Topic:** Streams 0.85ms hardware-converged damping parameters over `/robot/pcam/optimal_damping` (`std_msgs/Float64`).
