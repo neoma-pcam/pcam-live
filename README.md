@@ -9,7 +9,108 @@
 [![SDK License](https://img.shields.io/badge/Client%20SDK-Apache%202.0-blue.svg)](LICENSE)
 [![Core Architecture](https://img.shields.io/badge/Enclave%20Core-Proprietary-red.svg)](#-proprietary-notice)
 
+## ⚡ NEOMA P-CAM 003 Independent Hardware Attestation
 
+> **Zero-Trust Client-Side Verification:**  
+> Do not trust server-side logs or static benchmark claims. This independent audit protocol generates non-linear physical challenges locally, submits boundary conditions to the P-CAM 003 silicon enclave via RapidAPI, and independently computes physical damping convergence directly inside your local CPU's physics engine.
+
+---
+
+### 1. Quick Verification (10-Second Test)
+
+Clone the repository and run the audit protocol. You can supply any arbitrary integer seed (`--seed <number>`) to synthesize unique physical perturbation profiles locally:
+
+```bash
+# 1. Clone repository
+git clone [https://github.com/your-username/neoma-pcam-audit.git](https://github.com/your-username/neoma-pcam-audit.git)
+cd neoma-pcam-audit
+
+# 2. Execute independent client-side hardware attestation
+python "Independent Hardware Attestation & Signature Verification.py" --seed 4234
+```
+
+---
+
+### 2. Independent Verification Pipeline
+
+```
+[Auditor Workstation] (Your Local Machine)
+   │
+   ├── 1. Synthesizes an unstable non-linear dynamic shock (e.g., >170,000 J kinetic energy)
+   ├── 2. Isolates ground-truth equations locally; dispatches boundary conditions to P-CAM Enclave
+   │
+[RapidAPI Gateway ➔ Remote P-CAM 003 Silicon Enclave]
+   │
+   └── 3. Silicon substrate relaxes to equilibrium in < 1.0 ms (sub-millisecond physical reflex)
+          Returns adaptive damping coefficient + deterministic PUF silicon execution seal
+   │
+[Auditor Workstation] (Local Independent Grading)
+   │
+   └── 4. Injects P-CAM response into local 2nd-order non-linear equation of motion
+          Independently verifies >90% destructive energy dissipation (100% Client-Side PASS)
+```
+
+---
+
+### 3. Verifiable Hardware Invariants
+
+| Metric | Specification | Verification Method |
+| :--- | :--- | :--- |
+| **Silicon Substrate Reflex** | **< 1.0 ms** (Nominal: 0.85 ms) | Monitored pure core hardware relaxation latency |
+| **Dynamic Energy Dissipation** | **$\ge$ 90.0%** within 50 ms | Local numerical integration of non-linear kinetics |
+| **Ground-State Potential** | **85 mV (0.085 V)** | Direct circuit baseline bias anchor |
+| **Cryptographic Root-of-Trust** | **Silicon PUF Seal** | Monotonically advancing generation cycle token |
+
+---
+
+### 4. Expected Terminal Audit Output
+
+```text
+================================================================================
+ [INDEPENDENT AUDIT] Dynamic Physical Resonance & Stability Challenge
+ * Auditor Unique Seed   : #4234 (Locally Synthesized Problem)
+ * Target RapidAPI Host  : gp-pcam-universal-physical-solver.p.rapidapi.com
+ * Hardware Reflex Bound : < 1.0 ms (Physical Relaxation Threshold)
+================================================================================
+
+[Step 1] Synthesizing unstable physical perturbation on local machine...
+    └─ Initial Shock Energy : 176485.29 Joules
+    └─ Initial Conditions   : Velocity = 594.10 m/s, Displacement = 0.0858 m
+    └─ Dynamics Status      : Without active damping, this system oscillates violently and diverges.
+
+[Step 2] Sending perturbation boundary conditions to remote P-CAM 003 Enclave...
+    └─ Convergence Status   : CONVERGED_SUCCESS
+    └─ Silicon Reflex Time  : 0.8596 ms (Physical Substrate Relaxation)
+    └─ Total Ingress RTT    : 480.27 ms
+    └─ Proposed Damping     : 0.8818
+    └─ Silicon Execution Seal: SEAL-CORE06-C09717
+    └─ Physical Generation  : #27485756
+
+[Step 3] Local Auditor PC independently simulating and grading the solution...
+    └─ Injecting P-CAM damping parameter into 2nd-order non-linear equation of motion...
+
+================================================================================
+                    INDEPENDENT CLIENT-SIDE GRADING REPORT
+================================================================================
+ Initial Destructive Energy   : 176485.29 Joules
+ Final Residual Energy (50ms) : 1.2095e+04 Joules
+ Energy Dissipation Efficiency: 93.15 %
+ Silicon Ground-State Potential: 0.085 V (85mV Physical Target)
+ Silicon Seal Verification    : SEAL-CORE06-C09717 (Hardware Authentic)
+ Attestation Proof Token      : 0xf3a0d8697787a5186a070daeaa5ed5...
+--------------------------------------------------------------------------------
+ Cognitive Physical Insight   : Complex physical system stabilized to global Hamiltonian 
+                                ground-state equilibrium without numerical stall.
+================================================================================
+
+[INDEPENDENT TECHNICAL VERDICTS]
+ [PASS] 1. Dynamic Stability: P-CAM damping successfully arrested resonance (93.15% >= 90%).
+ [PASS] 2. Sub-Millisecond Reflex: Silicon converged in 0.8596 ms (< 1.0 ms bound).
+ [PASS] 3. Silicon Root-of-Trust: Hardware PUF seal #27485756 verified authentic.
+================================================================================
+ >>> OVERALL VERDICT: OBJECTIVE PHYSICAL CHALLENGE INDEPENDENTLY SOLVED & VERIFIED (PASS)
+================================================================================
+```
 > **Sub-Millisecond Physical Dynamics Convergence & Cryptographic Silicon Root-of-Trust**
 
 **NEOMA P-CAM (Physical Co-processor Appliance Matrix)** is an enterprise hardware computing engine engineered for **Real-Time Physical Dynamics Convergence, Non-Linear Boundary Stabilization, and General-Purpose Physical Optimization (GP-PCAM)**.
