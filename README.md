@@ -22,11 +22,12 @@ Clone the repository and run the audit protocol. You can supply any arbitrary in
 
 ```bash
 # 1. Clone repository
-git clone [https://github.com/your-username/neoma-pcam-audit.git](https://github.com/your-username/neoma-pcam-audit.git)
-cd neoma-pcam-audit
+git clone https://github.com/neoma-pcam/pcam-live.git
+cd pcam-live
+
 
 # 2. Execute independent client-side hardware attestation
-python "Independent Hardware Attestation & Signature Verification.py" --seed 4234
+python "pcam_objective_audit.py" --seed 4234
 ```
 
 ---
@@ -397,7 +398,7 @@ python battery/pcam_pybamm_thermal.py
 
 To definitively verify that the execution payload originates from an authentic **P-CAM Physical Enclave** and has not been fabricated or tampered with by intermediary cloud routing, external auditors can run the following local verification protocol.
 
-### Local Cryptographic Audit Script (Python)
+### Local Cryptographic Audit Script ('pcam_objective_audit.py')
 
 ```python
 """
