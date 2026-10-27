@@ -505,6 +505,7 @@ def run_comparative_audit():
 
 if __name__ == "__main__":
     run_comparative_audit()```
+```
 ---
 
 - **Zero-Simulation Guarantee:** Responses failing cryptographic seed structure or physical cycle advancement are rejected.
