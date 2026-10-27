@@ -310,9 +310,9 @@ Clone the repository directly into your ROS 2 workspace (`colcon_ws/src`) and bu
 cd ~/colcon_ws/src
 git clone https://github.com/neoma-pcam/pcam-live.git
 cd ..
-colcon build --packages-select pcam_ros2
+colcon build --packages-select pcam_driver
 source install/setup.bash
-ros2 run pcam_ros2 compliance_node
+driver run pcam_driver compliance_node
 ```
 
 - **Target Topic:** Streams 0.85ms hardware-converged damping parameters over `/robot/pcam/optimal_damping` (`std_msgs/Float64`).
