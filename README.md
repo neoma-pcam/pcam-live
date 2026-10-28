@@ -635,8 +635,8 @@ export GEMINI_API_KEY="your-gemini-key"
 ```
 ### Physical & Cognitive Architecture
 
-* **Spine Layer (P-CAM)**: Continuously samples physical entropy, converges state within 0.85ms, and seals telemetry into local Parquet vaults with Hive partitioning (`date/domain`). This 100% local operation ensures deterministic latency without cloud dependencies.
-* **Brain Layer (Gemini)**: Automatically triggered on high-G shocks (>45,000 mm/s²) to formulate proactive root-cause diagnoses and operational advisories without human intervention.
+* **Spine Layer (P-CAM Reflex Core)**: Continuously samples physical entropy, converges boundary states within 0.85ms, and cryptographically seals telemetry into local Parquet vaults with Hive partitioning (`date/domain`). Operates 100% locally with zero cloud dependency.
+* **Brain Layer (On-Board Local Cognitive Enclave)**: Autonomously triggered on severe dynamic anomalies (>45,000 mm/s²) to perform in-situ Hamiltonian root-cause diagnoses and operational prescriptions directly within the edge container, maintaining complete data sovereignty without external cloud LLM dependencies.
 
 ### 🛡️ Data Provenance & Integrity Statement
 
