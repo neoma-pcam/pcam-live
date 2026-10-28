@@ -633,12 +633,16 @@ python pcam_cluster_supervisor.py
 # (Used strictly for post-event root-cause analysis, NOT for physical data generation)
 export GEMINI_API_KEY="your-gemini-key"
 ```
-Spine Layer (P-CAM): Continuously samples physical entropy, converges state within 0.85ms, and seals telemetry into local Parquet vaults with Hive partitioning (`date/domain`). This 100% local operation ensures deterministic latency without cloud dependencies.
-Brain Layer (Gemini): Automatically triggered on high-G shocks (>45,000 mm/s²) to formulate proactive root-cause diagnoses and operational advisories without human intervention.
-🛡️ Data Provenance & Integrity Statement
-Hardware-in-the-Loop Mining: The dataset is NOT derived from web scraping or cloud LLM hallucination. It is autonomously generated via a 5-Node closed-loop simulation that mathematically enforces P-CAM's strict 0.85ms deterministic silicon constraint.
-Cross-Calibrated Ground Truth: The virtual loop coefficients are directly calibrated against 1,000 physical sensor anchor points, achieving R² ≥ 0.98 physical consistency. This allows us to pre-generate high-risk, destructive physical edge-case datasets (e.g., 6G~12G kinematic shocks, 0.08V pre-thermal runaway) without physical equipment destruction.
-SEAL-CORE Authentication: Every physical tick is cryptographically sealed into Parquet format, guaranteeing 100% tamper-proof data integrity for enterprise-grade due diligence.
+### Physical & Cognitive Architecture
+
+* **Spine Layer (P-CAM)**: Continuously samples physical entropy, converges state within 0.85ms, and seals telemetry into local Parquet vaults with Hive partitioning (`date/domain`). This 100% local operation ensures deterministic latency without cloud dependencies.
+* **Brain Layer (Gemini)**: Automatically triggered on high-G shocks (>45,000 mm/s²) to formulate proactive root-cause diagnoses and operational advisories without human intervention.
+
+### 🛡️ Data Provenance & Integrity Statement
+
+* **Hardware-in-the-Loop Mining**: The dataset is NOT derived from web scraping or cloud LLM hallucination. It is autonomously generated via a 5-Node closed-loop simulation that mathematically enforces P-CAM's strict 0.85ms deterministic silicon constraint.
+* **Cross-Calibrated Ground Truth**: The virtual loop coefficients are directly calibrated against 1,000 physical sensor anchor points, achieving R² ≥ 0.98 physical consistency. This allows us to pre-generate high-risk, destructive physical edge-case datasets (e.g., 6G~12G kinematic shocks, 0.08V pre-thermal runaway) without physical equipment destruction.
+* **SEAL-CORE Authentication**: Every physical tick is cryptographically sealed into Parquet format, guaranteeing 100% tamper-proof data integrity for enterprise-grade due diligence.
 ---
 ## 📬 Enterprise Inquiries & Partnership
 
