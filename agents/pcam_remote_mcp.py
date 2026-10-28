@@ -1,40 +1,26 @@
-"""
+﻿"""
 ==============================================================================
-NEOMA P-CAM Remote MCP (Model Context Protocol) Server via SSE
+NEOMA P-CAM Remote MCP (Model Context Protocol) Router
 - Protocol: Remote MCP Specification (Server-Sent Events + HTTP POST)
 - Function: Decoupled Brain-Spine Bridge across Wide-Area Networks
-- Security: RapidAPI Proxy Secret Validation & Hardware PUF Silicon Seal
+- Security: Environment-based Proxy Secret & Enclave Attestation
 ==============================================================================
 """
-
 import os
 import json
 import asyncio
 import time
 import requests
 from typing import AsyncGenerator
-from fastapi import FastAPI, Request, Response, HTTPException, status
-from fastapi.middleware.cors import CORSMiddleware
+from fastapi import APIRouter, Request, Response, HTTPException, status
 from sse_starlette.sse import EventSourceResponse
-import uvicorn
 
-# 🌟 P-CAM 로컬 게이트웨이 또는 RapidAPI 라우팅
-LOCAL_GATEWAY_URL = "http://127.0.0.1:8000/v1/solve-universal-equilibrium"
-RAPID_PROXY_SECRET = "5b53f210-cc89-11f1-b103-2f4009b9fdeb"
+# 보안 강화: 하드코딩 제거 및 환경 변수 처리
+LOCAL_GATEWAY_URL = os.getenv("LOCAL_GATEWAY_URL", "http://127.0.0.1:8000/v1/solve-universal-equilibrium")
+RAPID_PROXY_SECRET = os.getenv("RAPID_PROXY_SECRET", "")
 
-app = FastAPI(
-    title="NEOMA P-CAM Remote MCP Gateway",
-    version="1.0.0",
-    description="Remote Model Context Protocol Server for Hardware Physical Reflex Enclaves"
-)
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+# 8000번 메인 서버에 등록할 APIRouter 정의
+router = APIRouter(tags=["Model Context Protocol (MCP)"])
 
 # MCP 표준 도구 메타데이터 정의
 MCP_TOOL_DEFINITION = {
@@ -71,7 +57,6 @@ MCP_TOOL_DEFINITION = {
     }
 }
 
-# 활성 세션 메시지 큐
 SESSION_QUEUES: dict[str, asyncio.Queue] = {}
 
 def call_local_pcam_hardware(params: dict) -> dict:
@@ -114,7 +99,7 @@ def call_local_pcam_hardware(params: dict) -> dict:
     except Exception as e:
         return {"isError": True, "content": [{"type": "text", "text": f"Hardware Offline: {str(e)}"}]}
 
-@app.get("/sse")
+@router.get("/sse")
 async def handle_sse(request: Request):
     """원격 MCP 클라이언트와의 상시 SSE 스트리밍 연결 수립"""
     session_id = f"session_{int(time.time() * 1000)}"
@@ -122,10 +107,8 @@ async def handle_sse(request: Request):
     SESSION_QUEUES[session_id] = queue
 
     async def event_generator() -> AsyncGenerator[dict, None]:
-        # 1. 초기 엔드포인트 URI 공지 (MCP SSE 표준 규격)
         endpoint_uri = f"/messages?session_id={session_id}"
         yield {"event": "endpoint", "data": endpoint_uri}
-
         try:
             while True:
                 if await request.is_disconnected():
@@ -134,14 +117,13 @@ async def handle_sse(request: Request):
                     data = await asyncio.wait_for(queue.get(), timeout=15.0)
                     yield {"event": "message", "data": json.dumps(data)}
                 except asyncio.TimeoutError:
-                    # Keep-Alive 핑 전송
                     yield {"event": "ping", "data": "keep-alive"}
         finally:
             SESSION_QUEUES.pop(session_id, None)
 
     return EventSourceResponse(event_generator())
 
-@app.post("/messages")
+@router.post("/messages")
 async def handle_messages(request: Request, session_id: str):
     """원격 AI 클라이언트의 JSON-RPC 요청 수신 및 처리"""
     if session_id not in SESSION_QUEUES:
@@ -150,17 +132,14 @@ async def handle_messages(request: Request, session_id: str):
     body = await request.json()
     method = body.get("method")
     msg_id = body.get("id")
-
     response_data = None
 
-    # MCP 도구 목록 요청
     if method == "tools/list":
         response_data = {
             "jsonrpc": "2.0",
             "id": msg_id,
             "result": {"tools": [MCP_TOOL_DEFINITION]}
         }
-    # MCP 도구 실행 요청 (P-CAM 하드웨어 호출)
     elif method == "tools/call":
         params = body.get("params", {}).get("arguments", {})
         execution_result = call_local_pcam_hardware(params)
@@ -176,10 +155,5 @@ async def handle_messages(request: Request, session_id: str):
             "result": {}
         }
 
-    # 해당 세션의 SSE 큐에 응답 주입
     await SESSION_QUEUES[session_id].put(response_data)
     return Response(status_code=status.HTTP_202_ACCEPTED)
-
-if __name__ == "__main__":
-    print("[*] Launching NEOMA P-CAM Remote MCP Server (SSE) on port 8001...")
-    uvicorn.run(app, host="0.0.0.0", port=8001, log_level="info")
