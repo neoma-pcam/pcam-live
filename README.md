@@ -121,9 +121,11 @@ Unlike conventional software simulators that suffer from computational lag, iter
 ---
 ---
 
+---
+
 ## 🧠 Physical AI Architecture: The Brain-Spine Cooperative Loop
 
-NEOMA P-CAM establishes the world's first **Decoupled Bionic Loop**, solving the fundamental latency and physical grounding bottleneck of Frontier LLMs:
+NEOMA P-CAM establishes the world's first **Decoupled Bionic Loop**, bridging Frontier Cognitive Models with a deterministic physical reflex core:
 
 ```
 [ Cognitive Layer (The Brain) ]  ─── Anthropic Claude / GPT-4o / Local SLM
@@ -140,9 +142,9 @@ NEOMA P-CAM establishes the world's first **Decoupled Bionic Loop**, solving the
        └── Zero-GPU Overhead, 19.92 MB Host Footprint, 0.00% Packet Loss
 ```
 
-### 📊 Empirical Validation: Hardware Reflex vs. Cognitive Jitter
+### 📊 Empirical Hardware Validation (P-CAM 003 Live Telemetry)
 
-Benchmarked directly against live edge silicon hardware (STM32 + ESP32-S3 Physical Substrate):
+Benchmarked directly against live physical silicon hardware to verify time-scale decoupling:
 
 | Functional Layer | Role & Responsibility | Measured Reaction Latency | Deterministic Status |
 | :--- | :--- | :--- | :--- |
@@ -150,19 +152,16 @@ Benchmarked directly against live edge silicon hardware (STM32 + ESP32-S3 Physic
 | **Cloud/Host LLM (Brain)** | Semantic Interpretation & Diagnostic Prescription | **639.66 ms** (Network/Inference) | **COGNITIVE (PASS)** |
 | **Speed Differential** | **P-CAM Physical Reflex responds 752.5x faster than pure AI inference.** | |
 
-> **Why This Matters:**  
-> While the cloud LLM ponders the situation over hundreds of milliseconds, the P-CAM hardware spine has already intercepted the destructive physical shockwave in 0.85ms, locking the system into ground-state equilibrium (`0.085V`, `0.0010 Entropy`) and transmitting a cryptographically attested (`SEAL-CORE...`) payload up to the cognitive brain via standard MCP tools.
+- **Zero-GPU Footprint:** Fully operational on edge hardware with 0 MB GPU allocation and only 19.92 MB host RAM.
+- **Flawless Telemetry:** 0.00% packet loss across 432 consecutive physical cycles.
 
----
-
-### ⚡ 1-Click Claude Desktop Integration (Model Context Protocol)
-
-Connect your Claude Desktop directly to the P-CAM physical hardware enclave by adding this block to your `claude_desktop_config.json`:
+### ⚡ 1-Click Claude Desktop MCP Configuration
+Add the following configuration to your `claude_desktop_config.json` to link Claude directly to the P-CAM physical enclave:
 
 ```json
 {
   "mcpServers": {
-    "pcam-physical-enclave": {
+    "pcam-physical-solver": {
       "command": "python",
       "args": ["-m", "agents.pcam_mcp_server"],
       "env": {
@@ -172,9 +171,7 @@ Connect your Claude Desktop directly to the P-CAM physical hardware enclave by a
   }
 }
 ```
-* Now Claude autonomously calls the physical P-CAM hardware whenever physical stability, resonance damping, or non-linear equilibrium is required.
-
-
+* **Paywall Protected:** Execution requires a valid RapidAPI Key. 👉 [Get your RapidAPI Key ($30/mo micro-tier)](https://rapidapi.com/shs15199702/api/gp-pcam-universal-physical-solver)
 ## 🌐 Production Access Points & Official Gateways
 
 - **Enterprise Control Matrix (RapidAPI Hub):**  
@@ -405,32 +402,6 @@ print("Damping Action  :", result["damping_coefficient"])
 ```
 
 👉 **Need an API Key?** [Get your key on RapidAPI ($30/mo micro-tier with 50 free calls)](https://rapidapi.com/shs15199702/api/gp-pcam-universal-physical-solver)
----
-
-## ⚡ Anthropic Claude Desktop MCP (Model Context Protocol) Integration
-
-Seamlessly connects Anthropic Claude Desktop or Frontier LLM Agents directly to the live P-CAM physical hardware enclave.
-
-### 1-Click Claude Desktop Configuration
-Add the following configuration to your `claude_desktop_config.json`:
-
-```json
-{
-  "mcpServers": {
-    "pcam-physical-solver": {
-      "command": "python",
-      "args": ["-m", "agents.pcam_mcp_server"],
-      "env": {
-        "RAPIDAPI_KEY": "YOUR_PURCHASED_RAPIDAPI_KEY"
-      }
-    }
-  }
-}
-```
-
-- **Physical Grounding:** Eliminates hallucination by executing 0.85ms hardware-level physical equilibrium convergence.
-- **Paywall Protected:** Execution requires a valid RapidAPI Key, preventing unauthorized compute drain.
-👉 [Get your RapidAPI Key ($30/mo micro-tier)](https://rapidapi.com/shs15199702/api/gp-pcam-universal-physical-solver)
 ---
 ---
 
