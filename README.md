@@ -622,7 +622,21 @@ if __name__ == "__main__":
 - **Automated Golden Physics Vault:** Continuous physical-cognitive inference records are immutably archived into secure local datasets for proprietary verification and enterprise licensing.
 
 ---
+## 🤖 Autonomous Physical Reflex Daemon (`agents/`)
 
+P-CAM includes a continuous, proactive telemetry miner and anomaly containment daemon:
+
+```bash
+# Set Gemini cognitive key
+export GEMINI_API_KEY="your-gemini-key"
+
+# Run autonomous physical homeostasis loop
+python agents/pcam_autonomous_worker.py
+```
+
+- **Spine Layer (P-CAM):** Continuously samples physical entropy, converges state within 0.85ms, and seals telemetry into local SQLite vault (`pcam_reflex_vault.db`).
+- **Brain Layer (Gemini):** Automatically triggered on high-G shocks (>45,000 mm/s²) to formulate proactive root-cause diagnoses and operational advisories without human intervention.
+---
 ## 📬 Enterprise Inquiries & Partnership
 
 For custom on-premise appliances, physical co-processor licensing, or technical PoC evaluation:
