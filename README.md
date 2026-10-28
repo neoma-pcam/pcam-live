@@ -622,7 +622,7 @@ if __name__ == "__main__":
 - **Automated Golden Physics Vault:** Continuous physical-cognitive inference records are immutably archived into secure local datasets for proprietary verification and enterprise licensing.
 
 ---
-🤖 Autonomous Physical Reflex Cluster & Data Lake Daemon (`agents/`)
+### 🤖 Autonomous Physical Reflex Cluster & Data Lake Daemon (`agents/`)
 P-CAM includes a continuous, proactive telemetry miner and anomaly containment daemon running across a 5-node distributed architecture:
 ```bash
 # 1. Run autonomous physical homeostasis loop (Spine Layer)
