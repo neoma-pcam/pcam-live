@@ -168,7 +168,8 @@ Add the following configuration to your `claude_desktop_config.json` to link Cla
   }
 }
 ```
-* **Paywall Protected:** Execution requires a valid RapidAPI Key. 👉 [Get your RapidAPI Key ($30/mo micro-tier)](https://rapidapi.com/shs15199702/api/gp-pcam-universal-physical-solver)
+- **Free Tier Available:** Includes monthly evaluation requests on the cloud ($0 BASIC plan). 👉 [Get your Free RapidAPI Key](https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control)
+- **Local Hardware Diagnostic Mode:** Direct COM port access is strictly limited to local integrity audits and connection testing (`pcam_objective_audit.py`). Continuous solver compute requires an authorized license or API gateway routing.
 ---
 ## 🌐 Production Access Points & Official Gateways
 
