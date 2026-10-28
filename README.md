@@ -119,9 +119,6 @@ python "pcam_objective_audit.py" --seed 4234
 Unlike conventional software simulators that suffer from computational lag, iterative convergence stalls, and exponential scaling bottlenecks, P-CAM offloads dynamic relaxation loops directly to **dedicated physical reflex hardware enclaves**. Operating within a sealed blackbox architecture, P-CAM achieves **deterministic sub-millisecond physical equilibrium (0.84ms ~ 0.87ms)**, active dynamic damping, and cryptographically verifiable **Silicon Hardware Execution Seals (`SEAL-CORE...`)** backed by an autonomous on-board cognitive reasoning layer.
 
 ---
----
-
----
 
 ## 🧠 Physical AI Architecture: The Brain-Spine Cooperative Loop
 
@@ -172,6 +169,7 @@ Add the following configuration to your `claude_desktop_config.json` to link Cla
 }
 ```
 * **Paywall Protected:** Execution requires a valid RapidAPI Key. 👉 [Get your RapidAPI Key ($30/mo micro-tier)](https://rapidapi.com/shs15199702/api/gp-pcam-universal-physical-solver)
+---
 ## 🌐 Production Access Points & Official Gateways
 
 - **Enterprise Control Matrix (RapidAPI Hub):**  
