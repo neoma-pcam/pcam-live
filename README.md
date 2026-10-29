@@ -644,6 +644,32 @@ export GEMINI_API_KEY="your-gemini-key"
 * **Cross-Calibrated Ground Truth**: The virtual loop coefficients are directly calibrated against 1,000 physical sensor anchor points, achieving R² ≥ 0.98 physical consistency. This allows us to pre-generate high-risk, destructive physical edge-case datasets (e.g., 6G~12G kinematic shocks, 0.08V pre-thermal runaway) without physical equipment destruction.
 * **SEAL-CORE Authentication**: Every physical tick is cryptographically sealed into Parquet format, guaranteeing 100% tamper-proof data integrity for enterprise-grade due diligence.
 ---
+## ⚡ On-Demand Bespoke Physical Data Mining & Data Licensing
+
+Accelerate your Physical AI, Robotics, and Battery Foundation Models with custom-mined physical ground-truth datasets without risking multimillion-dollar hardware destruction.
+
+Through our distributed 5-node P-CAM Reflex Cluster, we provide **On-Demand Bespoke Data Mining Services** tailored to your mission-critical boundary conditions.
+
+### 🎯 Supported Custom Perturbation Domains
+* **Robotics & Compliance:** Extreme kinematic impact shocks (6G ~ 15G), joint resonance singularities, and sudden mechanical jamming.
+* **Battery & Energy Storage:** Pre-thermal runaway electrochemical gradients (< 0.085V drop), extreme ambient thermal shocks (-40°C ~ 85°C).
+* **High-Speed Mobility:** Sudden yaw divergence, zero-traction ice hydroplaning, and non-linear aerodynamic crosswind shocks.
+* **Bioreactor & Fluid Dynamics:** High-shear cavitation boundaries and non-Newtonian flow equilibrium transitions.
+
+### 🛡️ What You Receive
+* **Cryptographically Signed Telemetry:** Every cycle is immutably stamped with P-CAM `SEAL-CORE` hardware attestation proof tokens.
+* **Enterprise-Ready Delivery:** Formatted directly into partitioned Apache Parquet / HDF5 datasets ready for PyTorch, JAX, or ROS 2 training loops.
+* **Calibrated Ground-Truth:** $R^2 \ge 0.98$ physical consistency cross-calibrated against 1,000 empirical sensor anchors.
+
+---
+
+### 📬 Request Custom Mining & RFQ (Request for Quote)
+Interested in commissioning a tailored physical dataset for your foundation model or edge testing?
+
+Submit your boundary conditions (target mass, gradient velocity, thermal ranges, and sample size):
+* **Custom Dataset Inquiry:** [contact@neoma-pcam.com](mailto:contact@neoma-pcam.com)
+* **Subject Format:** `[Data Mining Request] <Domain> - <Company/Institution Name>`
+---
 ## 📬 Enterprise Inquiries & Partnership
 
 For custom on-premise appliances, physical co-processor licensing, or technical PoC evaluation:
