@@ -138,6 +138,7 @@ NEOMA P-CAM establishes the world's first **Decoupled Bionic Loop**, bridging Fr
        └── Sub-Millisecond In-Situ Damping (0.85ms Ground-State Lock)
        └── Zero-GPU Overhead, 19.92 MB Host Footprint, 0.00% Packet Loss
 ```
+---
 ## 🔌 Zero-Software-Tax Architecture: Universal Hardware-First Interfacing
 
 ### ⚙️ Why P-CAM Requires Zero Proprietary Software Stacks
