@@ -139,58 +139,6 @@ NEOMA P-CAM establishes the world's first **Decoupled Bionic Loop**, bridging Fr
        └── Zero-GPU Overhead, 19.92 MB Host Footprint, 0.00% Packet Loss
 ```
 ---
-## 🔌 Zero-Software-Tax Architecture: Universal Hardware-First Interfacing
-
-### ⚙️ Why P-CAM Requires Zero Proprietary Software Stacks
-
-Conventional software-dependent accelerators impose a heavy **"Software Tax"** on engineering teams: multi-gigabyte runtime installations, fragile library version matching, frequent driver conflicts, and continuous dependency maintenance.
-
-**NEOMA P-CAM completely decouples physical relaxation from software runtimes.** Much like a classic hardware Floating-Point Unit (FPU) or an analog signal processor, P-CAM acts as a **self-contained physical co-processor**. You do not build on top of P-CAM; you simply interface with it.
-
-```
-┌────────────────────────────────────────────────────────────────────────────────────────┐
-│                        COMPUTATIONAL STACK COMPARISON                                  │
-├──────────────────────────────────────────┬─────────────────────────────────────────────┤
-│ Legacy Software-Bound Compute Engines    │ NEOMA P-CAM Hardware Interfacing (Stateless)│
-├──────────────────────────────────────────┼─────────────────────────────────────────────┤
-│ • Heavy host footprint (> 5 GB SDK/libs) │ • Zero host dependencies (< 20 MB footprint)│
-│ • Fragile version lock-in & driver drift │ • Permanent ABI stability (standard buses)  │
-│ • Non-deterministic OS scheduling jitter │ • Deterministic physical relaxation latency │
-│ • Rewrites required across languages     │ • Pure transport: Serial, REST, gRPC, CAN   │
-└──────────────────────────────────────────┴─────────────────────────────────────────────┘
-```
-
-### 🌐 100% Stack & Framework Agnostic
-
-P-CAM does not dictate your language, framework, or operating system. Whether your stack is bare-metal firmware, an industrial real-time OS (RTOS), or modern high-level robotics middleware, integration requires nothing more than transmitting minimal boundary scalars:
-
-* **Robotics & Motion Control:** ROS 1 / ROS 2, Orocos, EtherCAT controllers, micro-ROS.
-* **Systems & Embedded Engineering:** Bare-Metal C, C++20, Rust, RT-Linux, FreeRTOS.
-* **Scientific & CAE Simulations:** MATLAB/Simulink, PyBaMM, ANSYS, OpenFOAM, SciPy.
-* **Enterprise & AI Agents:** Python, Go, Node.js, Claude Desktop (MCP), LangChain.
-
-### 🛠️ Effortless Integration & Zero-Maintenance Operational Lifecycle
-
-```
-[ Your Existing Stack ]                [ P-CAM Physical Substrate ]
-  (C++, ROS 2, Python, PLC)             (Autonomous Silicon Enclave)
-          │                                         │
-          │ ─── 1. Send Boundary Vector (JSON/Bus) ─►│
-          │      (Velocity, Strain, Thermal Flux)   │ (Relaxes to 85 mV in < 1 ms)
-          │                                         │
-          │ ◄── 2. Receive Damping & PUF Seal ──────│
-          ▼
-   Apply directly to your actuators/registers
-   (Zero background drivers. Zero cache invalidation. Zero drift.)
-```
-
-1. **Plug-and-Produce Simplicity:**
-   * No compilation toolchains or custom SDK bindings required. If your environment can open a standard serial port (`COM`/`tty`), write to a memory-mapped bus (`SPI`/`PCIe`), or send a 4-field HTTP POST request, it is already 100% P-CAM compatible.
-2. **Permanent Stability (Fit-and-Forget):**
-   * P-CAM’s internal algorithms and analog quantum-relaxation dynamics execute entirely inside its sealed physical enclave. Client-side applications never suffer from breaking library updates or platform obsolescence.
-3. **Frictionless Maintenance:**
-   * Because P-CAM stores zero client state and maintains no local memory caches, operational maintenance overhead is mathematically eliminated. Upgrades to host software environments never impact P-CAM's physical convergence characteristics.
----
 ### 📊 Empirical Hardware Validation (P-CAM 003 Live Telemetry)
 
 Benchmarked directly against live physical silicon hardware to verify time-scale decoupling:
