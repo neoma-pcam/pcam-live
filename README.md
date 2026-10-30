@@ -193,7 +193,7 @@ To maintain absolute engineering candor and reproducibility, all diagnostic data
 
 * **Physical Boundary Mapping:** Dynamic state variables of complex non-linear systems (robotic joint backlash, dendritic impedance drift, exothermic radical runaways, turbulent hydrodynamic shear) are translated into boundary conditions and injected directly into the **P-CAM Silicon Enclave & Adaptive Material Substrate**.
 * **Quantum Annealing & Ground-State Relaxation:** Instead of solving stiff partial differential equations through iterative software numerical approximations, the physical P-CAM substrate undergoes analog quantum/material relaxation to settle into its minimum-entropy Hamiltonian ground state (**85 mV / 0.085 V**) in **< 1.0 ms**.
-* **Cryptographic Attestation & Telemetry Ingress:** Telemetry streams are coupled with real-time physical micro-entropy and authenticated via the silicon enclave's hardware PUF/UID signature (`HMAC-SHA256`), providing an unforgeable hardware audit trail.
+* **Cryptographic Attestation & Telemetry Ingress:** Telemetry streams are coupled with real-time physical micro-entropy from the physical COM6 serial interface (921,600 bps) and authenticated via the silicon enclave's hardware PUF/UID signature (`HMAC-SHA256`), providing an unforgeable hardware audit trail.
 
 ---
 
@@ -203,38 +203,38 @@ Each vault encapsulates 1,000+ cycle-equivalent dynamics (219 batches / 21,900 p
 
 | Target Domain & Silicon Enclave | Injected Dynamic Boundary Conditions | Substrate-Extracted Precursor Telemetry | Physical Convergence Metric | Golden Vault Integrity (SHA-256) |
 | :--- | :--- | :--- | :--- | :--- |
-| **Robotics & Mobility**<br>`ENCLAVE-03`<br>`SEAL-CORE03-4AB333` | 1,095 EOD cyclic shear stress, multi-axis harmonic shocks, non-linear gear backlash | Mechanical fatigue progression (**100.0% → 72.1% SOH**), backlash expansion (**0.02 mm → 0.44 mm**) | **0.85 ms** reflex<br>85 mV potential anchor<br>> 90% dynamic dissipation | `B863E32E1FFA4C1A0171688235525196ADA27EE1BDAE9775AB142E6B61672383`<br>*(tesla_3year_golden_vault.zip, 1.47 MB)* |
-| **Next-Gen Battery**<br>`ENCLAVE-05`<br>`SEAL-CORE05-EE2474` | 4680 cell cyclic charge/discharge stress, lithium dendrite SEI impedance drift | Internal resistance divergence, micro-short precursor glitch (**1.21 mV anomalous drop**) | **0.85 ms** reflex<br>85 mV potential anchor<br>Thermal clamp < 52.8°C | `925EF9DD2CCEE7BF69D2A56BC0CA01C914ACEF97DBB0A8265904A3D1A767EB23`<br>*(battery_3year_golden_vault.zip, 0.34 MB)* |
-| **Precision Synthesis**<br>`ENCLAVE-02`<br>`SEAL-CORE02-3FCE9A` | Continuous flow microreactor feed fluctuations, catalytic boundary exotherms | Purity decay trajectory (**99.95% → 92.03%**), radical runaway pre-ignition glitch (**0.94 ~ 1.42 mV**) | **0.87 ms** reflex<br>85 mV potential anchor<br>Hotspot clamp < 65.2°C | `9B648469FCBB3F322A13A3EC0BE93F250328E6B793D14A04E3490F780EC9CD27`<br>*(chemical_synthesis_golden_vault.zip, 0.30 MB)* |
-| **Biopharma & Therapeutics**<br>`ENCLAVE-01`<br>`SEAL-CORE01-C09717` | Bioreactor hydrodynamic shear vortex, cavitation collapse, ligand unbinding | Cell viability degradation (**99.6% → 76.8%**), protein unfolding precursor glitch (**0.27 mV**) | **0.85 ms** reflex<br>85 mV potential anchor<br>Shear stress < 1.85 Pa | `383F6B0A6C6E563E9EDDE4CBF99F4E6E5489EE2AFAEE5DE6611ADDB43E151E6B`<br>*(bioreactor_diagnostic_golden_vault.zip, 0.31 MB)* |
+| **Robotics & Mobility**<br>`ENCLAVE-03`<br>`SEAL-CORE03-4AB333` | 1,095 EOD cyclic shear stress, multi-axis harmonic shocks, non-linear gear backlash | Mechanical fatigue progression (**100.0% → 72.1% SOH**), backlash expansion (**0.02 mm → 0.44 mm**) | **0.85 ms** reflex<br>85 mV potential anchor<br>> 90% dynamic dissipation | `B863E32E1FFA4C1A0171688235525196ADA27EE1BDAE9775AB142E6B61672383`<br>*(tesla_3year_golden_vault.zip)* |
+| **Next-Gen Battery**<br>`ENCLAVE-05`<br>`SEAL-CORE05-EE2474` | 4680 cell cyclic charge/discharge stress, lithium dendrite SEI impedance drift | Internal resistance divergence, micro-short precursor glitch (**1.21 mV anomalous drop**) | **0.85 ms** reflex<br>85 mV potential anchor<br>Thermal clamp < 52.8°C | `497373FA447A95606905A4FD265381E2906B16DBED76780C9C09F78A7E1376B0`<br>*(battery_3year_golden_vault.zip)* |
+| **Precision Synthesis**<br>`ENCLAVE-02`<br>`SEAL-CORE02-3FCE9A` | Continuous flow microreactor feed fluctuations, catalytic boundary exotherms | Purity decay trajectory (**99.95% → 92.03%**), radical runaway pre-ignition glitch (**0.94 ~ 1.42 mV**) | **0.87 ms** reflex<br>85 mV potential anchor<br>Hotspot clamp < 65.2°C | `F953591494113AC01433561326CEE1A6608AC4D993EB95E812BC2A90E5380F8A`<br>*(chemical_synthesis_golden_vault.zip)* |
+| **Biopharma & Therapeutics**<br>`ENCLAVE-01`<br>`SEAL-CORE01-C09717` | Bioreactor hydrodynamic shear vortex, cavitation collapse, ligand unbinding | Cell viability degradation (**99.6% → 76.8%**), protein unfolding precursor glitch (**0.27 mV**) | **0.85 ms** reflex<br>85 mV potential anchor<br>Shear stress < 1.85 Pa | `82AEAA7AB49E4FD3B861E5CDE5D3ECB467A7C225A5E38554967A3522360345D0`<br>*(bioreactor_diagnostic_golden_vault.zip)* |
 
 ---
 
-### 🛡️ Diagnostic Hook & Sealed Solution Policy
+### 🛡️ Data Availability & Deployment Architecture
 
 ```
 [ INCOMING BOUNDARY TELEMETRY ]
                │
                ▼
 ┌──────────────────────────────┐
-│  P-CAM Substrate Relaxation  │ ──► [ OPEN DIAGNOSTIC VAULT ]
-│  (Analog Quantum Annealing)  │     • Precursor micro-voltages (mV)
-└──────────────┬───────────────┘     • SOH decay trajectories
-               │                     • SHA-256 sealed golden datasets
+│  P-CAM Substrate Relaxation  │ ──► [ PUBLIC DIAGNOSTIC ARCHIVE ]
+│  (Analog Quantum Annealing)  │     • Precursor micro-voltage telemetry
+└──────────────┬───────────────┘     • SOH degradation trajectories
+               │                     • SHA-256 verified golden datasets
                ▼
 ┌──────────────────────────────┐
-│   CLOSED-LOOP DAMPING CORE   │ ──► [ AIR-GAPPED SOLUTION KERNEL ]
-│  (Post-Failure Compensation) │     • Dynamic inverse backlash tables
-└──────────────────────────────┘     • Sub-millisecond thermal arrest
-                                     • Fluid turbulence cancelation
-                                     (Enterprise Enclave Appliance Only)
+│   CLOSED-LOOP DAMPING CORE   │ ──► [ HARDWARE-BOUND CONTROL FIRMWARE ]
+│  (Active Dynamic Regulation) │     • Real-time backlash compensation tables
+└──────────────────────────────┘     • Sub-millisecond thermal arrest logic
+                                     • Hydrodynamic turbulence dampening
+                                     (Dedicated Appliance Deployment)
 ```
 
-1. **Open Verification Layer (The Diagnostic Hook):**
-   * Raw time-series records containing substrate micro-voltages, entropy dissipation curves, and failure precursor signatures are fully transparent. Independent academic or industrial researchers can cross-validate the cryptographic signatures and physical convergence metrics.
-2. **Proprietary Active Mitigation Layer (The Commercial Lock):**
-   * Multi-axis backlash compensation lookup tables, thermal runaway arrest drivers, and hydrodynamic turbulence dampening kernels are strictly excluded from public distributions.
-   * Solution kernels remain air-gapped as proprietary intellectual property and are deployed exclusively via dedicated NEOMA P-CAM Silicon Appliances under enterprise commercial licensing.
+1. **Public Verification Layer (Diagnostic Telemetry):**
+   * Raw time-series records containing substrate micro-voltages, entropy dissipation curves, and degradation precursor signatures are openly accessible for independent verification and academic reproducibility.
+2. **Hardware-Bound Mitigation Layer (Proprietary Control Firmware):**
+   * Real-time closed-loop mitigation routines—including dynamic backlash compensation tables, thermal runaway arrest drivers, and turbulence cancellation kernels—are embedded directly into dedicated hardware appliances and governed by standard enterprise licensing agreements.
+
 ---
 ## 🌐 Production Access Points & Official Gateways
 
