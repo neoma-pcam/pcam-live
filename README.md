@@ -8,7 +8,10 @@
 [![Silicon Attestation](https://img.shields.io/badge/Hardware%20PUF-Cryptographically%20Signed-blueviolet.svg)](https://api.neoma-pcam.com/health)
 [![SDK License](https://img.shields.io/badge/Client%20SDK-Apache%202.0-blue.svg)](LICENSE)
 [![Core Architecture](https://img.shields.io/badge/Enclave%20Core-Proprietary-red.svg)](#-proprietary-notice)
+<!-- Live Interactive Showcase Badge & Callout -->
+[![Hugging Face Spaces](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Live%20Reflex%20Solver%20Demo-blue?style=for-the-badge&logo=huggingface)](https://huggingface.co/spaces/Johnsgama/neoma-pcam-solver)
 
+> ⚡ **Interactive Hardware Reflex Solver:** Test 0.85ms sub-millisecond physical equilibrium convergence and SEAL-CORE cryptographic proofs directly in your browser with 1-click guest mode: [Launch P-CAM Live Solver on Hugging Face](https://huggingface.co/spaces/Johnsgama/neoma-pcam-solver)
 ## ⚡ NEOMA P-CAM 003 Independent Hardware Attestation
 
 > **Zero-Trust Client-Side Verification:**  
