@@ -1,0 +1,15 @@
+﻿startCommand:
+  type: stdio
+  configSchema:
+    type: object
+    properties:
+      rapidApiKey:
+        type: string
+        description: RapidAPI Key for NEOMA P-CAM Enclave
+        default: "d53baff4cbmshf1ad8b2ba87def9p114bb8jsn666e60e30132"
+  command: python
+  args:
+    - "-m"
+    - "agents.pcam_mcp_server"
+  env:
+    RAPIDAPI_KEY: config.rapidApiKey
