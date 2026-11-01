@@ -103,8 +103,7 @@ python "pcam_objective_audit.py" --seed 4234
  Silicon Seal Verification    : SEAL-CORE06-C09717 (Hardware Authentic)
  Attestation Proof Token      : 0xf3a0d8697787a5186a070daeaa5ed5...
 --------------------------------------------------------------------------------
- Cognitive Physical Insight   : Complex physical system stabilized to global Hamiltonian 
-                                ground-state equilibrium without numerical stall.
+ Cognitive Physical Insight   : Complex physical system stabilized to minimum-energy equilibrium state without numerical stall.
 ================================================================================
 
 [INDEPENDENT TECHNICAL VERDICTS]
@@ -246,7 +245,7 @@ Each vault encapsulates 1,000+ cycle-equivalent dynamics (219 batches / 21,900 p
 ### 🛡️ Core Enterprise Compliance Principles
 
 1. **Non-Storage Physical Substrate (Zero-Retention by Physics):**
-   * P-CAM is not an LLM or a database that retains or trains on user history. It acts strictly as an analog physical relaxation co-processor. Once the Hamiltonian ground state is calculated and returned, all intermediate states vanish instantaneously.
+   * P-CAM is not an LLM or a database that retains or trains on user history. It acts strictly as an analog physical relaxation co-processor. Once minimum-energy equilibrium state is calculated and returned, all intermediate states vanish instantaneously.
 2. **Boundary-Only Data Transmission:**
    * Enterprise evaluators never send full structural specifications or proprietary system weights. The API only requires localized numerical scalars (e.g., initial kinetic velocity, boundary displacement, or current thermal flux).
 3. **Cryptographically Sealed Audit Trail:**
@@ -731,7 +730,7 @@ if __name__ == "__main__":
 
 - **Autonomous Cognitive Enclave:** Operates with a proprietary on-board physical reasoning core. No external cloud endpoints or third-party AI APIs are queried, ensuring absolute data sovereignty and air-gapped isolation.
 - **Physical Unclonable Function (PUF) Seals:** Each convergence transaction is bound to a deterministic, tamper-proof hardware execution token (`attestation_proof`) cryptographically signed by the physical enclave's silicon characteristics.
-- **Zero Simulation Fallback:** If the physical computing fabric is disconnected or experiences physical decoherence, the gateway returns explicit enclave diagnostic warnings rather than deceptive software approximations.
+- **Zero Simulation Fallback:** If the physical computing fabric is disconnected or experiences physical divergence, the gateway returns explicit enclave diagnostic warnings rather than deceptive software approximations.
 - **Automated Golden Physics Vault:** Continuous physical-cognitive inference records are immutably archived into secure local datasets for proprietary verification and enterprise licensing.
 
 ---
