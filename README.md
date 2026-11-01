@@ -189,14 +189,14 @@ To maintain absolute engineering candor and reproducibility, all diagnostic data
 ├──────────────────────────┼─────────────────────────────┼───────────────────────────────┤
 │ • Numerical Runge-Kutta  │ • Physical pack fire / test │ • Boundary dynamics mapped to │
 │ • Discretization latency │ • High CAPEX & destructible │   P-CAM adaptive material     │
-│ • Numerical stall/blowup │ • Slow iteration turnaround │ • Quantum annealing to 85 mV  │
-│ • Zero physical entropy  │ • Hard to capture precursor │ • Instantaneous (<0.85 ms) fix│
+│ • Numerical stall/blowup │ • Slow iteration turnaround │ • Zero physical entropy       │
+│ • Hard to capture precursor │ • Instantaneous (<0.85 ms) fix│                           │
 └──────────────────────────┴─────────────────────────────┴───────────────────────────────┘
 ```
 
 * **Physical Boundary Mapping:** Dynamic state variables of complex non-linear systems (robotic joint backlash, dendritic impedance drift, exothermic radical runaways, turbulent hydrodynamic shear) are translated into boundary conditions and injected directly into the **P-CAM Silicon Enclave & Adaptive Material Substrate**.
-* **Quantum Annealing & Ground-State Relaxation:** Instead of solving stiff partial differential equations through iterative software numerical approximations, the physical P-CAM substrate undergoes analog quantum/material relaxation to settle into its minimum-entropy Hamiltonian ground state (**85 mV / 0.085 V**) in **< 1.0 ms**.
-* **Cryptographic Attestation & Telemetry Ingress:** Telemetry streams are coupled with real-time physical micro-entropy from the physical COM6 serial interface (921,600 bps) and authenticated via the silicon enclave's hardware PUF/UID signature (`HMAC-SHA256`), providing an unforgeable hardware audit trail.
+* **Ground-State Relaxation:** Instead of solving stiff partial differential equations through iterative software numerical approximations, the physical P-CAM substrate undergoes analog material relaxation to settle into its minimum-entropy ground state (**85 mV / 0.085 V**) in **< 1.0 ms**.
+* **Cryptographic Attestation & Telemetry Ingress:** Telemetry streams are coupled with real-time physical micro-entropy via the silicon enclave's hardware PUF/UID signature (`HMAC-SHA256`), providing an unforgeable hardware audit trail.
 
 ---
 
@@ -221,7 +221,7 @@ Each vault encapsulates 1,000+ cycle-equivalent dynamics (219 batches / 21,900 p
                ▼
 ┌──────────────────────────────┐
 │  P-CAM Substrate Relaxation  │ ──► [ PUBLIC DIAGNOSTIC ARCHIVE ]
-│  (Analog Quantum Annealing)  │     • Precursor micro-voltage telemetry
+│                              │     • Precursor micro-voltage telemetry
 └──────────────┬───────────────┘     • SOH degradation trajectories
                │                     • SHA-256 verified golden datasets
                ▼
