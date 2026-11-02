@@ -29,22 +29,6 @@ git clone [https://github.com/neoma-pcam/pcam-live.git](https://github.com/neoma
 cd pcam-live
 
 # 2. Execute independent client-side hardware attestation
-python pcam_objective_audit.py --seed 4234
-```
-## ⚡ NEOMA P-CAM 003 Independent Hardware Attestation
-
-**Zero-Trust Client-Side Verification:** Do not trust server-side logs or static benchmark claims. This independent audit protocol generates non-linear physical challenges locally, submits boundary conditions to the P-CAM 003 silicon enclave via RapidAPI, and independently computes physical damping convergence directly inside your local CPU's physics engine.
-
-### 1. Quick Verification (10-Second Test)
-
-Clone the repository and run the audit protocol. You can supply any arbitrary integer seed (`--seed <number>`) to synthesize unique physical perturbation profiles locally:
-
-```bash
-# 1. Clone repository
-git clone [https://github.com/neoma-pcam/pcam-live.git](https://github.com/neoma-pcam/pcam-live.git)
-cd pcam-live
-
-# 2. Execute independent client-side hardware attestation
 python pcam_objective_audit.py --seed 7777
 ```
 
