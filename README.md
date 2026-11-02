@@ -31,8 +31,25 @@ cd pcam-live
 # 2. Execute independent client-side hardware attestation
 python pcam_objective_audit.py --seed 4234
 ```
+## ⚡ NEOMA P-CAM 003 Independent Hardware Attestation
+
+**Zero-Trust Client-Side Verification:** Do not trust server-side logs or static benchmark claims. This independent audit protocol generates non-linear physical challenges locally, submits boundary conditions to the P-CAM 003 silicon enclave via RapidAPI, and independently computes physical damping convergence directly inside your local CPU's physics engine.
+
+### 1. Quick Verification (10-Second Test)
+
+Clone the repository and run the audit protocol. You can supply any arbitrary integer seed (`--seed <number>`) to synthesize unique physical perturbation profiles locally:
+
+```bash
+# 1. Clone repository
+git clone [https://github.com/neoma-pcam/pcam-live.git](https://github.com/neoma-pcam/pcam-live.git)
+cd pcam-live
+
+# 2. Execute independent client-side hardware attestation
+python pcam_objective_audit.py --seed 7777
+```
+
 <details>
-<summary><b>🔍 [클릭하여 펼치기] 독립 검증 스크립트 전체 소스 코드 (pcam_objective_audit.py)</b></summary>
+<summary><b>🔍 [View Source] pcam_objective_audit.py (Click to expand client-side verifier code)</b></summary>
 
 ```python
 import sys
@@ -151,6 +168,10 @@ if __name__ == "__main__":
     parser.add_argument("--seed", type=int, default=1234, help="Auditor random seed integer")
     args = parser.parse_args()
     run_audit(args.seed)
+```
+
+</details>
+
 ```
 ### 2. Independent Verification Pipeline
 
