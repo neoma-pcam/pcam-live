@@ -406,7 +406,7 @@ Every inference response returned by the NEOMA P-CAM gateway is cryptographicall
 Clone the repository directly into your ROS 2 workspace (`colcon_ws/src`) and build:
 ```bash
 cd ~/colcon_ws/src
-git clone url?id=2.git
+git clone https://github.com/neoma-pcam/pcam-live.git
 cd ..
 colcon build --packages-select pcam_driver
 source install/setup.bash
@@ -435,7 +435,7 @@ print("Damping Action  :", result["damping_coefficient"])
 
 ### 3. PyBaMM Battery Thermal Runaway Mitigation
 ```bash
-git clone url?id=2.git
+git clone https://github.com/neoma-pcam/pcam-live.git
 cd pcam-live
 python battery/pcam_pybamm_thermal.py
 ```
@@ -456,7 +456,7 @@ python battery/pcam_pybamm_thermal.py
   *Real-time testing console for physical inference across all 6 production enclaves.*
 * **Official Web Telemetry Console:** 👉 [https://neoma-pcam.github.io/pcam-live/](https://neoma-pcam.github.io/pcam-live/)  
   *Live physical convergence state, hardware attestation seals, and cluster monitor.*
-* **Cluster Health & Silicon Proof:** 👉 [url?id=44](https://api.neoma-pcam.com/health)  
+* **Cluster Health & Silicon Proof:** 👉 https://neoma-pcam.github.io/pcam-live/  
   *Live cluster status, synchronous bus fabric monitor, and PUF silicon attestation.*
 
 ---
