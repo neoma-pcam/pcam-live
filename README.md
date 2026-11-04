@@ -1,9 +1,3 @@
-# NEOMA P-CAM: Universal Physical Reflex Engine & Silicon Root-of-Trust (v3.6.0)
-### 💳 Commercial Access & Full Download ($299)
-- 📦 **Instant Checkout:** [Buy NEOMA Brain-Spine Suite v1.0 License](복사한_레몬스퀴지_링크)
-*(Includes 10k ground-truth vectors, Python co-processor SDK, and offline reflex weights)*
-
----
 [![PyPI Version](https://img.shields.io/pypi/v/neoma-pcam?color=blue)](https://pypi.org/project/neoma-pcam/2.5.0/)
 [![Cluster Status](https://img.shields.io/badge/Hardware%20Cluster-ONLINE%20(6%20Enclaves%20Active)-emerald?style=flat-square)](https://api.neoma-pcam.com/health)
 [![Production Gateway](https://img.shields.io/badge/Production%20Gateway-api.neoma--pcam.com-blue?style=flat-square)](https://api.neoma-pcam.com/docs)
