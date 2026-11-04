@@ -39,6 +39,7 @@ print(f"Silicon Seal: {result['engine_seal_id']}")
 print(f"Local Brief: {result['local_core_brief']}")
 ```
 ---
+---
 ### 1. Quick Verification (10-Second Test)
 
 Clone the repository and run the audit protocol. You can supply any arbitrary integer seed (`--seed <number>`) to synthesize unique physical perturbation profiles locally:
