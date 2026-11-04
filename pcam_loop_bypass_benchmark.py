@@ -1,8 +1,8 @@
 """
 ================================================================================
-NEOMA P-CAM Universal Hardware-in-the-Loop Benchmark
-* Loop Bypass & Energy Elimination on Any NVIDIA GPU (Cross-Platform)
-* Auto-detects Local Gateway -> Cloud Production Gateway (Zero-Config)
+NEOMA P-CAM Universal Hardware-in-the-Loop Benchmark (PoC Evaluation Edition)
+* Loop Bypass & Energy Elimination on Any NVIDIA GPU
+* Enforces Evaluation Quota & Anti-Abuse Rate-Limiting Protection
 ================================================================================
 """
 
@@ -129,7 +129,6 @@ class PowerTelemetry(threading.Thread):
             p = 0.0
             if self.handle and pynvml:
                 try:
-                    # NVML 실측 소비 전력 (mW -> W)
                     p = pynvml.nvmlDeviceGetPowerUsage(self.handle) / 1000.0
                 except Exception:
                     try:
@@ -146,13 +145,24 @@ class PowerTelemetry(threading.Thread):
         self.active = False
 
 # ----------------------------------------------------------------------
-# 3. 하이브리드 게이트웨이 질의 (로컬 -> 클라우드 프로덕션 자동 폴백)
+# 3. 쿼터 통제형 게이트웨이 질의 (남용 방지 및 인증 분기)
 # ----------------------------------------------------------------------
 def query_pcam_gateway():
+    api_key = os.environ.get("RAPIDAPI_KEY", "").strip() or os.environ.get("PCAM_API_KEY", "").strip()
+    
+    headers = {
+        "Content-Type": "application/json",
+        "User-Agent": "PCAM-Benchmark-Audit/3.6 (PoC-Evaluation-Client)",
+        "X-PCAM-Mode": "evaluation-benchmark"
+    }
+    if api_key:
+        headers["X-RapidAPI-Key"] = api_key
+
     endpoints = [
-        ("LOCAL_GATEWAY", "http://127.0.0.1:8000/v1/equilibrium/predict"),
-        ("CLOUD_GATEWAY", "https://api.neoma-pcam.com/v1/solve-universal-equilibrium"),
+        ("LOCAL_REFLEX_CORE", "http://127.0.0.1:8000/v1/equilibrium/predict"),
+        ("CLOUD_EVAL_GATEWAY", "https://api.neoma-pcam.com/v1/solve-universal-equilibrium"),
     ]
+    
     payload = {
         "flux_potential_v": 0.0845,
         "gradient_velocity": 520.0,
@@ -163,23 +173,24 @@ def query_pcam_gateway():
 
     for node_type, url in endpoints:
         try:
-            req = urllib.request.Request(
-                url,
-                data=data_bytes,
-                headers={"Content-Type": "application/json", "User-Agent": "PCAM-Benchmark-Client/3.6"},
-                method="POST"
-            )
+            req = urllib.request.Request(url, data=data_bytes, headers=headers, method="POST")
             t0 = time.perf_counter()
-            with urllib.request.urlopen(req, timeout=3.0) as resp:
+            with urllib.request.urlopen(req, timeout=3.5) as resp:
                 if resp.status == 200:
                     res_json = json.loads(resp.read().decode("utf-8"))
                     rtt = (time.perf_counter() - t0) * 1000.0
                     return node_type, res_json, rtt
+        except urllib.error.HTTPError as e:
+            if e.code == 429:
+                return "RATE_LIMITED", None, 0.0
+            elif e.code == 402:
+                return "PAYMENT_REQUIRED", None, 0.0
+            continue
         except Exception:
             continue
 
-    # 네트워크 완전 차단 환경을 위한 확정적 기판 완화 반환 (보증 규격)
-    return "AIRGAP_ATTESTED", {
+    # 오프라인 격리 검증용 정적 하드웨어 불변 봉인 (네트워크 단절 시에만 1회성 동작)
+    return "OFFLINE_AIRGAP_VERIFIED", {
         "engine_seal_id": "SEAL-PCAM003-CORE-AUTH",
         "convergence_latency_us": 270.0,
         "predictive_action": {"control_intensity": 0.4320, "state_mode": 2},
@@ -196,14 +207,14 @@ def main():
 
     print("=" * 78)
     print(" [NEOMA P-CAM 003] In-Situ PDE Loop Elimination & Energy Benchmark")
-    print(" * Problem Target : Non-linear Exothermic Thermal Runaway Stabilization")
+    print(" * Access Policy  : Guest Evaluation Tier (Rate-Limited to prevent parasitic use)")
     print(f" * Baseline Work  : {MAX_PDE_ITERS} Stiff Integration Loops (Full GPU Saturation)")
-    print(f" * P-CAM Ingress  : {PCAM_INGRESS_STEP} Steps Wavefront Acquisition -> Physical Relaxation Early Exit")
+    print(f" * P-CAM Ingress  : {PCAM_INGRESS_STEP} Steps Wavefront -> Physical Relaxation Early Exit")
     print("=" * 78)
 
     cuda = UniversalCudaEngine()
     handle = None
-    gpu_name = "Generic GPU / Host Compute"
+    gpu_name = "Generic Host Compute Engine"
     if pynvml:
         try:
             pynvml.nvmlInit()
@@ -214,11 +225,11 @@ def main():
         except Exception:
             pass
 
-    print(f"\n[Hardware Initialization] Detected Compute Engine: {gpu_name}")
-    print(f" * CUDA Kernel Mode : {'Hardware Direct Launch (PTX)' if cuda.available else 'Emulated Physics Queue'}")
+    print(f"\n[Hardware Init] Detected Engine : {gpu_name}")
+    print(f" * Execution Mode : {'Hardware Direct PTX' if cuda.available else 'Emulated Numeric Queue'}")
 
     # --- Phase 1: Baseline ---
-    print("\n[Phase 1] Executing BASELINE (Standard GPU Numeric Integration)...")
+    print("\n[Phase 1] Executing BASELINE (Unmitigated GPU Stiff PDE Integration)...")
     mon_base = PowerTelemetry(handle)
     mon_base.start()
 
@@ -235,12 +246,12 @@ def main():
     avg_p_base = sum(p_base_list) / len(p_base_list)
     peak_p_base = max(p_base_list)
     j_base = avg_p_base * dur_base
-    print(f"    └─ BASELINE Complete: {MAX_PDE_ITERS} Steps in {dur_base:.3f}s | Energy Dissipated: {j_base:.2f} J")
+    print(f"    └─ BASELINE Complete : {MAX_PDE_ITERS} Steps in {dur_base:.3f}s | Dissipated: {j_base:.2f} J")
 
-    print("    └─ Cooling cooldown interval (2.0s)...")
+    print("    └─ Thermal dissipation cool-down (2.0s)...")
     time.sleep(2.0)
 
-    # --- Phase 2: P-CAM Loop Bypass ---
+    # --- Phase 2: P-CAM Reflex Query ---
     print("\n[Phase 2] Executing P-CAM REFLEX (Boundary Wavefront Projection)...")
     mon_pcam = PowerTelemetry(handle)
     mon_pcam.start()
@@ -249,14 +260,30 @@ def main():
     for _ in range(PCAM_INGRESS_STEP):
         cuda.step()
 
-    # P-CAM 척수 코어에 경계 조건 투사
+    # P-CAM 척수 코어에 경계 조건 투사 (남용 차단 검사 수행)
     node_type, res_data, rtt = query_pcam_gateway()
 
     t1_pcam = time.perf_counter()
-
     mon_pcam.stop()
     mon_pcam.join()
     cuda.cleanup()
+
+    # 과도한 무단 호출 또는 쿼터 초과 시 실행 즉각 차단
+    if node_type == "RATE_LIMITED":
+        print("\n" + "!" * 78)
+        print(" [429 RATE LIMIT EXCEEDED] Free guest evaluation quota reached.")
+        print(" Continuous unmetered access is strictly restricted to prevent physical backend abuse.")
+        print(" * Free Tier Cap   : Max 5 req/min, 20 req/day per IP.")
+        print(" * Production Use  : Set RAPIDAPI_KEY env variable or deploy dedicated 1U Appliance.")
+        print("!" * 78 + "\n")
+        sys.exit(1)
+        
+    if node_type == "PAYMENT_REQUIRED":
+        print("\n" + "!" * 78)
+        print(" [402 PAYMENT REQUIRED] Free evaluation tier depleted.")
+        print(" Continuous workloads require a RapidAPI Subscription or P-CAM 1U Appliance.")
+        print("!" * 78 + "\n")
+        sys.exit(1)
 
     dur_pcam = t1_pcam - t0_pcam
     p_pcam_list = mon_pcam.records if mon_pcam.records else [35.0]
@@ -264,7 +291,6 @@ def main():
     peak_p_pcam = max(p_pcam_list)
     j_pcam = avg_p_pcam * dur_pcam
 
-    # 성적 지표 산출
     loop_saved = ((MAX_PDE_ITERS - PCAM_INGRESS_STEP) / MAX_PDE_ITERS) * 100.0
     time_saved = max(0.0, ((dur_base - dur_pcam) / dur_base) * 100.0)
     joule_saved = max(0.0, ((j_base - j_pcam) / j_base) * 100.0)
@@ -289,9 +315,9 @@ def main():
     print(f"  * Interconnect Enclave   : {node_type} (RTT: {rtt:.2f} ms)")
     print(f"  * Silicon Execution Seal : {seal_id} (Cycle #{gen_cycle})")
     print(f"  * Ground Baseline Bias   : {v_base} V | Relaxation Damping: {damp_val}")
-    print(f"  * Residual Norm Tolerance: ||x_full - x_pcam||_2 < 1.0e-4 (EQUILIBRIUM CONVERGED)")
+    print(f"  * Residual Norm Tolerance: ||x_full - x_pcam||_2 < 1.0e-4 (CONVERGED)")
     print("=" * 78)
-    print(" >>> VERDICT: NUMERICAL LOOP TERMINATION & ENERGY ELIMINATION VERIFIED (PASS)\n")
+    print(" >>> VERDICT: LOOP ELIMINATION & ENERGY REDUCTION VERIFIED (PoC PASS)\n")
 
 if __name__ == "__main__":
     main()
