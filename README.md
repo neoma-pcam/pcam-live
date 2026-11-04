@@ -37,6 +37,7 @@ result = client.predict_robotic_compliance()
 print(f"Convergence Latency: {result['convergence_latency_us']} us")
 print(f"Silicon Seal: {result['engine_seal_id']}")
 print(f"Local Brief: {result['local_core_brief']}")
+```
 ---
 ### 1. Quick Verification (10-Second Test)
 
