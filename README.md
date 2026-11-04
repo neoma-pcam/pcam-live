@@ -4,6 +4,7 @@
 *(Includes 10k ground-truth vectors, Python co-processor SDK, and offline reflex weights)*
 
 ---
+[![PyPI Version](https://img.shields.io/pypi/v/neoma-pcam?color=blue)](https://pypi.org/project/neoma-pcam/2.5.0/)
 [![Cluster Status](https://img.shields.io/badge/Hardware%20Cluster-ONLINE%20(6%20Enclaves%20Active)-emerald?style=flat-square)](https://api.neoma-pcam.com/health)
 [![Production Gateway](https://img.shields.io/badge/Production%20Gateway-api.neoma--pcam.com-blue?style=flat-square)](https://api.neoma-pcam.com/docs)
 [![RapidAPI Enterprise](https://img.shields.io/badge/RapidAPI-Enterprise%20Hub-purple?style=flat-square)](https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control)
