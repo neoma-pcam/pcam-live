@@ -235,6 +235,62 @@ if __name__ == "__main__":
 
 ---
 
+## 🎯 Target Workloads & Scope Boundaries: Physical AI Infrastructure
+
+To ensure absolute engineering transparency and prevent architectural ambiguity, NEOMA P-CAM explicitly delineates its operational boundary and target compute domain:
+
+### 1. General IT vs. Physical AI Clusters: Where the Energy Is Lost
+In standard cloud data centers running web transactions or pure text generation, physical numerical loops represent a negligible fraction of compute. 
+
+However, in **Physical AI (Humanoid Robotics, Autonomous Systems) and Digital Twin (Battery/Materials CAE) Clusters**, the operational reality is inverted:
+* **The Sim-to-Real & Solver Bottleneck:** To train physical agents in physics simulators (e.g., NVIDIA Isaac Gym, MuJoCo) or solve stiff multiphysics (e.g., PyBaMM, OpenFOAM), GPU clusters spend **70% to 90% of their compute budgets** running high-power numerical integration loops to prevent simulation divergence.
+* **P-CAM Interception:** By resolving boundary relaxation in **0.27ms**, P-CAM terminates these stiff relaxation loops early (5 steps vs. 50 steps), eliminating up to 96.9% of the dissipated thermal energy specifically in these high-consequence clusters.
+
+---
+
+### 2. Operational Matrix: Supported vs. Non-Applicable Workloads
+
+| Workload Domain | Typical GPU Tasks | P-CAM Intervention | Expected Impact |
+| :--- | :--- | :---: | :---: |
+| **Physical AI & Sim-to-Real** | Isaac Gym, MuJoCo rigid-body contact dynamics | **YES (Target)** | **90% Loop Bypass / -96.9% Energy** |
+| **Battery Digital Twins** | PyBaMM electrochemical runaway, Butler-Volmer PDE | **YES (Target)** | **Deterministic 0.27ms Convergence** |
+| **High-Rate Robotics** | 1kHz+ joint torque damping, impact compliance | **YES (Target)** | **Hardware Reflex Suppression** |
+| **Fluid & Thermal CAE** | Navier-Stokes turbulence, exothermic reactions | **YES (Target)** | **Early Numerical Exit** |
+| **Pure LLM Inference** | Transformer Feed-Forward (Dense GEMM / MatMul) | **NO (Out of Scope)** | **0% (No iterative loops to bypass)** |
+| **3D Graphics & Gaming** | Ray tracing, rasterization, shader rendering | **NO (Out of Scope)** | **0% (Fixed-function graphics)** |
+| **Transactional DB & Web** | PostgreSQL, Redis, REST routing | **NO (Out of Scope)** | **0% (I/O bound workloads)** |
+
+---
+
+### 3. The Brain-Spine Co-processing Paradigm
+
+NEOMA P-CAM does not replace host GPUs or large foundation models; it forms a complementary neuromorphic-physical hierarchy:
+
+```text
+[ THE BRAIN : Cloud LLM / VLA Foundation Models ]
+  - Frequency : 1 Hz ~ 5 Hz (Low-Frequency Semantic Reasoning)
+  - Workload  : Dense Matrix Multiplication (GEMM), Policy Planning
+  - Action    : Emits discrete intent ("Stabilize manipulator", "Regulate charging rate")
+         │
+         ▼ (High-Level Policy Directives)
+[ THE SPINE : NEOMA P-CAM 1U Hardware Co-processor ]
+  - Frequency : 1 kHz ~ 10 kHz (0.27ms Deterministic Hardware Reflex)
+  - Workload  : Boundary Condition Absorption, In-Situ Physics Relaxation
+  - Action    : Absorbs environmental perturbation wavefronts, bypasses 90% of stiff GPU loops
+         │
+         ▼ (Feedback Attestation Seal: SEAL-CORE...)
+[ PHYSICAL ACTUATION & SIMULATION CONVERGENCE ]
+```
+
+---
+
+### 4. Infrastructure Value: PUE & Thermal Surge Suppression
+In dense GPU racks (NVIDIA H100 / B200), numerical stiff loops cause sharp power surges (up to 100% TDP spikes), stressing server power supplies and demanding intensive facility chilling:
+* **Surge Suppression:** Peak GPU electrical power drops from 66.9W full saturation to 14.0W idle floor within 0.59s.
+* **Compound Chiller OPEX Drop:** Lower thermal dissipation directly reduces facility Power Usage Effectiveness (PUE) overhead, mitigating rack-level cooling bottlenecks without artificial clock throttling (DVFS).
+
+---
+
 ## ⚡ Executive Summary
 
 *Sub-Millisecond Physical Dynamics Convergence & Cryptographic Silicon Root-of-Trust*
