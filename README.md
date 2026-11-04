@@ -305,6 +305,8 @@ P-CAM operates as an **In-Material Non-Equilibrium Relaxation Co-Processor**. By
 │  GPU Iterative Loop Termination (Steps 6 ~ 50 Bypassed)│
 │  Result: 96.90% Net Joules Eliminated                  │
 └────────────────────────────────────────────────────────┘
+```
+
 ---
 ## ⚡ 1-Click Claude Desktop MCP Configuration
 
