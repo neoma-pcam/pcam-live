@@ -24,24 +24,24 @@
 
 **Zero-Trust Client-Side Verification:** Do not trust server-side logs or static benchmark claims. This independent audit protocol generates non-linear physical challenges locally, submits boundary conditions to the P-CAM 003 silicon enclave via RapidAPI, and independently computes physical damping convergence directly inside your local CPU's physics engine.
 
-## 📦 Pip Installation
-```bash
-pip install neoma-pcam
-from neoma_pcam import PCAMClient
+## 🚀 Quickstart: Installation & Python SDK
 
-# Initialize client (Zero-trust guest evaluation mode)
+```python
+# [Step 1] Install SDK via terminal
+# pip install neoma-pcam
+
+# [Step 2] Import & Initialize Client (Zero-trust guest evaluation mode)
+from neoma_pcam import PCAMClient
 client = PCAMClient(api_key="your_api_key_here")
 
-# Execute 0.27ms deterministic robotic compliance reflex
+# [Step 3] Execute 0.27ms deterministic robotic compliance reflex
 result = client.predict_robotic_compliance()
 print(f"Convergence Latency: {result['convergence_latency_us']} us")
 print(f"Silicon Seal: {result['engine_seal_id']}")
 print(f"Local Brief: {result['local_core_brief']}")
 ```
----
----
 ### 1. Quick Verification (10-Second Test)
-
+---
 Clone the repository and run the audit protocol. You can supply any arbitrary integer seed (`--seed <number>`) to synthesize unique physical perturbation profiles locally:
 
 ```bash
