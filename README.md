@@ -294,7 +294,7 @@ P-CAM operates as an **In-Material Non-Equilibrium Relaxation Co-Processor**. By
                            │ Dispatches Boundary Ingress (0.0845V Base)
                            ▼
 ┌────────────────────────────────────────────────────────┐
-│  COM3 Ch.17 Master Enclave: Physical Relaxation        │
+│  In-Situ Relaxation Matrix: Physical Relaxation        │
 │  • Substrate Convergence : 0.2700 ms                   │
 │  • Intrinsic Damping Coeff: 0.4320                     │
 │  • Hardware Attestation  : SEAL-PCAM003-CH17-0051003C  │
