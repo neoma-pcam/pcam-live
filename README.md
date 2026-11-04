@@ -27,6 +27,17 @@
 ## 📦 Pip Installation
 ```bash
 pip install neoma-pcam
+from neoma_pcam import PCAMClient
+
+# Initialize client (Zero-trust guest evaluation mode)
+client = PCAMClient(api_key="your_api_key_here")
+
+# Execute 0.27ms deterministic robotic compliance reflex
+result = client.predict_robotic_compliance()
+print(f"Convergence Latency: {result['convergence_latency_us']} us")
+print(f"Silicon Seal: {result['engine_seal_id']}")
+print(f"Local Brief: {result['local_core_brief']}")
+---
 ### 1. Quick Verification (10-Second Test)
 
 Clone the repository and run the audit protocol. You can supply any arbitrary integer seed (`--seed <number>`) to synthesize unique physical perturbation profiles locally:
