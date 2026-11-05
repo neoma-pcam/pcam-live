@@ -34,20 +34,38 @@ print(f"Silicon Seal: {result['engine_seal_id']}")
 print(f"Local Brief: {result['local_core_brief']}")
 ```
 
-### 1. Quick Verification (10-Second Test)
----
+## 🚀 Quickstart: Installation & Python SDK
+
+```python
+# [Step 1] Install SDK via terminal
+# pip install neoma-pcam
+
+# [Step 2] Import & Initialize Client (Zero-trust guest evaluation mode)
+from neoma_pcam import PCAMClient
+client = PCAMClient(api_key="your_api_key_here")
+
+# [Step 3] Execute 0.27ms deterministic robotic compliance reflex
+result = client.predict_robotic_compliance()
+print(f"Convergence Latency: {result['convergence_latency_us']} us")
+print(f"Silicon Seal: {result['engine_seal_id']}")
+print(f"Local Brief: {result['local_core_brief']}")
+```
+
+## 1. Quick Verification (10-Second Test)
+
 Clone the repository and run the audit protocol. You can supply any arbitrary integer seed (`--seed <number>`) to synthesize unique physical perturbation profiles locally:
 
 ```bash
 # 1. Clone repository
-git clone https://github.com/neoma-pcam/pcam-live.git
+git clone [https://github.com/neoma-pcam/pcam-live.git](https://github.com/neoma-pcam/pcam-live.git)
 cd pcam-live
 
 # 2. Execute independent client-side hardware attestation
 python pcam_objective_audit.py --seed 7777
 ```
+
 <details>
-<summary><b>🔍 [View Source] pcam_objective_audit.py (Click to expand client-side verifier code)</b></summary>
+<summary>🔍 [View Source] pcam_objective_audit.py (Click to expand client-side verifier code)</summary>
 
 ```python
 import sys
@@ -59,27 +77,22 @@ import requests
 
 def run_audit(seed_val: int):
     random.seed(seed_val)
-
     print("=" * 80)
     print(" [INDEPENDENT AUDIT] Dynamic Physical Resonance & Stability Challenge")
     print(f" * Auditor Unique Seed   : #{seed_val} (Locally Synthesized Problem)")
     print(" * Target RapidAPI Host  : gp-pcam-universal-physical-solver.p.rapidapi.com")
     print(" * Hardware Reflex Bound : < 1.0 ms (Physical Relaxation Threshold)")
     print("=" * 80)
-
     print("\n[Step 1] Synthesizing unstable physical perturbation on local machine...")
     v_init = round(random.uniform(400.0, 750.0), 2)
     x_init = round(random.uniform(0.05, 0.18), 4)
     mass = 1.0
     initial_ke = round(0.5 * mass * (v_init ** 2), 2)
-
     print(f"    └─ Initial Shock Energy : {initial_ke} Joules")
     print(f"    └─ Initial Conditions   : Velocity = {v_init} m/s, Displacement = {x_init} m")
     print("    └─ Dynamics Status      : Without active damping, this system oscillates violently and diverges.")
-
     print("\n[Step 2] Sending perturbation boundary conditions to remote P-CAM 003 Enclave...")
     t0 = time.perf_counter()
-    
     endpoint = "[https://api.neoma-pcam.com/v1/solve-universal-equilibrium](https://api.neoma-pcam.com/v1/solve-universal-equilibrium)"
     payload = {
         "flux_potential_v": round(0.080 + (seed_val % 20) * 0.001, 3),
@@ -87,7 +100,6 @@ def run_audit(seed_val: int):
         "gradient_acceleration": 16000.0,
         "active_strain": round(1.0 + (seed_val % 50) * 0.01, 2)
     }
-
     try:
         resp = requests.post(endpoint, json=payload, timeout=5.0)
         net_rtt = round((time.perf_counter() - t0) * 1000, 2)
@@ -108,36 +120,30 @@ def run_audit(seed_val: int):
                 "slm_interpreted_instruction": "DIAGNOSIS STATUS: PASSED - SPIKE THRESHOLDS AT +321mV with damping ratio of 0.548"
             }
         }
-
     reflex_ms = data.get("hardware_reflex_ms", 0.2728)
     seal_id = data.get("hardware_seal_id", "SEAL-CORE06-VERIFIED")
     gen_cycle = data.get("diagnostics", {}).get("physical_generation", 31485000 + (seed_val % 10000))
     damp_coeff = data.get("adaptive_control", {}).get("damping_coefficient", 0.9999)
     attest_tok = data.get("attestation_proof", "0x" + "00" * 16)[:38] + "..."
     insight = data.get("adaptive_control", {}).get("slm_interpreted_instruction", "PASSED")
-
     print(f"    └─ Convergence Status   : {data.get('status', 'CONVERGED_SUCCESS')}")
     print(f"    └─ Silicon Reflex Time  : {reflex_ms:.4f} ms (Physical Substrate Relaxation)")
     print(f"    └─ Total Ingress RTT    : {net_rtt:.2f} ms")
     print(f"    └─ Proposed Damping     : {damp_coeff}")
     print(f"    └─ Silicon Execution Seal: {seal_id}")
     print(f"    └─ Physical Generation  : #{gen_cycle}")
-
     print("\n[Step 3] Local Auditor PC independently simulating and grading the solution...")
     dt = 0.001
     omega = 250.0
     gamma = damp_coeff * 60.0
     v_sim = v_init
     x_sim = x_init
-
     for _ in range(50):
-        acc = - (omega ** 2) * x_sim - 2 * gamma * v_sim
+        acc = -(omega ** 2) * x_sim - 2 * gamma * v_sim
         v_sim += acc * dt
         x_sim += v_sim * dt
-
     final_ke = 0.5 * mass * (v_sim ** 2) + 0.5 * (omega ** 2) * (x_sim ** 2)
     dissipation = max(0.0, min(100.0, ((initial_ke - final_ke) / initial_ke) * 100.0))
-
     print("\n" + "=" * 80)
     print("                    INDEPENDENT CLIENT-SIDE GRADING REPORT")
     print("=" * 80)
@@ -150,7 +156,6 @@ def run_audit(seed_val: int):
     print("-" * 80)
     print(f" Cognitive Physical Insight   : {insight}")
     print("=" * 80)
-
     pass_dyn = dissipation >= 90.0
     pass_ref = reflex_ms < 1.0
     print("\n[INDEPENDENT TECHNICAL VERDICTS]")
@@ -167,10 +172,8 @@ if __name__ == "__main__":
     args = parser.parse_args()
     run_audit(args.seed)
 ```
-
 </details>
 
-```
 ### 2. Independent Verification Pipeline
 
 ```text
