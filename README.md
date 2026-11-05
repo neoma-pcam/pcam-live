@@ -229,7 +229,7 @@ Benchmarked directly against live physical silicon hardware to verify time-scale
 
 Conventional numeric solvers (Runge-Kutta, Newton-Raphson, PINNs) suffer from computational stalls and severe thermal stress when solving non-linear boundary dynamics. In iterative solvers, GPUs repeatedly evaluate differential state transitions until reaching numeric tolerance, consuming excessive power and inducing large $di/dt$ voltage drops.
 
-P-CAM operates as an **In-Material Non-Equilibrium Relaxation Co-Processor**. By projecting initial wavefront boundaries directly onto the COM3 Ch.17 physical silicon substrate, the system resolves dynamic equilibrium in **0.27ms** ($270\,\mu\text{s}$) through natural charge relaxation, bypassing up to 90% of downstream GPU numeric iteration loops.
+P-CAM operates as an **In-Material Non-Equilibrium Relaxation Co-Processor**. By projecting initial wavefront boundaries directly onto the dedicated physical silicon substrate, the system resolves dynamic equilibrium in **0.27ms** ($270\,\mu\text{s}$) through natural charge relaxation, bypassing up to 90% of downstream GPU numeric iteration loops.
 
 ```text
 [ Non-linear Kinetic/Thermal Perturbation ]
@@ -244,7 +244,7 @@ P-CAM operates as an **In-Material Non-Equilibrium Relaxation Co-Processor**. By
 │  In-Situ Relaxation Matrix: Physical Relaxation        │
 │  • Substrate Convergence : 0.2700 ms                   │
 │  • Intrinsic Damping Coeff: 0.4320                     │
-│  • Hardware Attestation  : SEAL-PCAM003-CH17-0051003C  │
+│  • Hardware Attestation  : SEAL-CORE-AUTHENTIC-FABRIC  │
 └──────────────────────────┬─────────────────────────────┘
                            │ Early-Exit Equilibrium Vector Injected
                            ▼
