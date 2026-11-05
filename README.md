@@ -67,7 +67,6 @@ python pcam_objective_audit.py --seed 7777
    └── 4. Injects P-CAM response into local 2nd-order non-linear equation of motion
           Independently verifies >90% destructive energy dissipation (100% Client-Side PASS)
 ```
-
 ### 3. Verifiable Hardware Invariants
 
 | Metric | Specification | Verification Method |
