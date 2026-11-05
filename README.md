@@ -68,7 +68,6 @@ python pcam_objective_audit.py --seed 7777
           Independently verifies >90% destructive energy dissipation (100% Client-Side PASS)
 ```
 
-```
 ### 3. Verifiable Hardware Invariants
 
 | Metric | Specification | Verification Method |
