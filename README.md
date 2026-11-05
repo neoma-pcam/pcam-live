@@ -17,7 +17,7 @@
 ## ⚡ NEOMA P-CAM 003 Independent Hardware Attestation
 
 **Zero-Trust Client-Side Verification:** Do not trust server-side logs or static benchmark claims. This independent audit protocol generates non-linear physical challenges locally, submits boundary conditions to the P-CAM 003 silicon enclave via RapidAPI, and independently computes physical damping convergence directly inside your local CPU's physics engine.
-```markdown
+
 ## 🚀 Quickstart: Installation & Python SDK
 
 ```python
