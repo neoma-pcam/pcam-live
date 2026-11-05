@@ -578,6 +578,11 @@ For custom on-premise appliances, physical co-processor licensing, or technical 
 * **Developer & Engineering Core:** [engineering@neoma-pcam.com](mailto:engineering@neoma-pcam.com)
 * **Executive Office:** [ceo@neoma-pcam.com](mailto:ceo@neoma-pcam.com)
 
+## ⚖️ Legal Policies & Compliance
+
+- 📄 **Terms of Service:** [Read Terms](TERMS.md)
+- 💳 **Refund Policy:** [Read Refund Policy](REFUND_POLICY.md)
+- 📬 **Customer Support:** [contact@neoma-pcam.com](mailto:contact@neoma-pcam.com)
 ---
 
 ## 🔒 Proprietary Notice
