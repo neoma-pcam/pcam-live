@@ -18,9 +18,7 @@
 
 ## ⚡ NEOMA P-CAM 003 Independent Hardware Attestation
 
-**Zero-Trust Client-Side Verification:** Do not trust server-side logs or static benchmark claims. This independent audit protocol generates non-linear physical challenges locally, submits boundary conditions to the P-CAM 003 silicon enclave via RapidAPI, and independently computes physical damping convergence directly inside your local CPU's physics engine.
-
----
+*Zero-Trust Client-Side Verification:* Do not trust server-side logs or static benchmark claims. This independent audit protocol generates non-linear physical challenges locally, submits boundary conditions to the P-CAM 003 silicon enclave via RapidAPI, and independently computes physical damping convergence directly inside your local CPU's physics engine.
 
 ## 🚀 Quickstart: Installation & Python SDK
 
@@ -52,7 +50,7 @@ cd pcam-live
 python pcam_objective_audit.py --seed 7777
 ```
 
-### 2. Independent Verification Pipeline
+## 2. Independent Verification Pipeline
 
 ```text
 [Auditor Workstation] (Your Local Machine)
@@ -70,7 +68,6 @@ python pcam_objective_audit.py --seed 7777
    └── 4. Injects P-CAM response into local 2nd-order non-linear equation of motion
           Independently verifies >90% destructive energy dissipation (100% Client-Side PASS)
 ```
-
 ### 3. Verifiable Hardware Invariants
 
 | Metric | Specification | Verification Method |
