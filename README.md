@@ -15,7 +15,6 @@
 > ⚡ **Interactive Hardware Reflex Solver:** Test 0.27ms sub-millisecond physical equilibrium convergence and SEAL-CORE cryptographic proofs directly in your browser with 1-click guest mode: [Launch P-CAM Live Solver on Hugging Face](https://huggingface.co/spaces/Johnsgama/neoma-pcam-solver)
 
 ---
-
 ## ⚡ NEOMA P-CAM 003 Independent Hardware Attestation
 
 *Zero-Trust Client-Side Verification:* Do not trust server-side logs or static benchmark claims. This independent audit protocol generates non-linear physical challenges locally, submits boundary conditions to the P-CAM 003 silicon enclave via RapidAPI, and independently computes physical damping convergence directly inside your local CPU's physics engine.
@@ -39,7 +38,7 @@ print(f"Local Brief: {result['local_core_brief']}")
 
 ## 1. Quick Verification (10-Second Test)
 
-Clone the repository and run the audit protocol. You can supply any arbitrary integer seed (`--seed <number>`) to synthesize unique physical perturbation profiles locally:
+Clone the repository and run the audit protocol:
 
 ```bash
 # 1. Clone repository
@@ -67,6 +66,8 @@ python pcam_objective_audit.py --seed 7777
    │
    └── 4. Injects P-CAM response into local 2nd-order non-linear equation of motion
           Independently verifies >90% destructive energy dissipation (100% Client-Side PASS)
+```
+
 ```
 ### 3. Verifiable Hardware Invariants
 
