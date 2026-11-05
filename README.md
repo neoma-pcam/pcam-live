@@ -42,7 +42,7 @@ Clone the repository and run the audit protocol:
 
 ```bash
 # 1. Clone repository
-git clone [https://github.com/neoma-pcam/pcam-live.git](https://github.com/neoma-pcam/pcam-live.git)
+git clone https://github.com/neoma-pcam/pcam-live.git
 cd pcam-live
 
 # 2. Execute independent client-side hardware attestation
