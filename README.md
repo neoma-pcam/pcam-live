@@ -1,3 +1,5 @@
+# NEOMA P-CAM (Predictive Control Adaptive Material)
+
 [![PyPI Version](https://img.shields.io/pypi/v/neoma-pcam?color=blue)](https://pypi.org/project/neoma-pcam/2.5.0/)
 [![Cluster Status](https://img.shields.io/badge/Hardware%20Cluster-ONLINE%20(6%20Enclaves%20Active)-emerald?style=flat-square)](https://api.neoma-pcam.com/health)
 [![Production Gateway](https://img.shields.io/badge/Production%20Gateway-api.neoma--pcam.com-blue?style=flat-square)](https://api.neoma-pcam.com/docs)
@@ -17,7 +19,9 @@
 ## ⚡ NEOMA P-CAM 003 Independent Hardware Attestation
 
 **Zero-Trust Client-Side Verification:** Do not trust server-side logs or static benchmark claims. This independent audit protocol generates non-linear physical challenges locally, submits boundary conditions to the P-CAM 003 silicon enclave via RapidAPI, and independently computes physical damping convergence directly inside your local CPU's physics engine.
+
 ---
+
 ## 🚀 Quickstart: Installation & Python SDK
 
 ```python
@@ -33,7 +37,7 @@ result = client.predict_robotic_compliance()
 print(f"Convergence Latency: {result['convergence_latency_us']} us")
 print(f"Silicon Seal: {result['engine_seal_id']}")
 print(f"Local Brief: {result['local_core_brief']}")
-```
+
 
 ## 1. Quick Verification (10-Second Test)
 
