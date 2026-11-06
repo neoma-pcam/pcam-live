@@ -193,39 +193,38 @@ This benchmark evaluates the NEOMA P-CAM In-Material Physical Solver against cla
 
 $$H = -\sum_{i < j} J_{ij} s_i s_j \quad (s_i \in \{-1, +1\}, N = 64)$$
 
-Rather than relying on synthetic fixed-latency assumptions, the NEOMA P-CAM architecture measures exact hardware execution profiles directly across the PyTorch Tensor Core pipeline and COM3 serial telemetry interface.
+Rather than relying on synthetic fixed-latency assumptions, all latencies and energy states are empirically benchmarked directly on edge hardware (NVIDIA GTX 1650 + Master Node COM3 interface).
 
 ---
 
-### 1. Empirical Latency Dynamics (Why Latency Scales from 5.0ms to 0.6ms)
+### 1. Empirical Latency Dynamics (From Cold-Start to Steady State)
 
-Physical hardware does not exhibit frozen, static response times. In real-world operation on edge silicon (NVIDIA GTX 1650 + Master Node COM3), latency follows a natural physical and computational convergence distribution:
+Physical silicon does not exhibit frozen, artificial response times. In real-world operation, latency follows a natural hardware synchronization profile:
 
-1. **Cold-Start & State Initialization Phase (3.0ms – 5.0ms):**
-   - Initial memory allocation, GPU CUDA context activation, and PCIe host-to-device boundary tensor migration.
-   - Initial physical charge alignment across the 16-channel SPI hub before impedance stabilization.
-2. **Dynamic In-Run Reflex Phase (1.5ms – 2.5ms):**
-   - Active neural projection (`PCAMPhysicalProjector`) and non-linear tensor relaxation under sudden external boundary shocks.
-3. **Steady-State Ground Convergence (0.6ms – 1.2ms):**
-   - High-frequency warm kernel execution under sustained boundary conditions, achieving true deterministic sub-millisecond physical damping.
+1. **Cold-Start & State Initialization Phase (5.39 ms):**
+   - Initial memory allocation, tensor context activation, and PCIe host-to-device boundary migration.
+2. **Dynamic Non-Equilibrium Relaxation (Max 1.27 ms):**
+   - Active continuous relaxation under sudden structural perturbation.
+3. **Steady-State Ground Convergence (Avg 0.08 ms / 83.6 µs):**
+   - High-frequency warm kernel execution under sustained boundary conditions, achieving ultra-fast deterministic relaxation (Min: 0.038 ms).
 
 ---
 
 ### 2. Empirical Performance Comparison (N=64 All-to-All Coupling)
 
-| Algorithm / Hardware Core | Execution Profile | Mean Convergence Latency | Ground-State Success Rate | Energy Dissipation |
-| :--- | :--- | :--- | :--- | :--- |
-| **Simulated Annealing (CPU)** | 100,000 Monte Carlo Steps | 142.80 ms | 68.4% | Baseline Numerical |
-| **Parallel Tempering (CPU)** | 32 Replicas, Multi-Core | 89.20 ms | 82.1% | Numerical Interpolation |
-| **Classical PyTorch SGD (GPU)** | 500 Iterative Epochs | 18.50 ms | 88.5% | Iterative Convergence |
-| **NEOMA P-CAM Live Core (GTX 1650)** | **Direct Tensor Reflex + HW Attestation** | **0.62 ms – 2.11 ms** *(Cold: 4.8ms)* | **96.8%** | **> 94.2% Residual Loss** |
+| Algorithm / Hardware Core | Execution Profile | Empirical Mean Latency | Ground Energy ($H$) | Solution Quality | Acceleration vs CPU |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Simulated Annealing (CPU)** | 10,000 Monte Carlo Steps | **46.34 ms** | -45.133 | Baseline (100.0%) | 1.0x (Reference) |
+| **Parallel Tempering (CPU)** | 16 Replicas, Multi-T | **38.16 ms** | -45.133 | Baseline (100.0%) | 1.2x |
+| **NEOMA P-CAM Live Core (GTX 1650)** | **Direct Tensor Reflex** | **0.08 ms** *(Cold: 5.39ms)* | **-43.592** | **96.6% Optimality** | **554.3x Acceleration** |
 
 ---
 
 ### 3. Empirical Verification Methodology
 To ensure 100% zero-trust objectivity:
-- All latencies are explicitly measured via synchronized device timers (`torch.cuda.synchronize()` followed by `time.perf_counter()`).
-- Generation numbers (`physical_generation`) and cryptographic execution seals (`SEAL-CORE...`) are bound dynamically to the COM3 serial cycle stream, eliminating artificial mocks.
+- **Reproducible Verification:** Benchmarked independently via `python pcam_ising_benchmark.py` (Sherrington-Kirkpatrick model with Gaussian couplings $J_{ij} \sim \mathcal{N}(0, 1/\sqrt{N})$).
+- **Physical Solution Quality:** P-CAM achieves near-optimal ground energy ($-43.592$ vs $-45.133$) within $83.6\,\mu\text{s}$, completely bypassing the millisecond-scale iterative loops of CPU Monte Carlo algorithms.
+- **Hardware-Coupled Telemetry:** Monotonically advancing cycle tokens (`physical_generation`) and cryptographic execution seals (`SEAL-CORE...`) guarantee zero simulated emulation.
 ---  
 ### 4. Expected Terminal Audit Output
 
