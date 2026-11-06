@@ -185,47 +185,6 @@ if __name__ == "__main__":
 | **Dynamic Energy Dissipation**| ≥ 90.0% within 50 ms | **91.5% – 99.8%** | Local Numerical Integration of 2nd-order Kinetics |
 | **Ground-State Potential** | Circuit Baseline Bias | **82.0 mV – 95.0 mV** (Dynamic Fluctuation Tracking) | COM3 Master Node Hardware ADC Telemetry |
 | **Silicon Proof-of-Work** | Monotonic Hardware Proof | **SEAL-CORE Monotonic Cycle** | Monotonically Advancing Hardware Generation Cycle Token |
-
-## 🔬 Large-Scale Physical Annealing Benchmark: 64-Spin Ising Spin Glass
-### Empirical Sub-to-Low Millisecond Ground-State Convergence on Edge Hardware
-
-This benchmark evaluates the NEOMA P-CAM In-Material Physical Solver against classical stochastic optimization algorithms on NP-hard combinatorial problems mapped to an all-to-all coupled 64-Spin Ising Hamiltonian:
-
-$$H = -\sum_{i < j} J_{ij} s_i s_j \quad (s_i \in \{-1, +1\}, N = 64)$$
-
-Rather than relying on synthetic fixed-latency assumptions, all latencies and energy states are empirically benchmarked directly on edge hardware (NVIDIA GTX 1650 + Master Node COM3 interface).
-
----
-
-### 1. Empirical Latency Dynamics (From Cold-Start to Steady State)
-
-Physical silicon does not exhibit frozen, artificial response times. In real-world operation, latency follows a natural hardware synchronization profile:
-
-1. **Cold-Start & State Initialization Phase (5.39 ms):**
-   - Initial memory allocation, tensor context activation, and PCIe host-to-device boundary migration.
-2. **Dynamic Non-Equilibrium Relaxation (Max 1.27 ms):**
-   - Active continuous relaxation under sudden structural perturbation.
-3. **Steady-State Ground Convergence (Avg 0.08 ms / 83.6 µs):**
-   - High-frequency warm kernel execution under sustained boundary conditions, achieving ultra-fast deterministic relaxation (Min: 0.038 ms).
-
----
-
-### 2. Empirical Performance Comparison (N=64 All-to-All Coupling)
-
-| Algorithm / Hardware Core | Execution Profile | Empirical Mean Latency | Ground Energy ($H$) | Solution Quality | Acceleration vs CPU |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| **Simulated Annealing (CPU)** | 10,000 Monte Carlo Steps | **46.34 ms** | -45.133 | Baseline (100.0%) | 1.0x (Reference) |
-| **Parallel Tempering (CPU)** | 16 Replicas, Multi-T | **38.16 ms** | -45.133 | Baseline (100.0%) | 1.2x |
-| **NEOMA P-CAM Live Core (GTX 1650)** | **Direct Tensor Reflex** | **0.08 ms** *(Cold: 5.39ms)* | **-43.592** | **96.6% Optimality** | **554.3x Acceleration** |
-
----
-
-### 3. Empirical Verification Methodology
-To ensure 100% zero-trust objectivity:
-- **Reproducible Verification:** Benchmarked independently via `python pcam_ising_benchmark.py` (Sherrington-Kirkpatrick model with Gaussian couplings $J_{ij} \sim \mathcal{N}(0, 1/\sqrt{N})$).
-- **Physical Solution Quality:** P-CAM achieves near-optimal ground energy ($-43.592$ vs $-45.133$) within $83.6\,\mu\text{s}$, completely bypassing the millisecond-scale iterative loops of CPU Monte Carlo algorithms.
-- **Hardware-Coupled Telemetry:** Monotonically advancing cycle tokens (`physical_generation`) and cryptographic execution seals (`SEAL-CORE...`) guarantee zero simulated emulation.
----  
 ### 4. Expected Terminal Audit Output
 
 ```text
@@ -273,6 +232,47 @@ To ensure 100% zero-trust objectivity:
  >>> OVERALL VERDICT: OBJECTIVE PHYSICAL CHALLENGE INDEPENDENTLY SOLVED & VERIFIED (PASS)
 ================================================================================
 ```
+---
+## 🔬 Large-Scale Physical Annealing Benchmark: 64-Spin Ising Spin Glass
+### Empirical Sub-to-Low Millisecond Ground-State Convergence on Edge Hardware
+
+This benchmark evaluates the NEOMA P-CAM In-Material Physical Solver against classical stochastic optimization algorithms on NP-hard combinatorial problems mapped to an all-to-all coupled 64-Spin Ising Hamiltonian:
+
+$$H = -\sum_{i < j} J_{ij} s_i s_j \quad (s_i \in \{-1, +1\}, N = 64)$$
+
+Rather than relying on synthetic fixed-latency assumptions, all latencies and energy states are empirically benchmarked directly on edge hardware (NVIDIA GTX 1650 + Master Node COM3 interface).
+
+---
+
+### 1. Empirical Latency Dynamics (From Cold-Start to Steady State)
+
+Physical silicon does not exhibit frozen, artificial response times. In real-world operation, latency follows a natural hardware synchronization profile:
+
+1. **Cold-Start & State Initialization Phase (5.39 ms):**
+   - Initial memory allocation, tensor context activation, and PCIe host-to-device boundary migration.
+2. **Dynamic Non-Equilibrium Relaxation (Max 1.27 ms):**
+   - Active continuous relaxation under sudden structural perturbation.
+3. **Steady-State Ground Convergence (Avg 0.08 ms / 83.6 µs):**
+   - High-frequency warm kernel execution under sustained boundary conditions, achieving ultra-fast deterministic relaxation (Min: 0.038 ms).
+
+---
+
+### 2. Empirical Performance Comparison (N=64 All-to-All Coupling)
+
+| Algorithm / Hardware Core | Execution Profile | Empirical Mean Latency | Ground Energy ($H$) | Solution Quality | Acceleration vs CPU |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Simulated Annealing (CPU)** | 10,000 Monte Carlo Steps | **46.34 ms** | -45.133 | Baseline (100.0%) | 1.0x (Reference) |
+| **Parallel Tempering (CPU)** | 16 Replicas, Multi-T | **38.16 ms** | -45.133 | Baseline (100.0%) | 1.2x |
+| **NEOMA P-CAM Live Core (GTX 1650)** | **Direct Tensor Reflex** | **0.08 ms** *(Cold: 5.39ms)* | **-43.592** | **96.6% Optimality** | **554.3x Acceleration** |
+
+---
+
+### 3. Empirical Verification Methodology
+To ensure 100% zero-trust objectivity:
+- **Reproducible Verification:** Benchmarked independently via `python pcam_ising_benchmark.py` (Sherrington-Kirkpatrick model with Gaussian couplings $J_{ij} \sim \mathcal{N}(0, 1/\sqrt{N})$).
+- **Physical Solution Quality:** P-CAM achieves near-optimal ground energy ($-43.592$ vs $-45.133$) within $83.6\,\mu\text{s}$, completely bypassing the millisecond-scale iterative loops of CPU Monte Carlo algorithms.
+- **Hardware-Coupled Telemetry:** Monotonically advancing cycle tokens (`physical_generation`) and cryptographic execution seals (`SEAL-CORE...`) guarantee zero simulated emulation.
+---  
 
 ---
 
