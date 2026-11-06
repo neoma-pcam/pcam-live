@@ -197,7 +197,7 @@ Rather than relying on cryogenic gate-based quantum circuits or repetitive digit
 
 #### 📊 Performance Comparison: Classical Heuristics vs. P-CAM Substrate
 
-| Evaluation Metric | Classical Simulated Annealing (10k Steps) | NEOMA P-CAM (COM6 Substrate) | Advantage / Factor |
+| Evaluation Metric | Classical Simulated Annealing (10k Steps) | NEOMA P-CAM (Substrate) | Advantage / Factor |
 | :--- | :--- | :--- | :--- |
 | **Search Space ($2^{64}$)** | $1.84 \times 10^{19}$ discrete states | $1.84 \times 10^{19}$ discrete states | Mathematical Parity |
 | **Time-to-Solution (TTS)** | ~42.8 ms (Intel i9 / RTX Cores) | **0.2718 ms** (Fixed Hardware Reflex) | **~157x Acceleration** |
