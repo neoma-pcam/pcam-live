@@ -184,14 +184,15 @@ if __name__ == "__main__":
 | **Dynamic Energy Dissipation** | $\ge$ **90.0%** within 50 ms | Local numerical integration of non-linear kinetics |
 | **Ground-State Potential** | **82 mV ~ 95 mV** | Direct circuit baseline bias anchor |
 | **Cryptographic Root-of-Trust** | **Silicon PUF Seal** | Monotonically advancing generation cycle token |
-### ⚛️ Large-Scale Physical Annealing Benchmark: 64-Spin Ising Spin Glass
+
+###  🔬 Large-Scale Physical Annealing Benchmark: 64-Spin Ising Spin Glass
 Deterministic Sub-Millisecond Ground-State Convergence on Room-Temperature Physical Substrate
 
 This benchmark evaluates the **NEOMA P-CAM In-Material Physical Solver** against classical stochastic optimization algorithms on NP-hard combinatorial problems mapped to an all-to-all coupled 64-Spin Ising Hamiltonian:
 
 $$H = -\sum_{i < j} J_{ij} s_i s_j \quad (s_i \in \{-1, +1\}, \; N=64)$$
 
-Rather than relying on cryogenic gate-based quantum circuits or repetitive digital Markov Chain Monte Carlo (MCMC) iterations, P-CAM leverages **analog complex impedance relaxation and non-equilibrium thermodynamic dissipation** to collapse high-dimensional energy landscapes into global potential wells in deterministic time.
+Rather than relying on cryogenic superconducting processors or repetitive digital Markov Chain Monte Carlo (MCMC) iterations, P-CAM leverages **analog complex impedance relaxation and non-equilibrium thermodynamic dissipation** to collapse high-dimensional energy landscapes into global potential wells in deterministic time.
 
 ---
 
