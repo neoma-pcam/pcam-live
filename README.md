@@ -11,11 +11,11 @@
 
 [![Hugging Face Spaces](https://img.shields.io/badge/%F0%9F%A4%97%20HUGGING%20FACE-LIVE%20REFLEX%20SOLVER%20DEMO-yellow?style=for-the-badge)](https://huggingface.co/spaces/Johnsgama/neoma-pcam-solver)
 
-> âš¡ **Interactive Hardware Reflex Solver:** Test Sub-to-Low Millisecond Reflex (0.6ms â€“ 5.0ms) physical equilibrium convergence and SEAL-CORE cryptographic proofs directly in your browser with 1-click guest mode: [Launch P-CAM Live Solver on Hugging Face](https://huggingface.co/spaces/Johnsgama/neoma-pcam-solver)
+> ??**Interactive Hardware Reflex Solver:** Test Sub-to-Low Millisecond Reflex (0.6ms ??5.0ms) physical equilibrium convergence and SEAL-CORE cryptographic proofs directly in your browser with 1-click guest mode: [Launch P-CAM Live Solver on Hugging Face](https://huggingface.co/spaces/Johnsgama/neoma-pcam-solver)
 
 ---
 
-## âš¡ NEOMA P-CAM 003 Independent Hardware Attestation
+## ??NEOMA P-CAM 003 Independent Hardware Attestation
 
 **Zero-Trust Client-Side Verification:** Do not trust server-side logs or static benchmark claims. This independent audit protocol generates non-linear physical challenges locally, submits boundary conditions to the P-CAM 003 silicon enclave via RapidAPI, and independently computes physical damping convergence directly inside your local CPU's physics engine.
 
@@ -33,7 +33,7 @@ python pcam_objective_audit.py --seed 7777
 ```
 
 <details>
-<summary><b>ğŸ” [View Source] pcam_objective_audit.py (Click to expand client-side verifier code)</b></summary>
+<summary><b>?” [View Source] pcam_objective_audit.py (Click to expand client-side verifier code)</b></summary>
 
 ```python
 import sys
@@ -59,9 +59,9 @@ def run_audit(seed_val: int):
     mass = 1.0
     initial_ke = round(0.5 * mass * (v_init ** 2), 2)
 
-    print(f"    â””â”€ Initial Shock Energy : {initial_ke} Joules")
-    print(f"    â””â”€ Initial Conditions   : Velocity = {v_init} m/s, Displacement = {x_init} m")
-    print("    â””â”€ Dynamics Status      : Without active damping, this system oscillates violently and diverges.")
+    print(f"    ?”â? Initial Shock Energy : {initial_ke} Joules")
+    print(f"    ?”â? Initial Conditions   : Velocity = {v_init} m/s, Displacement = {x_init} m")
+    print("    ?”â? Dynamics Status      : Without active damping, this system oscillates violently and diverges.")
 
     print("\n[Step 2] Sending perturbation boundary conditions to remote P-CAM 003 Enclave...")
     t0 = time.perf_counter()
@@ -102,12 +102,12 @@ def run_audit(seed_val: int):
     attest_tok = data.get("attestation_proof", "0x" + "00" * 16)[:38] + "..."
     insight = data.get("adaptive_control", {}).get("slm_interpreted_instruction", "PASSED")
 
-    print(f"    â””â”€ Convergence Status   : {data.get('status', 'CONVERGED_SUCCESS')}")
-    print(f"    â””â”€ Silicon Reflex Time  : {reflex_ms:.4f} ms (Physical Substrate Relaxation)")
-    print(f"    â””â”€ Total Ingress RTT    : {net_rtt:.2f} ms")
-    print(f"    â””â”€ Proposed Damping     : {damp_coeff}")
-    print(f"    â””â”€ Silicon Execution Seal: {seal_id}")
-    print(f"    â””â”€ Physical Generation  : #{gen_cycle}")
+    print(f"    ?”â? Convergence Status   : {data.get('status', 'CONVERGED_SUCCESS')}")
+    print(f"    ?”â? Silicon Reflex Time  : {reflex_ms:.4f} ms (Physical Substrate Relaxation)")
+    print(f"    ?”â? Total Ingress RTT    : {net_rtt:.2f} ms")
+    print(f"    ?”â? Proposed Damping     : {damp_coeff}")
+    print(f"    ?”â? Silicon Execution Seal: {seal_id}")
+    print(f"    ?”â? Physical Generation  : #{gen_cycle}")
 
     print("\n[Step 3] Local Auditor PC independently simulating and grading the solution...")
     dt = 0.001
@@ -160,18 +160,18 @@ if __name__ == "__main__":
 
 ```text
 [Auditor Workstation] (Your Local Machine)
-   â”‚
-   â”œâ”€â”€ 1. Synthesizes an unstable non-linear dynamic shock (e.g., >170,000 J kinetic energy)
-   â”œâ”€â”€ 2. Isolates ground-truth equations locally; dispatches boundary conditions to P-CAM Enclave
-   â”‚
-[RapidAPI Gateway â” Remote P-CAM 003 Silicon Enclave (NVIDIA GTX 1650)]
-   â”‚
-   â””â”€â”€ 3. Silicon substrate relaxes to equilibrium in 0.08ms (83.6Âµs) (Sub-to-Low Millisecond Reflex)
+   ??
+   ?œâ??€ 1. Synthesizes an unstable non-linear dynamic shock (e.g., >170,000 J kinetic energy)
+   ?œâ??€ 2. Isolates ground-truth equations locally; dispatches boundary conditions to P-CAM Enclave
+   ??
+[RapidAPI Gateway ??Remote P-CAM 003 Silicon Enclave (NVIDIA GTX 1650)]
+   ??
+   ?”â??€ 3. Silicon substrate relaxes to equilibrium in 0.08ms (83.6Âµs) (Sub-to-Low Millisecond Reflex)
           Returns adaptive damping coefficient + deterministic PUF silicon execution seal
-   â”‚
+   ??
 [Auditor Workstation] (Local Independent Grading)
-   â”‚
-   â””â”€â”€ 4. Injects P-CAM response into local 2nd-order non-linear equation of motion
+   ??
+   ?”â??€ 4. Injects P-CAM response into local 2nd-order non-linear equation of motion
           Independently verifies >90% destructive energy dissipation (100% Client-Side PASS)
 ```
 
@@ -179,10 +179,10 @@ if __name__ == "__main__":
 
 | Metric | Specification | Empirical Measurement (GTX 1650) | Verification Method |
 | :--- | :--- | :--- | :--- |
-| **Silicon Substrate Reflex** | **Sub-to-Low Millisecond** | **0.60 ms â€“ 5.00 ms** (Cold: ~5.0ms, Steady: ~0.6â€“1.8ms) | GPU Tensor Kernel Synchronized Latency (`torch.cuda.synchronize()`) |
-| **End-to-End API Ingress RTT** | Real-Time Responsive | **2.00 ms â€“ 6.50 ms** | Cloudflared Tunnel + Gateway Serial Parsing Pipeline |
-| **Dynamic Energy Dissipation**| â‰¥ 90.0% within 50 ms | **91.5% â€“ 99.8%** | Local Numerical Integration of 2nd-order Kinetics |
-| **Ground-State Potential** | Circuit Baseline Bias | **82.0 mV â€“ 95.0 mV** (Dynamic Fluctuation Tracking) | COM3 Master Node Hardware ADC Telemetry |
+| **Silicon Substrate Reflex** | **Sub-to-Low Millisecond** | **0.60 ms ??5.00 ms** (Cold: ~5.0ms, Steady: ~0.6??.8ms) | GPU Tensor Kernel Synchronized Latency (`torch.cuda.synchronize()`) |
+| **End-to-End API Ingress RTT** | Real-Time Responsive | **2.00 ms ??6.50 ms** | Cloudflared Tunnel + Gateway Serial Parsing Pipeline |
+| **Dynamic Energy Dissipation**| ??90.0% within 50 ms | **91.5% ??99.8%** | Local Numerical Integration of 2nd-order Kinetics |
+| **Ground-State Potential** | Circuit Baseline Bias | **82.0 mV ??95.0 mV** (Dynamic Fluctuation Tracking) | COM3 Master Node Hardware ADC Telemetry |
 | **Silicon Proof-of-Work** | Monotonic Hardware Proof | **SEAL-CORE Monotonic Cycle** | Monotonically Advancing Hardware Generation Cycle Token |
 
 ### 4. Expected Terminal Audit Output
@@ -196,20 +196,20 @@ if __name__ == "__main__":
 ================================================================================
 
 [Step 1] Synthesizing unstable physical perturbation on local machine...
-    â””â”€ Initial Shock Energy : 176485.29 Joules
-    â””â”€ Initial Conditions   : Velocity = 594.10 m/s, Displacement = 0.0858 m
-    â””â”€ Dynamics Status      : Without active damping, this system oscillates violently and diverges.
+    ?”â? Initial Shock Energy : 176485.29 Joules
+    ?”â? Initial Conditions   : Velocity = 594.10 m/s, Displacement = 0.0858 m
+    ?”â? Dynamics Status      : Without active damping, this system oscillates violently and diverges.
 
 [Step 2] Sending perturbation boundary conditions to remote P-CAM 003 Enclave...
-    â””â”€ Convergence Status   : CONVERGED_SUCCESS
-    â””â”€ Silicon Reflex Time  : 1.6812 ms (Physical Substrate Relaxation)
-    â””â”€ Total Ingress RTT    : 2.05 ms
-    â””â”€ Proposed Damping     : 0.9999
-    â””â”€ Silicon Execution Seal: SEAL-CORE06-635873
-    â””â”€ Physical Generation  : #31489973
+    ?”â? Convergence Status   : CONVERGED_SUCCESS
+    ?”â? Silicon Reflex Time  : 1.6812 ms (Physical Substrate Relaxation)
+    ?”â? Total Ingress RTT    : 2.05 ms
+    ?”â? Proposed Damping     : 0.9999
+    ?”â? Silicon Execution Seal: SEAL-CORE06-635873
+    ?”â? Physical Generation  : #31489973
 
 [Step 3] Local Auditor PC independently simulating and grading the solution...
-    â””â”€ Injecting P-CAM damping parameter into 2nd-order non-linear equation of motion...
+    ?”â? Injecting P-CAM damping parameter into 2nd-order non-linear equation of motion...
 
 ================================================================================
                     INDEPENDENT CLIENT-SIDE GRADING REPORT
@@ -235,7 +235,7 @@ if __name__ == "__main__":
 
 ---
 
-## ğŸ”¬ Large-Scale Physical Annealing Benchmark: 64-Spin Ising Spin Glass
+## ?”¬ Large-Scale Physical Annealing Benchmark: 64-Spin Ising Spin Glass
 ### Empirical Sub-to-Low Millisecond Ground-State Convergence on Edge Hardware
 
 This benchmark evaluates the NEOMA P-CAM In-Material Physical Solver against classical stochastic optimization algorithms on NP-hard combinatorial problems mapped to an all-to-all coupled 64-Spin Ising Hamiltonian:
@@ -277,7 +277,7 @@ To ensure 100% zero-trust objectivity:
 
 ---
 
-## ğŸ¯ Target Workloads & Scope Boundaries: Physical AI Infrastructure
+## ?¯ Target Workloads & Scope Boundaries: Physical AI Infrastructure
 
 To ensure absolute engineering transparency and prevent architectural ambiguity, NEOMA P-CAM explicitly delineates its operational boundary and target compute domain:
 
@@ -313,14 +313,14 @@ NEOMA P-CAM does not replace host GPUs or large foundation models; it forms a co
   - Frequency : 1 Hz ~ 5 Hz (Low-Frequency Semantic Reasoning)
   - Workload  : Dense Matrix Multiplication (GEMM), Policy Planning
   - Action    : Emits discrete intent ("Stabilize manipulator", "Regulate charging rate")
-         â”‚
-         â–¼ (High-Level Policy Directives)
+         ??
+         ??(High-Level Policy Directives)
 [ THE SPINE : NEOMA P-CAM 1U Hardware Co-processor ]
   - Frequency : 1 kHz ~ 10 kHz (0.08ms (83.6Âµs) Deterministic Hardware Reflex)
   - Workload  : Boundary Condition Absorption, In-Situ Physics Relaxation
   - Action    : Absorbs environmental perturbation wavefronts, bypasses 90% of stiff GPU loops
-         â”‚
-         â–¼ (Feedback Attestation Seal: SEAL-CORE...)
+         ??
+         ??(Feedback Attestation Seal: SEAL-CORE...)
 [ PHYSICAL ACTUATION & SIMULATION CONVERGENCE ]
 ```
 
@@ -333,36 +333,36 @@ In dense GPU racks (NVIDIA H100 / B200), numerical stiff loops cause sharp power
 
 ---
 
-## âš¡ Executive Summary
+## ??Executive Summary
 
 *Sub-to-Low Millisecond Physical Dynamics Convergence & Cryptographic Silicon Root-of-Trust*
 
 **NEOMA P-CAM (Predictive Control Adaptive Material / Physical Co-processor Appliance Matrix)** is an enterprise hardware computing engine engineered for **Real-Time Physical Dynamics Convergence, Non-Linear Boundary Stabilization, and General-Purpose Physical Optimization (GP-PCAM)**.
 
-Unlike conventional software simulators that suffer from computational lag, iterative convergence stalls, and exponential scaling bottlenecks, P-CAM offloads dynamic relaxation loops directly to **dedicated edge physical reflex hardware enclaves**. Operating within an isolated edge execution fabric, P-CAM achieves **deterministic physical equilibrium (0.6ms â€“ 5.0ms)**, active dynamic damping, and cryptographically verifiable **Silicon Hardware Execution Seals (`SEAL-CORE...`)** coupled with an on-board physical cognitive reasoning layer.
+Unlike conventional software simulators that suffer from computational lag, iterative convergence stalls, and exponential scaling bottlenecks, P-CAM offloads dynamic relaxation loops directly to **dedicated edge physical reflex hardware enclaves**. Operating within an isolated edge execution fabric, P-CAM achieves **deterministic physical equilibrium (0.6ms ??5.0ms)**, active dynamic damping, and cryptographically verifiable **Silicon Hardware Execution Seals (`SEAL-CORE...`)** coupled with an on-board physical cognitive reasoning layer.
 
 ---
 
-## ğŸ§  Physical AI Architecture: The Brain-Spine Cooperative Loop
+## ?§  Physical AI Architecture: The Brain-Spine Cooperative Loop
 
 NEOMA P-CAM establishes a **Decoupled Bionic Loop**, bridging Frontier Cognitive Models with a deterministic physical reflex core across separate CUDA priority streams:
 
 ```text
-[ Cognitive Layer (The Brain) ]  â”€â”€â”€ Local 4-bit LoRA Phi-3 Mini SLM
-       â”‚ (Macro-Thermodynamic Reasoning, Asynchronous Queue, State Equations)
-       â”‚
-       â–¼ (Model Context Protocol - Standard JSON-RPC stdio / HTTP)
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚                   NEOMA P-CAM Bridge Interface Layer                   â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
-                                    â”‚ (CUDA High-Priority Stream)
-                                    â–¼
-[ Physical Reflex Layer (The Spine) ] â”€â”€â”€ 4-Channel Linear Tensor Projector (GTX 1650)
-       â””â”€â”€ Sub-to-Low Millisecond In-Situ Damping (0.08ms (83.6Âµs) Ground-State Lock)
-       â””â”€â”€ Edge GPU Tensor Acceleration, 4GB Isolated VRAM Footprint, Zero Packet Loss
+[ Cognitive Layer (The Brain) ]  ?€?€?€ Local 4-bit LoRA Phi-3 Mini SLM
+       ??(Macro-Thermodynamic Reasoning, Asynchronous Queue, State Equations)
+       ??
+       ??(Model Context Protocol - Standard JSON-RPC stdio / HTTP)
+?Œâ??€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€??
+??                  NEOMA P-CAM Bridge Interface Layer                   ??
+?”â??€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?¬â??€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€??
+                                    ??(CUDA High-Priority Stream)
+                                    ??
+[ Physical Reflex Layer (The Spine) ] ?€?€?€ 4-Channel Linear Tensor Projector (GTX 1650)
+       ?”â??€ Sub-to-Low Millisecond In-Situ Damping (0.08ms (83.6Âµs) Ground-State Lock)
+       ?”â??€ Edge GPU Tensor Acceleration, 4GB Isolated VRAM Footprint, Zero Packet Loss
 ```
 
-### ğŸ“Š Empirical Hardware Validation (GTX 1650 Live Telemetry)
+### ?“Š Empirical Hardware Validation (GTX 1650 Live Telemetry)
 
 Benchmarked directly against live physical silicon hardware to verify time-scale decoupling:
 
@@ -376,7 +376,7 @@ Benchmarked directly against live physical silicon hardware to verify time-scale
 * **Flawless Telemetry:** 0.00% packet loss across continuous physical stress cycles.
 
 ---
-## âš¡ Empirical Breakthrough: In-Situ PDE Loop Elimination (GTX 1650 Full-Load)
+## ??Empirical Breakthrough: In-Situ PDE Loop Elimination (GTX 1650 Full-Load)
 
 Conventional numeric solvers (Runge-Kutta, Newton-Raphson, PINNs) suffer from computational stalls and severe thermal stress when solving non-linear boundary dynamics. In iterative solvers, GPUs repeatedly evaluate differential state transitions until reaching numeric tolerance, consuming excessive power and inducing large $di/dt$ voltage drops.
 
@@ -384,29 +384,29 @@ P-CAM operates as an **In-Material Non-Equilibrium Relaxation Co-Processor**. By
 
 ```text
 [ Non-linear Kinetic/Thermal Perturbation ]
-                   â”‚
-                   â–¼
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚  GPU Initial Wavefront Acquisition (Steps 1 ~ 5)       â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
-                           â”‚ Dispatches Boundary Ingress (0.0845V Base)
-                           â–¼
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚  In-Situ Relaxation Matrix: Physical Relaxation        â”‚
-â”‚  â€¢ Substrate Convergence : 1.6812 ms                   â”‚
-â”‚  â€¢ Intrinsic Damping Coeff: 0.4320                     â”‚
-â”‚  â€¢ Hardware Attestation  : SEAL-PCAM003-Core-0051003C  â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
-                           â”‚ Early-Exit Equilibrium Vector Injected
-                           â–¼
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚  GPU Iterative Loop Termination (Steps 6 ~ 50 Bypassed)â”‚
-â”‚  Result: 96.90% Net Joules Eliminated                  â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+                   ??
+                   ??
+?Œâ??€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€??
+?? GPU Initial Wavefront Acquisition (Steps 1 ~ 5)       ??
+?”â??€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?¬â??€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€??
+                           ??Dispatches Boundary Ingress (0.0845V Base)
+                           ??
+?Œâ??€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€??
+?? In-Situ Relaxation Matrix: Physical Relaxation        ??
+?? ??Substrate Convergence : 1.6812 ms                   ??
+?? ??Intrinsic Damping Coeff: 0.4320                     ??
+?? ??Hardware Attestation  : SEAL-PCAM003-Core-0051003C  ??
+?”â??€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?¬â??€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€??
+                           ??Early-Exit Equilibrium Vector Injected
+                           ??
+?Œâ??€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€??
+?? GPU Iterative Loop Termination (Steps 6 ~ 50 Bypassed)??
+?? Result: 96.90% Net Joules Eliminated                  ??
+?”â??€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€??
 ```
 
 ---
-## âš¡ 1-Click Claude Desktop MCP Configuration
+## ??1-Click Claude Desktop MCP Configuration
 
 Add the following configuration to your `claude_desktop_config.json` to link Claude directly to the P-CAM physical enclave:
 
@@ -424,25 +424,25 @@ Add the following configuration to your `claude_desktop_config.json` to link Cla
 }
 ```
 
-* **Free Tier Available:** Includes monthly evaluation requests on the cloud ($0 BASIC plan). ğŸ‘‰ [Get your Free RapidAPI Key](https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control)
+* **Free Tier Available:** Includes monthly evaluation requests on the cloud ($0 BASIC plan). ?‘‰ [Get your Free RapidAPI Key](https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control)
 * **Local Hardware Diagnostic Mode:** Direct hardware access is strictly verified through `pcam_objective_audit.py`. Continuous enterprise solver compute requires an authorized license or API gateway routing.
 
 ---
 
-## ğŸ”¬ Architectural Paradigm: The Computational Triad
+## ?”¬ Architectural Paradigm: The Computational Triad
 
 ```text
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚                                 THE COMPUTATIONAL TRIAD                                â”‚
-â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-â”‚ Pure Software Simulation â”‚ Destructive Physical Tests  â”‚ P-CAM Substrate Edge Ingress  â”‚
-â”‚ (In-Silico / CPU / GPU)  â”‚ (Bench-top Wet Lab)         â”‚ (NEOMA Physical AI Engine)    â”‚
-â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¼â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¼â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-â”‚ â€¢ Numerical Runge-Kutta  â”‚ â€¢ Physical pack fire / test â”‚ â€¢ Boundary dynamics mapped to â”‚
-â”‚ â€¢ Discretization latency â”‚ â€¢ High CAPEX & destructible â”‚   P-CAM adaptive material     â”‚
-â”‚ â€¢ Numerical stall/blowup â”‚ â€¢ Slow iteration turnaround â”‚ â€¢ Zero numerical divergence   â”‚
-â”‚ â€¢ Hard to capture glitch â”‚ â€¢ Instantaneous (0.08ms) fixâ”‚ â€¢ Hardware-sealed attestation â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”´â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”´â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+?Œâ??€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€??
+??                                THE COMPUTATIONAL TRIAD                                ??
+?œâ??€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?¬â??€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?¬â??€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€??
+??Pure Software Simulation ??Destructive Physical Tests  ??P-CAM Substrate Edge Ingress  ??
+??(In-Silico / CPU / GPU)  ??(Bench-top Wet Lab)         ??(NEOMA Physical AI Engine)    ??
+?œâ??€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?¼â??€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?¼â??€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€??
+????Numerical Runge-Kutta  ????Physical pack fire / test ????Boundary dynamics mapped to ??
+????Discretization latency ????High CAPEX & destructible ??  P-CAM adaptive material     ??
+????Numerical stall/blowup ????Slow iteration turnaround ????Zero numerical divergence   ??
+????Hard to capture glitch ????Instantaneous (0.08ms) fix????Hardware-sealed attestation ??
+?”â??€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?´â??€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?´â??€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€??
 ```
 
 * **Physical Boundary Mapping:** Dynamic state variables of complex non-linear systems (robotic joint backlash, dendritic impedance drift, exothermic radical runaways, turbulent hydrodynamic shear) are projected directly into the P-CAM latent tensor space.
@@ -451,7 +451,7 @@ Add the following configuration to your `claude_desktop_config.json` to link Cla
 
 ---
 
-## âš¡ 6 Production Reflex Enclaves (Empirically Verified Telemetry)
+## ??6 Production Reflex Enclaves (Empirically Verified Telemetry)
 
 All 5 dedicated industrial enclaves and the universal co-solver are driven by synchronous time-division multiplexing with distinct physical silicon fingerprints:
 
@@ -466,7 +466,7 @@ All 5 dedicated industrial enclaves and the universal co-solver are driven by sy
 
 ---
 
-## ğŸš€ Quick Start: GP-PCAM Universal Physical Solver
+## ?? Quick Start: GP-PCAM Universal Physical Solver
 
 Ultra-low latency deterministic hardware equilibrium solver API designed for researchers and enterprise systems. Eliminates software numerical simulation loops, providing deterministic physical state convergence.
 
@@ -489,7 +489,7 @@ response = requests.post(url, json=payload, headers=headers)
 print(response.json())
 ```
 
-### ğŸ›¡ï¸ Deterministic Silicon-Bound Response Contract
+### ?›¡ï¸?Deterministic Silicon-Bound Response Contract
 
 Every inference response returned by the NEOMA P-CAM gateway is cryptographically anchored to physical hardware substrates:
 
@@ -527,7 +527,7 @@ Every inference response returned by the NEOMA P-CAM gateway is cryptographicall
 
 ---
 
-## ğŸ¤– Multi-Platform Integrations
+## ?¤– Multi-Platform Integrations
 
 ### 1. ROS 2 Robotic Dynamic Compliance
 Clone the repository directly into your ROS 2 workspace (`colcon_ws/src`) and build:
@@ -571,24 +571,24 @@ python battery/pcam_pybamm_thermal.py
 
 ---
 
-## ğŸŒ Production Access Points & Official Gateways
+## ?Œ Production Access Points & Official Gateways
 
-* **Enterprise Control Matrix (RapidAPI Hub):** ğŸ‘‰ [NEOMA P-CAM Hyper-Physical Control](https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control)  
+* **Enterprise Control Matrix (RapidAPI Hub):** ?‘‰ [NEOMA P-CAM Hyper-Physical Control](https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control)  
   *5-Domain industrial matrix for enterprise deployment (Bioreactor, Synthesis, Robotics, Mobility, Battery).*
-* **Universal Physical Solver (RapidAPI Micro-Tier):** ğŸ‘‰ [GP-PCAM Universal Physical Solver](https://rapidapi.com/shs15199702/api/gp-pcam-universal-physical-solver)  
+* **Universal Physical Solver (RapidAPI Micro-Tier):** ?‘‰ [GP-PCAM Universal Physical Solver](https://rapidapi.com/shs15199702/api/gp-pcam-universal-physical-solver)  
   *Standalone physical equilibrium solver (Includes 50 free calls/month, $30/mo accessible tier).*
-* **Direct Production Gateway Node:** ğŸ‘‰ [https://api.neoma-pcam.com](https://api.neoma-pcam.com)  
+* **Direct Production Gateway Node:** ?‘‰ [https://api.neoma-pcam.com](https://api.neoma-pcam.com)  
   *Direct low-latency endpoint connected directly to the physical computing fabric.*
-* **Interactive API Documentation (Swagger UI):** ğŸ‘‰ [https://api.neoma-pcam.com/docs](https://api.neoma-pcam.com/docs)  
+* **Interactive API Documentation (Swagger UI):** ?‘‰ [https://api.neoma-pcam.com/docs](https://api.neoma-pcam.com/docs)  
   *Real-time testing console for physical inference across all 6 production enclaves.*
-* **Official Web Telemetry Console:** ğŸ‘‰ [https://neoma-pcam.github.io/pcam-live/](https://neoma-pcam.github.io/pcam-live/)  
+* **Official Web Telemetry Console:** ?‘‰ [https://neoma-pcam.github.io/pcam-live/](https://neoma-pcam.github.io/pcam-live/)  
   *Live physical convergence state, hardware attestation seals, and cluster monitor.*
-* **Cluster Health & Silicon Proof:** ğŸ‘‰ https://neoma-pcam.github.io/pcam-live/  
+* **Cluster Health & Silicon Proof:** ?‘‰ https://neoma-pcam.github.io/pcam-live/  
   *Live cluster status, synchronous bus fabric monitor, and PUF silicon attestation.*
 
 ---
 
-## ğŸ”’ Security & Black-Box Enclave Architecture
+## ?”’ Security & Black-Box Enclave Architecture
 
 * **Autonomous Cognitive Enclave:** Operates with a proprietary on-board physical reasoning core. No external cloud endpoints or third-party AI APIs are queried, ensuring absolute data sovereignty and air-gapped isolation.
 * **Physical Unclonable Function (PUF) Seals:** Each convergence transaction is bound to a deterministic, tamper-proof hardware execution token (`attestation_proof`) cryptographically signed by the physical enclave's silicon characteristics.
@@ -597,7 +597,7 @@ python battery/pcam_pybamm_thermal.py
 
 ---
 
-## ğŸ“¬ Enterprise Inquiries & Partnership
+## ?“¬ Enterprise Inquiries & Partnership
 
 For custom on-premise appliances, physical co-processor licensing, or technical PoC evaluation:
 * **Official Website:** [https://neoma-pcam.com](https://neoma-pcam.com)
@@ -607,7 +607,7 @@ For custom on-premise appliances, physical co-processor licensing, or technical 
 
 ---
 
-## ğŸ”’ Proprietary Notice
+## ?”’ Proprietary Notice
 
 All physical computing architectures, silicon enclave protocols, and interface specifications related to **GP-PCAM** are proprietary assets of NEOMA Systems Inc. Unauthorized reverse engineering, silicon profiling, or unauthorized commercial exploitation is strictly prohibited. Client SDKs and open examples are governed under the Apache 2.0 license.
 
