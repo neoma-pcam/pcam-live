@@ -3,7 +3,9 @@ import re
 import time
 import queue
 import threading
+import hmac
 import hashlib
+import json
 from datetime import datetime, timezone
 from typing import Optional, Dict, Any, List
 
@@ -111,13 +113,13 @@ preallocated_tensor = torch.zeros((1, 4), device=DEVICE, dtype=TARGET_DTYPE)
 # 3. [완전 실측] COM3 하드웨어 시리얼 백그라운드 리더
 # ==============================================================================
 class PCAMHardwareSerialBridge:
-    def __init__(self, port="COM3", baudrate=115200):
+    def __init__(self, port="COM3", baudrate=921600):
         self.port_name = port
         self.baudrate = baudrate
         self.ser = None
         self.lock = threading.Lock()
         self.is_running = False
-        
+
         self.latest_telemetry = {
             "v_out": 0.085,
             "entropy": 0.0010,
@@ -188,7 +190,7 @@ class PCAMHardwareSerialBridge:
         with self.lock:
             return dict(self.latest_telemetry)
 
-hw_bridge = PCAMHardwareSerialBridge(port=os.getenv("PCAM_PORT", "COM3"))
+hw_bridge = PCAMHardwareSerialBridge(port="COM3", baudrate=921600)
 
 def get_pcam_live_telemetry():
     return hw_bridge.get_telemetry()
@@ -202,20 +204,11 @@ def extract_boundary_conditions(payload: Optional[BoundaryConditionPayload], hw_
     ent_base = hw_telemetry.get("entropy", 0.0010)
     gen = hw_telemetry.get("gen", 0)
 
-    # 하드웨어 실시간 물리 세대(GEN) 기반 동적 미세 전위 요동(Jitter) 결합
-    hw_jitter = ((gen % 997) / 1000.0) * 0.004 - 0.002
-
-    flux_in = p_dict.get("flux_potential_v")
-    flux = float(flux_in if flux_in is not None else v_base) + hw_jitter
-
-    vel_in = p_dict.get("gradient_velocity")
-    velocity = float(vel_in if vel_in is not None else 520.0) + (gen % 29) * 0.5
-
-    acc_in = p_dict.get("gradient_acceleration")
-    acceleration = float(acc_in if acc_in is not None else 16000.0) + (gen % 53) * 1.5
-
-    strain_in = p_dict.get("active_strain")
-    strain = float(strain_in if strain_in is not None else 1.25) + ((gen % 19) * 0.003)
+    # 가짜 난수 LCG 연산 전면 삭제, 순수 입력값 및 실측값 사용
+    flux = float(p_dict.get("flux_potential_v") if p_dict.get("flux_potential_v") is not None else v_base)
+    velocity = float(p_dict.get("gradient_velocity") if p_dict.get("gradient_velocity") is not None else 520.0)
+    acceleration = float(p_dict.get("gradient_acceleration") if p_dict.get("gradient_acceleration") is not None else 16000.0)
+    strain = float(p_dict.get("active_strain") if p_dict.get("active_strain") is not None else 1.25)
 
     return flux, velocity, acceleration, strain, ent_base, gen
 
@@ -278,10 +271,11 @@ async def execute_reflex_pipeline(
     tensor_mod = actuator_vals[0] * 0.001
 
     # 4. 도메인별 물리 수식 적용 (Diagnostics & Adaptive Control)
+    is_hw_connected = hw.get("connected", False)
     diagnostics = {
         "physical_generation": gen,
         "ground_state_potential": round(flux, 4),
-        "silicon_attestation": "VERIFIED_HARDWARE_AUTHENTIC" if hw.get("connected") else "HARDWARE_OFFLINE"
+        "silicon_attestation": "VERIFIED_HARDWARE_AUTHENTIC" if is_hw_connected else "ENCLAVE_EMULATION_MODE"
     }
     adaptive_control = {"target_state": "GROUND_STATE_CONVERGED"}
 
@@ -400,9 +394,21 @@ async def execute_reflex_pipeline(
             "slm_interpreted_instruction": f"UNIVERSAL PASS: {initial_ke} J kinetic shock dissipated to {residual_ke} J ({dissipation}% efficiency) via {silicon_reflex_ms}ms substrate reflex."
         })
 
-    # 5. 보안 씰 발급 및 장부 기록
-    seal_id = f"{spec['seal_prefix']}-{gen % 900000 + 100000}" if gen > 0 else f"{spec['seal_prefix']}-LIVE"
-    attest_hash = hashlib.sha256(f"{raw_vals}_{time.time()}_{hw.get('uid')}".encode()).hexdigest()
+    # 5. 정직한 실리콘 봉인 발급 (HMAC-SHA256) 및 장부 기록
+    timestamp = int(time.time())
+    secret_key = os.environ.get("PCAM_HARDWARE_SECRET", "neoma_production_secret_key_03").encode('utf-8')
+
+    if is_hw_connected:
+        uid = hw.get("uid", "UNKNOWN_UID")
+        v_out = hw.get("v_out", 0.0)
+        payload_str = f"{uid}:{gen}:{v_out}:{flux}:{vel}:{acc}:{strain}:{timestamp}"
+        hmac_obj = hmac.new(secret_key, payload_str.encode('utf-8'), hashlib.sha256)
+        digest = hmac_obj.hexdigest().upper()
+        seal_id = f"SEAL-CORE03-{timestamp}-{digest}"
+        attest_hash = f"0x{digest}"
+    else:
+        seal_id = f"SEAL-EMUL-NO_HARDWARE-{timestamp}"
+        attest_hash = "0x0000000000000000000000000000000000000000000000000000000000000000"
 
     background_tasks.add_task(
         record_rapidapi_call,
@@ -426,7 +432,8 @@ async def execute_reflex_pipeline(
         "domain": spec["domain"],
         "hardware_enclave": spec["enclave"],
         "hardware_seal_id": seal_id,
-        "attestation_proof": f"0x{attest_hash}",
+        "attestation_proof": attest_hash,
+        "is_hardware": is_hw_connected,
         "cognitive_brain": "NEOMA_COGNITIVE_ENCLAVE_ENTERPRISE_REFLEX",
         "hardware_reflex_ms": silicon_reflex_ms,
         "api_rtt_ms": actual_api_rtt_ms,
@@ -437,7 +444,7 @@ async def execute_reflex_pipeline(
     headers = {
         "X-Hardware-Seal": seal_id,
         "X-Physical-Cycle": str(gen),
-        "X-PCAM-Audit-Status": "VERIFIED_AUTHENTIC" if hw.get("connected") else "HARDWARE_OFFLINE"
+        "X-PCAM-Audit-Status": "VERIFIED_AUTHENTIC" if is_hw_connected else "HARDWARE_OFFLINE"
     }
 
     return JSONResponse(content=response_payload, status_code=200, headers=headers)
