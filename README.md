@@ -1,8 +1,9 @@
 # NEOMA P-CAM & Silicon Root-of-Trust (v5.0.0)
 
-[![P-CAM Objective Hardware Audit](https://github.com/neoma-pcam/pcam-live/actions/workflows/audit.yml/badge.svg)](https://github.com/neoma-pcam/pcam-live/actions/workflows/audit.yml)
+[![P-CAM Objective Hardware Audit](https://github.com/neoma-pcam/pcam-live/actions/workflows/audit.yml/badge.svg)](https://github.com/neoma-pcam/pcam-live/actions)
 [![Hardware Cluster](https://img.shields.io/badge/Hardware%20Cluster-ONLINE%20(6%20Enclaves%20Active)-brightgreen.svg)](#)
 [![Production Gateway](https://img.shields.io/badge/Production%20Gateway-api.neoma--pcam.com-007ec6.svg)](https://api.neoma-pcam.com)
+[![Swagger API Docs](https://img.shields.io/badge/Swagger-OpenAPI%20Specification-00b894.svg)](https://api.neoma-pcam.com/docs)
 [![RapidAPI Enterprise Hub](https://img.shields.io/badge/RapidAPI-Enterprise%20Hub-8a2be2.svg)](https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control)
 [![RapidAPI Universal Solver](https://img.shields.io/badge/RapidAPI-Universal%20Solver%20($30/mo)-orange.svg)](https://rapidapi.com/shs15199702/api/gp-pcam-universal-physical-solver/playground/Solve%20Universal%20Equilibrium)
 [![DOI](https://img.shields.io/badge/DOI-10.5281%2Fzenodo.23644655-blue.svg)](https://doi.org/10.5281/zenodo.23644655)
@@ -53,11 +54,13 @@ print("[AUDIT] Initializing client-side zero-trust verification...")
 
 ## 🌐 Production Access Points & Official Gateways
 
+* **Interactive Swagger UI (OpenAPI Docs):** 👉 [P-CAM OpenAPI Specification](https://api.neoma-pcam.com/docs)  
+  *Live interactive Swagger schema, endpoint playground, and raw OpenAPI JSON.*
 * **Enterprise Hyper Physical Hub (RapidAPI):** 👉 [NEOMA P-CAM Enterprise Hub](https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control)  
   *Dedicated industrial gateway covering multi-domain physical control enclaves.*
 * **Universal Physical Solver (RapidAPI):** 👉 [GP-PCAM Universal Physical Solver](https://rapidapi.com/shs15199702/api/gp-pcam-universal-physical-solver/playground/Solve%20Universal%20Equilibrium)  
   *Direct evaluation, playground testing, and monthly solver subscriptions ($30/mo).*
-* **Interactive Web Telemetry Console & Silicon Proof:** 👉 [NEOMA P-CAM Live Telemetry Console](https://neoma-pcam.github.io/pcam-live/)  
+* **Interactive Web Telemetry Console & Silicon Proof:** 👉 [NEOMA P-CAM Live Telemetry Console](https://neoma-pcam.github.io/pcam-live)  
   *Live cluster status, synchronous bus fabric monitor, and PUF silicon attestation.*
 * **Direct Production Gateway Node:** 👉 [Production Gateway Node](https://api.neoma-pcam.com)  
   *Direct low-latency endpoint connected directly to the physical computing fabric.*
