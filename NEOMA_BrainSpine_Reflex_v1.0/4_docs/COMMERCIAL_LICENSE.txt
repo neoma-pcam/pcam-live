@@ -1,0 +1,10 @@
+NEOMA P-CAM COMMERCIAL SUITE LICENSE (v1.0)
+Copyright (c) 2026 NEOMA P-CAM Architecture. All Rights Reserved.
+
+1. GRANT OF LICENSE:
+Permission is hereby granted to the purchasing organization to utilize this 
+dataset, SDK, and documentation internally for physical AI development, CAE 
+solvers, digital twin simulation, and robotic hardware control.
+
+2. SILICON ROOT-OF-TRUST:
+All included equilibrium vectors are attested by immutable hardware PUF seals.
