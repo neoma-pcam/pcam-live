@@ -1,0 +1,42 @@
+﻿# Core IP & Internal Suites
+NEOMA_BrainSpine_Reflex_v1.0*
+agents/
+battery/
+data/
+examples/
+matlab/
+ros2/
+__pycache__/
+
+# Scripts & Harvesters
+benchmark_*.py
+pcam_*_benchmark.py
+pcam_*_harvester.py
+pcam_perpetual_airgap_runner.py
+pcam_autonomous_worker.py
+pcam_gpu_daemon.py
+pcam_server_gateway.py
+pcam_rapidapi_gateway.py
+pcam_gateway.py
+neoma_*.py
+pcam_*dashboard*.py
+pcam_bridge.py
+pcam_mcp.py
+mcp_server.py
+pcam_*test*.py
+pcam_*eval*.py
+pcam_battery_demo.py
+pcam_fast_embodied.py
+pcam_cluster_supervisor.py
+pcam_credit_ledger.py
+build_commercial_suite.py
+generate_pilot.py
+make_sample.py
+
+# Local Data & Batch
+start_*.bat
+*.csv
+*.db
+REFUND_POLICY.md
+TERMS.md
+smithery.yaml
