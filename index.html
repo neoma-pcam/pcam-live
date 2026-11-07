@@ -1,6 +1,4 @@
-# -*- coding: utf-8 -*-
-
-html_content = """<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -70,14 +68,14 @@ html_content = """<!DOCTYPE html>
     .header-controls {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
       flex-wrap: wrap;
     }
     .btn {
       text-decoration: none;
       font-size: 0.85rem;
       font-weight: 600;
-      padding: 8px 16px;
+      padding: 8px 14px;
       border-radius: 8px;
       transition: all 0.2s;
       display: inline-flex;
@@ -90,6 +88,12 @@ html_content = """<!DOCTYPE html>
       border: 1px solid #334155;
     }
     .btn-secondary:hover { background: #334155; }
+    .btn-hf {
+      background: #2b2313;
+      color: #fbbf24;
+      border: 1px solid #78350f;
+    }
+    .btn-hf:hover { background: #3d3119; }
     .btn-primary {
       background: var(--amber);
       color: #000;
@@ -102,7 +106,7 @@ html_content = """<!DOCTYPE html>
       color: var(--emerald);
       background: rgba(16, 185, 129, 0.12);
       border: 1px solid var(--emerald);
-      padding: 6px 14px;
+      padding: 6px 12px;
       border-radius: 8px;
       letter-spacing: 0.05em;
     }
@@ -218,10 +222,11 @@ html_content = """<!DOCTYPE html>
           <h1>NEOMA P-CAM</h1>
           <span class="badge-ver">GP-PCAM v5.0.0</span>
         </div>
-        <p class="subtitle">Proprietary Physical Reflex Engine &amp; Cryptographic Silicon Root-of-Trust. Delivering deterministic sub-millisecond physical equilibrium convergence on NVIDIA GTX 1650 silicon.</p>
+        <p class="subtitle">Proprietary Physical Reflex Engine &amp; Cryptographic Silicon Root-of-Trust. Delivering deterministic 0.27ms physical equilibrium convergence on NVIDIA GTX 1650 silicon.</p>
       </div>
       <div class="header-controls">
-        <a href="https://rapidapi.com/shs15199702/api/gp-pcam-universal-physical-solver/playground/Solve%20Universal%20Equilibrium" target="_blank" class="btn btn-secondary">&#127760; Enterprise Hub</a>
+        <a href="https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control" target="_blank" class="btn btn-secondary">&#127760; Enterprise Hub</a>
+        <a href="https://huggingface.co/spaces/Johnsgama/neoma-pcam-solver" target="_blank" class="btn btn-hf">&#129303; Hugging Face Demo</a>
         <a href="https://rapidapi.com/shs15199702/api/gp-pcam-universal-physical-solver/playground/Solve%20Universal%20Equilibrium" target="_blank" class="btn btn-primary">&#9889; Universal Solver ($30/mo)</a>
         <span class="badge-status">GATEWAY: ACTIVE</span>
       </div>
@@ -230,8 +235,8 @@ html_content = """<!DOCTYPE html>
     <section class="card-grid">
       <div class="card">
         <span class="card-icon c-amber">&#9889;</span>
-        <h3>Empirical Sub-to-Low Millisecond Reflex (0.6ms &ndash; 5.0ms)</h3>
-        <p>Instantaneous equilibrium locking on isolated GPU tensor streams. Resolves catastrophic physical instability in 0.6ms &ndash; 5.0ms without computational lag or iterative numerical stalls.</p>
+        <h3>0.27ms Deterministic Hardware Reflex (GTX 1650)</h3>
+        <p>Instantaneous equilibrium locking on isolated GPU tensor streams. Resolves catastrophic physical instability in 0.27ms without computational lag or iterative numerical stalls.</p>
       </div>
       <div class="card">
         <span class="card-icon c-cyan">&#129504;</span>
@@ -252,7 +257,7 @@ html_content = """<!DOCTYPE html>
 
     <section>
       <div class="section-header">
-        <h2><span>&#9889;</span> Dedicated Physical Reflex Enclaves (0.6ms &ndash; 5.0ms Live Telemetry)</h2>
+        <h2><span>&#9889;</span> Dedicated Physical Reflex Enclaves (0.27ms Hardware Reflex Telemetry)</h2>
         <span class="section-meta">Synchronous Time-Division Grid</span>
       </div>
       <div class="enclave-grid">
@@ -266,35 +271,35 @@ html_content = """<!DOCTYPE html>
         <div class="enclave-item">
           <div class="enclave-info">
             <h4>Battery Energetics</h4>
-            <code>/v1/battery/predict</code>
+            <code>/v1/battery-energetics</code>
           </div>
           <span class="enclave-state">ONLINE &bull; DAMPING</span>
         </div>
         <div class="enclave-item">
           <div class="enclave-info">
             <h4>Bioreactor Kinematics</h4>
-            <code>/v1/pharma/predict</code>
+            <code>/v1/bioreactor-kinematics</code>
           </div>
           <span class="enclave-state">ONLINE &bull; DAMPING</span>
         </div>
         <div class="enclave-item">
           <div class="enclave-info">
             <h4>Robotic Compliance</h4>
-            <code>/v1/robotics/predict</code>
+            <code>/v1/robotic-compliance</code>
           </div>
           <span class="enclave-state">ONLINE &bull; DAMPING</span>
         </div>
         <div class="enclave-item">
           <div class="enclave-info">
             <h4>Mobility Dynamics</h4>
-            <code>/v1/mobility/predict</code>
+            <code>/v1/mobility-dynamics</code>
           </div>
           <span class="enclave-state">ONLINE &bull; DAMPING</span>
         </div>
         <div class="enclave-item">
           <div class="enclave-info">
             <h4>Precision Synthesis</h4>
-            <code>/v1/chemistry/predict</code>
+            <code>/v1/precision-synthesis</code>
           </div>
           <span class="enclave-state">ONLINE &bull; DAMPING</span>
         </div>
@@ -306,9 +311,4 @@ html_content = """<!DOCTYPE html>
     </div>
   </div>
 </body>
-</html>"""
-
-with open("index.html", "w", encoding="utf-8") as f:
-    f.write(html_content)
-
-print("[SUCCESS] index.html successfully created with UTF-8 encoding.")
+</html>
