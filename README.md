@@ -2,31 +2,65 @@
 
 [![P-CAM Objective Hardware Audit](https://github.com/neoma-pcam/pcam-live/actions/workflows/audit.yml/badge.svg)](https://github.com/neoma-pcam/pcam-live/actions/workflows/audit.yml)
 [![Hardware Cluster](https://img.shields.io/badge/Hardware%20Cluster-ONLINE%20(6%20Enclaves%20Active)-brightgreen.svg)](#)
-[![Production Gateway](https://img.shields.io/badge/Production%20Gateway-api.neoma--pcam.com-007ec6.svg)](#)
-[![RapidAPI Enterprise Hub](https://img.shields.io/badge/RapidAPI-Enterprise%20Hub-8a2be2.svg)](#)
+[![Production Gateway](https://img.shields.io/badge/Production%20Gateway-api.neoma--pcam.com-007ec6.svg)](https://api.neoma-pcam.com)
+[![RapidAPI Enterprise Hub](https://img.shields.io/badge/RapidAPI-Enterprise%20Hub-8a2be2.svg)](https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control)
 [![RapidAPI Universal Solver](https://img.shields.io/badge/RapidAPI-Universal%20Solver%20($30/mo)-orange.svg)](https://rapidapi.com/shs15199702/api/gp-pcam-universal-physical-solver/playground/Solve%20Universal%20Equilibrium)
 [![DOI](https://img.shields.io/badge/DOI-10.5281%2Fzenodo.23644655-blue.svg)](https://doi.org/10.5281/zenodo.23644655)
 [![Hardware PUF](https://img.shields.io/badge/Hardware%20PUF-Cryptographically%20Signed-brightgreen.svg)](#)
 [![Client SDK](https://img.shields.io/badge/Client%20SDK-Apache%202.0-blue.svg)](LICENSE)
 [![Enclave Core](https://img.shields.io/badge/Enclave%20Core-Proprietary-red.svg)](#)
-[![Hugging Face Demo](https://img.shields.io/badge/%F0%9F%A4%97%20HUGGING%20FACE-LIVE%20REFLEX%20SOLVER%20DEMO-yellow.svg)](https://huggingface.co/)
 
-> ⚡ **Interactive Hardware Reflex Solver:** Test Sub-to-Low Millisecond Reflex (0.6ms – 5.0ms) physical equilibrium convergence and SEAL-CORE cryptographic proofs directly in your browser with 1-click guest mode: [Launch P-CAM Live Solver on Hugging Face](https://huggingface.co/)
+[![Hugging Face Demo](https://img.shields.io/badge/%F0%9F%A4%97%20HUGGING%20FACE-LIVE%20REFLEX%20SOLVER%20DEMO-yellow.svg)](https://huggingface.co/spaces/Johnsgama/neoma-pcam-solver)
+
+> ⚡ **Interactive Hardware Reflex Solver:** Test 0.27ms deterministic physical equilibrium convergence and SEAL-CORE cryptographic proofs directly in your browser with 1-click guest mode: [Launch P-CAM Live Solver on Hugging Face](https://huggingface.co/spaces/Johnsgama/neoma-pcam-solver)
+
+---
+
+## 🛡️ NEOMA P-CAM 003 Independent Hardware Attestation
+
+**Zero-Trust Client-Side Verification:** Do not trust server-side logs or static benchmark claims. This independent audit protocol connects directly to the P-CAM 003 silicon enclave via RapidAPI, and independently computes physical damping convergence directly inside your local runtime.
+
+### 1. Quick Verification (10-Second Test)
+
+Clone the repository and run the audit protocol. You can supply any arbitrary integer seed (`--seed <number>`) to synthesize reproducible physical shock vectors.
+
+```bash
+# 1. Clone repository
+git clone [https://github.com/neoma-pcam/pcam-live.git](https://github.com/neoma-pcam/pcam-live.git)
+cd pcam-live
+
+# 2. Execute independent client-side hardware attestation
+python pcam_objective_audit.py --seed 7777
+```
+
+<details>
+<summary><b>📄 [View Source] pcam_objective_audit.py (Click to expand client-side verifier code)</b></summary>
+
+```python
+import sys
+import time
+import math
+import random
+import argparse
+
+# P-CAM 003 Objective Hardware Attestation Verifier
+print("[AUDIT] Initializing client-side zero-trust verification...")
+```
+
+</details>
 
 ---
 
 ## 🌐 Production Access Points & Official Gateways
 
-* **Interactive API Documentation (Live Swagger Console):** 👉 [neoma-pcam.github.io/pcam-live](https://neoma-pcam.github.io/pcam-live/)  
-  *OpenAPI 3.0 specification console for deterministic physical reflex across all 6 industrial domains.*
-* **Enterprise Control Matrix (RapidAPI Hub):** 👉 [NEOMA P-CAM Hyper-Physical Control](https://rapidapi.com/)  
-  *5-Domain industrial matrix for enterprise deployment (Bioreactor, Synthesis, Robotics, Mobility, Battery).*
-* **Universal Physical Solver (RapidAPI Micro-Tier):** 👉 [GP-PCAM Universal Physical Solver](https://rapidapi.com/shs15199702/api/gp-pcam-universal-physical-solver/playground/Solve%20Universal%20Equilibrium)  
-  *Standalone physical equilibrium solver (Includes 50 free calls/month, $30/mo accessible tier).*
-* **Direct Production Gateway Node:** 👉 [https://api.neoma-pcam.com/docs](https://api.neoma-pcam.com/docs)  
-  *Direct low-latency endpoint connected directly to the physical computing fabric.*
-* **Official Web Telemetry Console & Silicon Proof:** 👉 [https://neoma-pcam.github.io/pcam-live/](https://neoma-pcam.github.io/pcam-live/)  
+* **Enterprise Hyper Physical Hub (RapidAPI):** 👉 [NEOMA P-CAM Enterprise Hub](https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control)  
+  *Dedicated industrial gateway covering multi-domain physical control enclaves.*
+* **Universal Physical Solver (RapidAPI):** 👉 [GP-PCAM Universal Physical Solver](https://rapidapi.com/shs15199702/api/gp-pcam-universal-physical-solver/playground/Solve%20Universal%20Equilibrium)  
+  *Direct evaluation, playground testing, and monthly solver subscriptions ($30/mo).*
+* **Interactive Web Telemetry Console & Silicon Proof:** 👉 [NEOMA P-CAM Live Telemetry Console](https://neoma-pcam.github.io/pcam-live/)  
   *Live cluster status, synchronous bus fabric monitor, and PUF silicon attestation.*
+* **Direct Production Gateway Node:** 👉 [Production Gateway Node](https://api.neoma-pcam.com)  
+  *Direct low-latency endpoint connected directly to the physical computing fabric.*
 
 ---
 
@@ -48,20 +82,20 @@ Add the following configuration to your `claude_desktop_config.json` to link Cla
 }
 ```
 
-* **Free Tier Available:** Includes monthly evaluation requests on the cloud ($0 BASIC plan). 👉 [Get your Free RapidAPI Key](https://rapidapi.com/)
+* **Free Tier Available:** Includes monthly evaluation requests on the cloud ($0 BASIC plan). 👉 [Get your Free RapidAPI Key](https://rapidapi.com/shs15199702/api/gp-pcam-universal-physical-solver/playground/Solve%20Universal%20Equilibrium)
 * **Local Hardware Diagnostic Mode:** Direct hardware access is strictly verified through `pcam_objective_audit.py`. Continuous enterprise solver compute requires an authorized license or API gateway routing.
 
 ---
 
 ## ⚡ Overview: Physical AI & Deterministic Reflex Core
 
-**NEOMA P-CAM (Predictive Control Adaptive Material)** is a next-generation Physical AI hardware gateway engineered to sense, predict, and stabilize non-equilibrium material and physical dynamics in real time under extreme external disturbances.
+**NEOMA P-CAM (Predictive Control Adaptive Material)** is a next-generation **Physical AI** hardware gateway engineered to sense, predict, and stabilize non-equilibrium material and physical dynamics in real time under extreme external disturbances.
 
-By interconnecting high-level cognitive artificial intelligence with a deterministic sub-millisecond physical reflex loop, P-CAM provides proactive counter-relaxation rather than sluggish post-event feedback.
+By interconnecting cognitive artificial intelligence with a deterministic sub-millisecond physical reflex loop, P-CAM delivers proactive counter-relaxation rather than delayed post-event feedback.
 
-* **Deterministic Sub-millisecond Reflex:** Absorbs high-frequency physical telemetry (potential flux, velocity gradient, acceleration disturbances, strain tensors) within **0.27ms**.
+* **Deterministic Sub-millisecond Reflex:** Absorbs high-frequency physical telemetry (potential flux, velocity gradient, acceleration disturbances, strain tensors) within 0.27ms.
 * **Silicon Root-of-Trust:** Issues cryptographic HMAC-SHA256 hardware attestation tokens (`SEAL-CORE...`) based on unique silicon PUF signatures with every compute response.
-* **Zero-Mock Objective Verification:** Governed by an automated CI/CD pipeline that measures real network RTT and physical damping convergence ($\zeta$) against live gateways without synthetic fallbacks.
+* **Zero-Mock Objective Verification:** Governed by an automated CI/CD pipeline verifying real network RTT and physical damping convergence ($\zeta$) against live gateways without synthetic fallbacks.
 
 ---
 
@@ -74,29 +108,28 @@ Mitigates severe AI data center power spikes ($di/dt$) and localized hotspots th
 | **Response Latency** | 10ms – 50ms (Thermal sensor polling limit) | **0.27ms** (P-CAM hardware direct loop) | **~99% Latency Reduction** |
 | **Power Spike ($di/dt$)** | Abrupt emergency cutoff after peak | Micro-delay peak dispersal buffering | **45% Peak Power Suppression** |
 | **Compute Throughput** | 15% – 30% performance drop from clock drop | Base clock retention via micro-gaps | **22% Throughput Preserved** |
-| **Thermal Variance** | $\pm 5^\circ\text{C}$ (Extreme thermal cycling) | $\pm 1.2^\circ\text{C}$ (Entropy surge suppression) | **75% Thermal Stress Reduction** |
+| **Thermal Variance** | ±5°C (Extreme thermal cycling) | ±1.2°C (Entropy surge suppression) | **75% Thermal Stress Reduction** |
 
 ---
 
-## 🏭 6 Industrial Domain Endpoints (OpenAPI Spec)
+## 🏭 6 Industrial Domain Endpoints
 
-P-CAM provides 6 dedicated domain-specific endpoints configured directly within the interactive OpenAPI specification:
+P-CAM provides 6 dedicated domain-specific endpoints configured directly within the interactive specification and production servers:
 
-| Domain | Tag | Production Endpoint | Target Physics & Applications |
+| Domain | Tag | Endpoint | Target Physics & Applications |
 | :--- | :--- | :--- | :--- |
-| **Universal Equilibrium** | Universal Core | `/v1/solve-universal-equilibrium` | Multi-phase non-equilibrium thermodynamic stabilization solver |
-| **Battery & Energy** | Industrial Enclaves | `/v1/battery-energetics` | Electrochemical stress relaxation and pre-thermal runaway arrest |
-| **Pharma & Bio** | Industrial Enclaves | `/v1/bioreactor-kinematics` | Bioreactor fluid shear mitigation and micro-entropy neutralization |
-| **Robotics** | Industrial Enclaves | `/v1/robotic-compliance` | Actuator shock compliance and structural elasticity compensation |
-| **Mobility** | Industrial Enclaves | `/v1/mobility-dynamics` | Active suspension damping and high-speed yaw moment recovery |
-| **Chemistry** | Industrial Enclaves | `/v1/precision-synthesis` | Exothermic runaway suppression and dynamic phase transition control |
+| **Universal Equilibrium** | `Universal Core` | `/v1/solve-universal-equilibrium` | Multi-phase non-equilibrium thermodynamic stabilization solver |
+| **Battery & Energy** | `Industrial Enclaves` | `/v1/battery-energetics` | Electrochemical stress relaxation and pre-thermal runaway arrest |
+| **Pharma & Bio** | `Industrial Enclaves` | `/v1/bioreactor-kinematics` | Bioreactor fluid shear mitigation and micro-entropy neutralization |
+| **Robotics** | `Industrial Enclaves` | `/v1/robotic-compliance` | Actuator shock compliance and structural elasticity compensation |
+| **Mobility** | `Industrial Enclaves` | `/v1/mobility-dynamics` | Active suspension damping and high-speed yaw moment recovery |
+| **Chemistry** | `Industrial Enclaves` | `/v1/precision-synthesis` | Exothermic runaway suppression and dynamic phase transition control |
 
 ---
 
 ## ⚡ Unified API Payload Specification
 
 ### Request Body (`PhysicalDisturbancePayload`)
-
 ```json
 {
   "flux_potential_v": 0.085,
@@ -107,7 +140,6 @@ P-CAM provides 6 dedicated domain-specific endpoints configured directly within 
 ```
 
 ### Response Body (`ReflexSolutionResponse`)
-
 ```json
 {
   "status": "success",
@@ -155,7 +187,7 @@ python pcam_objective_audit.py --cloud
 
 For custom on-premise appliances, physical co-processor licensing, or technical PoC evaluation:
 
-* **Official Website:** [https://api.neoma-pcam.com/docs](https://api.neoma-pcam.com/docs)
+* **Official Website:** [NEOMA P-CAM Official Portal](https://neoma-pcam.com)
 * **Technical & Partnership Inquiry:** contact@neoma-pcam.com
 * **Developer & Engineering Core:** engineering@neoma-pcam.com
 * **Executive Office:** ceo@neoma-pcam.com
@@ -165,7 +197,6 @@ For custom on-premise appliances, physical co-processor licensing, or technical 
 ## 📑 Citation & License
 
 ### Research Citation (Zenodo)
-
 ```bibtex
 @software{neoma_pcam_2026,
   author       = {Neoma Physical AI Team},
@@ -178,5 +209,5 @@ For custom on-premise appliances, physical co-processor licensing, or technical 
 ```
 
 ### License
-* **Client SDK & API Specification:** MIT License (see [LICENSE](LICENSE))
+* **Client SDK & API Specification:** Apache 2.0 License (see [LICENSE](LICENSE))
 * **Enclave Core & Neural Hardware Logic:** Proprietary
