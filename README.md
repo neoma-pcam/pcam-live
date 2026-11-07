@@ -203,6 +203,7 @@ if __name__ == "__main__":
         use_rapidapi=args.rapidapi,
         seed=args.seed
     )
+```
 </details>
 
 ---
