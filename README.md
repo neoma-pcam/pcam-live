@@ -205,8 +205,39 @@ if __name__ == "__main__":
     )
 ```
 </details>
+## 🌌 D-Wave Ocean SDK Integration (`pcam-sampler`)
 
----
+P-CAM provides a native, drop-in hardware sampler for the D-Wave Ocean ecosystem via the open-source package [`pcam-sampler`](https://pypi.org/project/pcam-sampler/1.0.0/). 
+
+Instead of traditional digital simulated annealing (`neal`), optimization problems formulated in `dimod.BinaryQuadraticModel` (Ising / QUBO) are mapped directly to physical disturbance boundary conditions and resolved via in-material relaxation.
+
+### Installation
+
+```bash
+pip install pcam-sampler dimod
+```
+
+### Quick Start (3-Line Execution)
+
+```python
+import dimod
+from pcam_sampler import PCAMSampler
+
+# 1. Define Ising Hamiltonian problem (J couplings & h fields)
+h = {0: -0.5, 1: 0.5}
+J = {(0, 1): -1.0}
+bqm = dimod.BinaryQuadraticModel.from_ising(h, J)
+
+# 2. Sample ground state using P-CAM in-material hardware
+sampler = PCAMSampler()
+sampleset = sampler.sample(bqm)
+
+# 3. Retrieve ground state and physical proof
+print("Optimized Spins :", sampleset.first.sample)
+print("Hardware Seal   :", sampleset.info["seal_token"])
+print("Hardware Reflex :", f"{sampleset.info['reflex_time_ms']} ms")
+```
+
 ---
 
 ## 2. Empirical Benchmark: Stiff 64-Spin Ising Physical Solver (0.27ms Re-verified)
