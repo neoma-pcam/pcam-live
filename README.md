@@ -421,7 +421,80 @@ python pcam_objective_audit.py --cloud
 * **Silicon Seal Integrity:** Full 64-character SHA-256 cryptographic seal validation.
 
 ---
+---
 
+## 💎 1:1.1 PoPW Tokenomics & Zero-Trust Security Ledger
+
+The P-CAM protocol enforces a decentralized physical computing economy where token minting is strictly tied to validated physical entropy dissipation and hardware resource commitment, rather than speculative synthetic cycles.
+
+```
+Fiat Payment ($1.00 USD) ───▶ [RapidAPI Auth Gate] ───▶ Total Minted: 1.10 CR
+                                                        ├── User Pool:     1.00 CR (90.9%)
+                                                        ├── Owner Node:   +0.10 CR (9.1%)
+                                                        └── Reserve Pool:  0.055 CR (5.0%)
+```
+
+### 1. Mathematical Ledger Distribution (1:1.1 Ratio)
+
+For every verified $\$1.00\text{ USD}$ settled via the enterprise gateway, the ledger executes deterministic cryptographic allocation:
+
+* **Fiat Mint Ratio ($1.00 \rightarrow 1.10\text{ CR}$):** Each $\$1.00\text{ USD}$ mints $1.10\text{ CR}$ in protocol compute credits.
+* **User Usable Pool ($1.00\text{ CR}$ / $90.9\%$):** The consumer retains full $\$1.00$ equivalent purchasing power for sub-0.03ms physical reflex and damping solver execution.
+* **Hardware Owner Dividend ($+0.10\text{ CR}$ / $9.1\%$):** Exactly $+0.10\text{ CR}$ is instantly credited to the physical hardware node owner (COM3 Master Node) as an infrastructural yield for maintaining real-time silicon availability.
+* **Protocol Value Reserve ($5.0\%$ Collateral):** $5.0\%$ of the total minted credit value ($0.055\text{ CR}$) is permanently escrowed into the protocol stability pool to collateralize network liquidity and in-material research reserves.
+
+---
+
+### 2. Zero-Trust Anti-Farming Security Gate
+
+To prevent malicious credit exploitation, synthetic bot spam, and unauthorized replay attacks, the Axum core implements a strict **Zero-Trust Header Attestation Gate**:
+
+```
+           [ Inbound HTTP Request ]
+                       │
+         Is 'x-rapidapi-user' present?
+                  /         \
+              [ YES ]      [ NO ]
+                │             │
+        Verify Subscription   │
+                │             │
+        ┌───────┴──────┐      ▼
+        ▼              ▼   [ LOCK LEDGER ]
+   Active Tier       None  total_minted = 0.0
+   Mint 1.10 CR      Lock  status = "LEDGER_MINT_LOCKED_DIRECT_CALL"
+```
+
+* **Paid Session Enforcement:** Token minting and dividend distribution are activated **only** when inbound requests carry validated `x-rapidapi-user` and `x-rapidapi-subscription` proxy headers.
+* **Direct Call & Swagger Lockout:** Direct edge calls, local loopback requests, and unauthenticated Swagger UI tests are strictly locked (`LEDGER_MINT_LOCKED_DIRECT_CALL`). Physical calculations execute normally for testing, but all ledger mint values are enforced to `0.0`.
+
+---
+
+### 3. Ledger Attestation Telemetry Schema
+
+Every response header and JSON payload returns an immutable `credit_ledger` attestation object alongside the physical reflex solution:
+
+```json
+{
+  "credit_ledger": {
+    "rapidapi_verified": true,
+    "caller_tier": "PRO",
+    "fiat_payment_usd": 1.0,
+    "total_minted_credit": 1.1,
+    "user_usable_credit": 1.0,
+    "owner_dividend_credit": 0.1,
+    "protocol_reserve_value_5pct": 0.055,
+    "ledger_status": "1:1.1_MINTED_OWNER_0.1_CREDITED"
+  }
+}
+```
+
+#### Verification Matrix
+
+| Call Route | RapidAPI Auth Headers | Fiat Settlement | Total Minted | Owner Dividend | Ledger State |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Interactive Docs / Swagger** | None (Free Mode) | $\$0.00$ | $0.00\text{ CR}$ | $0.00\text{ CR}$ | `LEDGER_MINT_LOCKED_DIRECT_CALL` |
+| **Direct Gateway Probe** | Unauthorized | $\$0.00$ | $0.00\text{ CR}$ | $0.00\text{ CR}$ | `LEDGER_MINT_LOCKED_DIRECT_CALL` |
+| **RapidAPI Paid Gateway** | `x-rapidapi-user` Validated | **$\$1.00$** | **$1.10\text{ CR}$** | **$+0.10\text{ CR}$** | **`1:1.1_MINTED_OWNER_0.1_CREDITED`** |
 ## 📬 Enterprise Inquiries & Partnership
 
 For custom on-premise appliances, physical co-processor licensing, or technical PoC evaluation:
