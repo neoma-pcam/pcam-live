@@ -1,4 +1,4 @@
-# NEOMA P-CAM & Silicon Root-of-Trust (v5.0.0)
+# NEOMA P-CAM & Silicon Root-of-Trust (v5.3.0)
 
 [![P-CAM Objective Hardware Audit](https://github.com/neoma-pcam/pcam-live/actions/workflows/audit.yml/badge.svg)](https://github.com/neoma-pcam/pcam-live/actions)
 [![Hardware Cluster](https://img.shields.io/badge/Hardware%20Cluster-ONLINE%20(6%20Enclaves%20Active)-brightgreen.svg)](#)
@@ -13,7 +13,7 @@
 
 [![Hugging Face Demo](https://img.shields.io/badge/%F0%9F%A4%97%20HUGGING%20FACE-LIVE%20REFLEX%20SOLVER%20DEMO-yellow.svg)](https://huggingface.co/spaces/Johnsgama/neoma-pcam-solver)
 
-> ⚡ **Interactive Hardware Reflex Solver:** Test 0.27ms deterministic physical equilibrium convergence and SEAL-CORE cryptographic proofs directly in your browser with 1-click guest mode: [Launch P-CAM Live Solver on Hugging Face](https://huggingface.co/spaces/Johnsgama/neoma-pcam-solver)
+> ⚡ **Interactive Hardware Reflex Solver:** Test **0.015ms (15μs)** ultra-low latency deterministic physical equilibrium convergence and SEAL-CORE cryptographic proofs directly in your browser with 1-click guest mode: [Launch P-CAM Live Solver on Hugging Face](https://huggingface.co/spaces/Johnsgama/neoma-pcam-solver)
 
 ---
 
@@ -27,7 +27,7 @@ Clone the repository and run the audit protocol. You can supply any arbitrary in
 
 ```bash
 # 1. Clone repository
-git clone [https://github.com/neoma-pcam/pcam-live.git](https://github.com/neoma-pcam/pcam-live.git)
+git clone https://github.com/neoma-pcam/pcam-live.git
 cd pcam-live
 
 # 2. Execute independent client-side hardware attestation
@@ -39,7 +39,7 @@ python pcam_objective_audit.py --seed 7777
 
 ```python
 """
-NEOMA P-CAM Objective Hardware Attestation Protocol (v5.0.0)
+NEOMA P-CAM Objective Hardware Attestation Protocol (v5.3.0)
 ============================================================
 An open client-side verification script that connects directly
 to the P-CAM silicon computing fabric to objectively validate:
@@ -88,7 +88,7 @@ def get_gateway_config(use_local: bool, use_rapidapi: bool):
         endpoint = "https://api.neoma-pcam.com/v1/solve-universal-equilibrium"
         headers = {
             "Content-Type": "application/json",
-            "User-Agent": "NEOMA-PCAM-Audit-Client/5.0.0"
+            "User-Agent": "NEOMA-PCAM-Audit-Client/5.3.0"
         }
         print(" * Target Host  : Official Production Gateway (https://api.neoma-pcam.com)")
         print(" * Access Tier  : Open Zero-Trust Public Verification (No API key required)")
@@ -252,7 +252,7 @@ Add the following configuration to your `claude_desktop_config.json` to link Cla
 
 By interconnecting cognitive artificial intelligence with a deterministic sub-millisecond physical reflex loop, P-CAM delivers proactive counter-relaxation rather than delayed post-event feedback.
 
-* **Deterministic Sub-millisecond Reflex:** Absorbs high-frequency physical telemetry (potential flux, velocity gradient, acceleration disturbances, strain tensors) within 0.27ms.
+* **Deterministic Ultra-Low Latency Reflex:** Absorbs high-frequency physical telemetry (potential flux, velocity gradient, acceleration disturbances, strain tensors) within **0.015ms (15μs)** via the new Rust Unified Core.
 * **Silicon Root-of-Trust:** Issues cryptographic HMAC-SHA256 hardware attestation tokens (`SEAL-CORE...`) based on unique silicon PUF signatures with every compute response.
 * **Zero-Mock Objective Verification:** Governed by an automated CI/CD pipeline verifying real network RTT and physical damping convergence ($\zeta$) against live gateways without synthetic fallbacks.
 
@@ -260,11 +260,11 @@ By interconnecting cognitive artificial intelligence with a deterministic sub-mi
 
 ## 🖥️ Data Center GPU Power & Thermal Reflex Middleware
 
-Mitigates severe AI data center power spikes ($di/dt$) and localized hotspots through proactive 0.27ms non-equilibrium damping, eliminating traditional post-event DVFS throttling penalties.
+Mitigates severe AI data center power spikes ($di/dt$) and localized hotspots through proactive **0.015ms** non-equilibrium damping, eliminating traditional post-event DVFS throttling penalties.
 
 | Benchmark Indicator | Conventional DVFS Throttling | P-CAM Reflex Middleware | Improvement Benefit |
 | :--- | :--- | :--- | :--- |
-| **Response Latency** | 10ms – 50ms (Thermal sensor polling limit) | **0.27ms** (P-CAM hardware direct loop) | **~99% Latency Reduction** |
+| **Response Latency** | 10ms – 50ms (Thermal sensor polling limit) | **0.015ms** (Rust Unified Core direct loop) | **~99.9% Latency Reduction** |
 | **Power Spike ($di/dt$)** | Abrupt emergency cutoff after peak | Micro-delay peak dispersal buffering | **45% Peak Power Suppression** |
 | **Compute Throughput** | 15% – 30% performance drop from clock drop | Base clock retention via micro-gaps | **22% Throughput Preserved** |
 | **Thermal Variance** | ±5°C (Extreme thermal cycling) | ±1.2°C (Entropy surge suppression) | **75% Thermal Stress Reduction** |
@@ -278,11 +278,11 @@ P-CAM provides 6 dedicated domain-specific endpoints configured directly within 
 | Domain | Tag | Endpoint | Target Physics & Applications |
 | :--- | :--- | :--- | :--- |
 | **Universal Equilibrium** | `Universal Core` | `/v1/solve-universal-equilibrium` | Multi-phase non-equilibrium thermodynamic stabilization solver |
-| **Battery & Energy** | `Industrial Enclaves` | `/v1/battery-energetics` | Electrochemical stress relaxation and pre-thermal runaway arrest |
-| **Pharma & Bio** | `Industrial Enclaves` | `/v1/bioreactor-kinematics` | Bioreactor fluid shear mitigation and micro-entropy neutralization |
-| **Robotics** | `Industrial Enclaves` | `/v1/robotic-compliance` | Actuator shock compliance and structural elasticity compensation |
-| **Mobility** | `Industrial Enclaves` | `/v1/mobility-dynamics` | Active suspension damping and high-speed yaw moment recovery |
-| **Chemistry** | `Industrial Enclaves` | `/v1/precision-synthesis` | Exothermic runaway suppression and dynamic phase transition control |
+| **Battery & Energy** | `Industrial Enclaves` | `/v1/battery/predict` | Electrochemical stress relaxation and pre-thermal runaway arrest |
+| **Pharma & Bio** | `Industrial Enclaves` | `/v1/pharma/predict` | Bioreactor fluid shear mitigation and micro-entropy neutralization |
+| **Robotics** | `Industrial Enclaves` | `/v1/robotics/predict` | Actuator shock compliance and structural elasticity compensation |
+| **Mobility** | `Industrial Enclaves` | `/v1/mobility/predict` | Active suspension damping and high-speed yaw moment recovery |
+| **Chemistry** | `Industrial Enclaves` | `/v1/chemistry/predict` | Exothermic runaway suppression and dynamic phase transition control |
 
 ---
 
@@ -298,15 +298,37 @@ P-CAM provides 6 dedicated domain-specific endpoints configured directly within 
 }
 ```
 
-### Response Body (`ReflexSolutionResponse`)
+### Response Body (`ReflexSolutionResponse` - v5.3.0)
 ```json
 {
   "status": "success",
+  "domain": "Universal-Equilibrium",
   "zeta": 0.9981,
   "control_intensity": 0.420,
   "state_mode": 1,
   "hardware_seal_id": "SEAL-CORE03-1794022434-F04D109759866CBB6A0E63EAFEFF77D1C784FCE81F20E917555A976208EDBA88",
-  "equilibrium_converged": true
+  "equilibrium_converged": true,
+  "hardware_reflex_ms": 0.015,
+  "phi_embodied_cognition": "[Phi-3 Cognitive Synthesis] Temporal trajectory indicates SUBSIDING disturbance. Physical reflex engaged...",
+  "trajectory_summary": "Temporal Buffer Active: 12 secure frames retained.",
+  "telemetry": {
+    "allocated_fabric_node": "PCAM-FABRIC-ALPHA",
+    "v_out_measured_v": 0.085,
+    "entropy_ent": 0.0345,
+    "shock_rate_pct": 85.0,
+    "gen_cycle": 24871060,
+    "hardware_connected": true
+  },
+  "credit_ledger": {
+    "rapidapi_verified": false,
+    "caller_tier": "NONE",
+    "fiat_payment_usd": 0.0,
+    "total_minted_credit": 0.0,
+    "user_usable_credit": 0.0,
+    "owner_dividend_credit": 0.0,
+    "protocol_reserve_value_5pct": 0.0,
+    "ledger_status": "LEDGER_MINT_LOCKED_DIRECT_CALL"
+  }
 }
 ```
 
@@ -363,7 +385,7 @@ For custom on-premise appliances, physical co-processor licensing, or technical 
   year         = 2026,
   publisher    = {Zenodo},
   doi          = {10.5281/zenodo.23644655},
-  url          = {[https://doi.org/10.5281/zenodo.23644655](https://doi.org/10.5281/zenodo.23644655)}
+  url          = {https://doi.org/10.5281/zenodo.23644655}
 }
 ```
 
