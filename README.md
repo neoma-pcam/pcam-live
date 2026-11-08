@@ -205,8 +205,7 @@ if __name__ == "__main__":
     )
 ```
 </details>
----
-## 🌌 D-Wave Ocean SDK Integration (`pcam-sampler`)
+## 2. 🌌 D-Wave Ocean SDK Integration (`pcam-sampler`)
 
 P-CAM provides a native, drop-in hardware sampler for the D-Wave Ocean ecosystem via the open-source package [`pcam-sampler`](https://pypi.org/project/pcam-sampler/1.0.0/). 
 
