@@ -30,4 +30,4 @@ jobs:
       env:
         RAPIDAPI_KEY: ${{ secrets.RAPIDAPI_KEY }}
       run: |
-        python pcam_objective_audit.py --cloud
+        python pcam_objective_audit.py --audit.py
