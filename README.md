@@ -205,6 +205,7 @@ if __name__ == "__main__":
     )
 ```
 </details>
+
 ## 2. 🌌 D-Wave Ocean SDK Integration (`pcam-sampler`)
 
 P-CAM provides a native, drop-in hardware sampler for the D-Wave Ocean ecosystem via the open-source package [`pcam-sampler`](https://pypi.org/project/pcam-sampler/1.0.0/). 
@@ -240,7 +241,7 @@ print("Hardware Reflex :", f"{sampleset.info['reflex_time_ms']} ms")
 
 ---
 
-## 2. Empirical Benchmark: Stiff 64-Spin Ising Physical Solver (0.27ms Re-verified)
+## 3. Empirical Benchmark: Stiff 64-Spin Ising Physical Solver (0.27ms Re-verified)
 
 > 🔗 **Hacker News Submission:** [Show HN: In-material physical solver for stiff 64-spin Ising problems (0.27ms)](https://news.ycombinator.com/submitted?id=neoma001)
 
