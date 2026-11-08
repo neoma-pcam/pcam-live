@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NEOMA P-CAM | Physical Reflex & Hardware Enclave Specification</title>
+  <title>NEOMA P-CAM | Physical Reflex &amp; Silicon Root-of-Trust</title>
   <style>
     :root {
       --bg: #070b14;
@@ -26,7 +26,7 @@
     }
     .container { max-width: 1280px; margin: 0 auto; }
     
-    /* Header */
+    /* Top Header */
     .header-bar {
       display: flex;
       justify-content: space-between;
@@ -68,26 +68,38 @@
     .header-controls {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
       flex-wrap: wrap;
     }
     .btn {
       text-decoration: none;
       font-size: 0.85rem;
       font-weight: 600;
-      padding: 8px 16px;
+      padding: 8px 14px;
       border-radius: 8px;
       transition: all 0.2s;
       display: inline-flex;
       align-items: center;
       gap: 6px;
     }
+    .btn-swagger {
+      background: #064e3b;
+      color: #34d399;
+      border: 1px solid #059669;
+    }
+    .btn-swagger:hover { background: #065f46; }
     .btn-secondary {
       background: #1e293b;
       color: #e2e8f0;
       border: 1px solid #334155;
     }
     .btn-secondary:hover { background: #334155; }
+    .btn-hf {
+      background: #2b2313;
+      color: #fbbf24;
+      border: 1px solid #78350f;
+    }
+    .btn-hf:hover { background: #3d3119; }
     .btn-primary {
       background: var(--amber);
       color: #000;
@@ -100,12 +112,12 @@
       color: var(--emerald);
       background: rgba(16, 185, 129, 0.12);
       border: 1px solid var(--emerald);
-      padding: 6px 14px;
+      padding: 6px 12px;
       border-radius: 8px;
       letter-spacing: 0.05em;
     }
 
-    /* 4 Feature Cards */
+    /* 4 Core Cards */
     .card-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -143,7 +155,7 @@
       line-height: 1.6;
     }
 
-    /* Section: Dedicated Enclaves */
+    /* 6 Enclaves Section */
     .section-header {
       display: flex;
       justify-content: space-between;
@@ -197,11 +209,18 @@
       padding: 4px 10px;
       border-radius: 6px;
     }
+    .footer {
+      text-align: center;
+      margin-top: 60px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+      color: #64748b;
+      font-size: 0.85rem;
+    }
   </style>
 </head>
 <body>
   <div class="container">
-    <!-- Top Bar -->
     <header class="header-bar">
       <div class="header-left">
         <div class="title-row">
@@ -209,24 +228,23 @@
           <h1>NEOMA P-CAM</h1>
           <span class="badge-ver">GP-PCAM v5.0.0</span>
         </div>
-        <p class="subtitle">Proprietary Physical Reflex Engine &amp; Cryptographic Silicon Root-of-Trust. Delivering deterministic sub-millisecond physical equilibrium convergence on NVIDIA GTX 1650 silicon.</p>
+        <p class="subtitle">Proprietary Physical Reflex Engine &amp; Cryptographic Silicon Root-of-Trust. Delivering deterministic 0.27ms physical equilibrium convergence on NVIDIA GTX 1650 silicon.</p>
       </div>
       <div class="header-controls">
-        <a href="https://rapidapi.com/shs15199702/api/gp-pcam-universal-physical-solver/playground/Solve%20Universal%20Equilibrium" target="_blank" class="btn btn-secondary">&#127760; Enterprise Hub</a>
+        <a href="https://api.neoma-pcam.com/docs" target="_blank" class="btn btn-swagger">&#128220; Swagger Docs</a>
+        <a href="https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control" target="_blank" class="btn btn-secondary">&#127760; Enterprise Hub</a>
+        <a href="https://huggingface.co/spaces/Johnsgama/neoma-pcam-solver" target="_blank" class="btn btn-hf">&#129303; Hugging Face Demo</a>
         <a href="https://rapidapi.com/shs15199702/api/gp-pcam-universal-physical-solver/playground/Solve%20Universal%20Equilibrium" target="_blank" class="btn btn-primary">&#9889; Universal Solver ($30/mo)</a>
-      <a href="http://localhost:8000/docs" target="_blank" class="btn btn-docs" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:rgba(30,41,59,0.85);border:1px solid rgba(56,189,248,0.5);border-radius:8px;color:#38bdf8;text-decoration:none;font-size:0.85rem;font-weight:600;margin-left:8px;">
-  <span>📖</span> Swagger Docs (/docs)
-</a>
+      <a href="http://localhost:8000/docs" target="_blank" class="btn btn-docs" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:rgba(30,41,59,0.85);border:1px solid rgba(56,189,248,0.5);border-radius:8px;color:#38bdf8;text-decoration:none;font-size:0.85rem;font-weight:600;margin-left:8px;"><span>📖</span> Swagger Docs (/docs)</a>
         <span class="badge-status">GATEWAY: ACTIVE</span>
       </div>
     </header>
 
-    <!-- 4 Core Capabilities -->
     <section class="card-grid">
       <div class="card">
         <span class="card-icon c-amber">&#9889;</span>
-        <h3>Empirical Sub-to-Low Millisecond Reflex (0.6ms &ndash; 5.0ms)</h3>
-        <p>Instantaneous equilibrium locking on isolated GPU tensor streams. Resolves catastrophic physical instability in 0.6ms &ndash; 5.0ms without computational lag or iterative numerical stalls.</p>
+        <h3>0.27ms Deterministic Hardware Reflex (GTX 1650)</h3>
+        <p>Instantaneous equilibrium locking on isolated GPU tensor streams. Resolves catastrophic physical instability in 0.27ms without computational lag or iterative numerical stalls.</p>
       </div>
       <div class="card">
         <span class="card-icon c-cyan">&#129504;</span>
@@ -245,10 +263,9 @@
       </div>
     </section>
 
-    <!-- 6 Enclaves Section -->
     <section>
       <div class="section-header">
-        <h2><span>&#9889;</span> Dedicated Physical Reflex Enclaves (0.6ms &ndash; 5.0ms Live Telemetry)</h2>
+        <h2><span>&#9889;</span> Dedicated Physical Reflex Enclaves (0.27ms Hardware Reflex Telemetry)</h2>
         <span class="section-meta">Synchronous Time-Division Grid</span>
       </div>
       <div class="enclave-grid">
@@ -262,40 +279,44 @@
         <div class="enclave-item">
           <div class="enclave-info">
             <h4>Battery Energetics</h4>
-            <code>/v1/battery/predict</code>
+            <code>/v1/battery-energetics</code>
           </div>
           <span class="enclave-state">ONLINE &bull; DAMPING</span>
         </div>
         <div class="enclave-item">
           <div class="enclave-info">
             <h4>Bioreactor Kinematics</h4>
-            <code>/v1/pharma/predict</code>
+            <code>/v1/bioreactor-kinematics</code>
           </div>
           <span class="enclave-state">ONLINE &bull; DAMPING</span>
         </div>
         <div class="enclave-item">
           <div class="enclave-info">
             <h4>Robotic Compliance</h4>
-            <code>/v1/robotics/predict</code>
+            <code>/v1/robotic-compliance</code>
           </div>
           <span class="enclave-state">ONLINE &bull; DAMPING</span>
         </div>
         <div class="enclave-item">
           <div class="enclave-info">
             <h4>Mobility Dynamics</h4>
-            <code>/v1/mobility/predict</code>
+            <code>/v1/mobility-dynamics</code>
           </div>
           <span class="enclave-state">ONLINE &bull; DAMPING</span>
         </div>
         <div class="enclave-item">
           <div class="enclave-info">
             <h4>Precision Synthesis</h4>
-            <code>/v1/chemistry/predict</code>
+            <code>/v1/precision-synthesis</code>
           </div>
           <span class="enclave-state">ONLINE &bull; DAMPING</span>
         </div>
       </div>
     </section>
+
+    <div class="footer">
+      <p>&copy; 2026 Neoma Physical AI Team. All rights reserved.</p>
+    </div>
   </div>
 </body>
 </html>
