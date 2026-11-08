@@ -25,7 +25,7 @@
       line-height: 1.5;
     }
     .container { max-width: 1280px; margin: 0 auto; }
-    
+
     /* Top Header */
     .header-bar {
       display: flex;
@@ -226,9 +226,9 @@
         <div class="title-row">
           <span class="icon-lead">&#9889;</span>
           <h1>NEOMA P-CAM</h1>
-          <span class="badge-ver">GP-PCAM v5.0.0</span>
+          <span class="badge-ver">GP-PCAM v5.3.0</span>
         </div>
-        <p class="subtitle">Proprietary Physical Reflex Engine &amp; Cryptographic Silicon Root-of-Trust. Delivering deterministic 0.27ms physical equilibrium convergence on NVIDIA GTX 1650 silicon.</p>
+        <p class="subtitle">Proprietary Physical Reflex Engine &amp; Cryptographic Silicon Root-of-Trust. Delivering deterministic 0.015ms (15&mu;s) physical equilibrium convergence via Rust Unified Core.</p>
       </div>
       <div class="header-controls">
         <a href="https://api.neoma-pcam.com/docs" target="_blank" class="btn btn-swagger">&#128220; Swagger Docs</a>
@@ -242,8 +242,8 @@
     <section class="card-grid">
       <div class="card">
         <span class="card-icon c-amber">&#9889;</span>
-        <h3>0.27ms Deterministic Hardware Reflex (GTX 1650)</h3>
-        <p>Instantaneous equilibrium locking on isolated GPU tensor streams. Resolves catastrophic physical instability in 0.27ms without computational lag or iterative numerical stalls.</p>
+        <h3>0.015ms Ultra-Low Latency Hardware Reflex</h3>
+        <p>Instantaneous equilibrium locking on isolated hardware tensor streams. Resolves catastrophic physical instability in 15 microseconds (0.015ms) without computational lag or iterative numerical stalls.</p>
       </div>
       <div class="card">
         <span class="card-icon c-cyan">&#129504;</span>
@@ -264,7 +264,7 @@
 
     <section>
       <div class="section-header">
-        <h2><span>&#9889;</span> Dedicated Physical Reflex Enclaves (0.27ms Hardware Reflex Telemetry)</h2>
+        <h2><span>&#9889;</span> Dedicated Physical Reflex Enclaves (0.015ms Hardware Reflex Telemetry)</h2>
         <span class="section-meta">Synchronous Time-Division Grid</span>
       </div>
       <div class="enclave-grid">
@@ -278,35 +278,35 @@
         <div class="enclave-item">
           <div class="enclave-info">
             <h4>Battery Energetics</h4>
-            <code>/v1/battery-energetics</code>
+            <code>/v1/battery/predict</code>
           </div>
           <span class="enclave-state">ONLINE &bull; DAMPING</span>
         </div>
         <div class="enclave-item">
           <div class="enclave-info">
             <h4>Bioreactor Kinematics</h4>
-            <code>/v1/bioreactor-kinematics</code>
+            <code>/v1/pharma/predict</code>
           </div>
           <span class="enclave-state">ONLINE &bull; DAMPING</span>
         </div>
         <div class="enclave-item">
           <div class="enclave-info">
             <h4>Robotic Compliance</h4>
-            <code>/v1/robotic-compliance</code>
+            <code>/v1/robotics/predict</code>
           </div>
           <span class="enclave-state">ONLINE &bull; DAMPING</span>
         </div>
         <div class="enclave-item">
           <div class="enclave-info">
             <h4>Mobility Dynamics</h4>
-            <code>/v1/mobility-dynamics</code>
+            <code>/v1/mobility/predict</code>
           </div>
           <span class="enclave-state">ONLINE &bull; DAMPING</span>
         </div>
         <div class="enclave-item">
           <div class="enclave-info">
             <h4>Precision Synthesis</h4>
-            <code>/v1/precision-synthesis</code>
+            <code>/v1/chemistry/predict</code>
           </div>
           <span class="enclave-state">ONLINE &bull; DAMPING</span>
         </div>
