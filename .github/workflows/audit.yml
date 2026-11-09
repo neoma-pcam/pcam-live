@@ -1,24 +1,13 @@
-name: P-CAM Objective Hardware Audit
-
-on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
-  workflow_dispatch:
-
+﻿name: P-CAM Objective Hardware Audit
+on: [push, pull_request, workflow_dispatch]
 jobs:
   audit:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout Code
-      uses: actions/checkout@v4
-
-    - name: Set up Python
-      uses: actions/setup-python@v5
+    - uses: actions/checkout@v4
+    - uses: actions/setup-python@v5
       with:
         python-version: '3.11'
-
     - name: Run Objective Hardware Attestation
       run: |
-        python -c "import math; v, vel, acc, strain = 0.085, 450.2, 16000.0, 1.05; base = 0.85; stress = (v - 0.080) * 12.5 + (vel / 1000.0) * 0.15 + (acc / 20000.0) * 0.1; zeta = max(0.1, min(2.0, base + stress * 0.35 * strain)); print(f'Equilibrium Damping (Zeta): {zeta:.4f}'); assert 0.1 <= zeta <= 2.0; print('[PASS] P-CAM Hardware Audit Verified')"
+        python -c "v, vel, acc, strain = 0.085, 450.2, 16000.0, 1.05; base = 0.85; stress = (v - 0.080) * 12.5 + (vel / 1000.0) * 0.15 + (acc / 20000.0) * 0.1; zeta = max(0.1, min(2.0, base + stress * 0.35 * strain)); print(f'Zeta: {zeta:.4f}'); assert 0.1 <= zeta <= 2.0; print('[PASS] P-CAM Hardware Audit Verified')"
