@@ -1,4 +1,4 @@
-# NEOMA P-CAM & Silicon Root-of-Trust (v5.3.0)
+﻿# NEOMA P-CAM & Silicon Root-of-Trust (v5.3.0)
 
 [![P-CAM Objective Hardware Audit](https://github.com/neoma-pcam/pcam-live/actions/workflows/audit.yml/badge.svg)](https://github.com/neoma-pcam/pcam-live/actions)
 [![Production Gateway](https://img.shields.io/badge/Production%20Gateway-15µs%20Active-emerald?style=flat&logo=fastapi)](https://api.neoma-pcam.com)
@@ -301,7 +301,7 @@ Fiat Payment ($1.00 USD) ───▶ [RapidAPI Auth Gate] ───▶ Total Mi
 
 ## 📬 Enterprise Inquiries & Partnership
 
-For custom on-premise appliances, physical co-processor licensing, or technical PoC evaluation:
+For institutional API access, high-throughput cloud enclave tunnels, or technical evaluation:
 * **Official Web Portal:** [NEOMA P-CAM Official Portal](https://neoma-pcam.github.io/pcam-live/)
 * **Technical & Partnership Inquiry:** [contact@neoma-pcam.com](mailto:contact@neoma-pcam.com)
 * **Executive Office:** [ceo@neoma-pcam.com](mailto:ceo@neoma-pcam.com)
@@ -323,3 +323,4 @@ For custom on-premise appliances, physical co-processor licensing, or technical 
 
 * **Client SDK & API Specification:** Apache 2.0 / MIT License (see [LICENSE](LICENSE))
 * **Enclave Core & Neural Hardware Logic:** Proprietary
+
