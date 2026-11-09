@@ -1,4 +1,4 @@
-# NEOMA P-CAM & Silicon Root-of-Trust (v5.3.0)
+﻿# NEOMA P-CAM & Silicon Root-of-Trust (v5.3.0)
 
 [![P-CAM Objective Hardware Audit](https://github.com/neoma-pcam/pcam-live/actions/workflows/audit.yml/badge.svg)](https://github.com/neoma-pcam/pcam-live/actions)
 [![Hardware Cluster](https://img.shields.io/badge/Hardware%20Cluster-ONLINE%20(6%20Enclaves%20Active)-brightgreen.svg)](#)
@@ -424,6 +424,17 @@ P-CAM provides 6 dedicated domain-specific endpoints configured directly within 
 
 ---
 
+
+---
+
+## 🛡️ Anti-Dumping & High-Frequency Institutional Policy
+
+* **Strict Academic Demarcation:** The academic **$30/mo Universal Physical Solver plan** is strictly designated for material science and academic research. It explicitly does **NOT** authorize live exchange order flow, algorithmic market making, or automated execution.
+* **No Price Dumping:** We do not engage in price dumping to inflate traffic. Deterministic sub-0.03ms silicon reflex is an institutional infrastructure asset and is priced strictly at its real financial engineering value.
+* **Evaluation Quota (50 Ticks):** Public client SDKs and GitHub evaluation scripts are capped at 50 market ticks for objective silicon latency attestation.
+* **Institutional Deployment:** Continuous live HFT execution, multi-exchange arbitrage, and prop desk integration require a verified [RapidAPI Institutional Enterprise License](https://rapidapi.com/shs15199702/api/neoma-p-cam-quant-reflex-hft).
+
+---
 ## 🔒 Silicon Root-of-Trust & Dynamic Material PUF
 
 P-CAM enforces a 3-tier immutable defense mechanism grounded in raw physical entropy:
