@@ -40,3 +40,6 @@ start_*.bat
 REFUND_POLICY.md
 TERMS.md
 smithery.yaml
+
+target/
+pcam-gateway/target/
