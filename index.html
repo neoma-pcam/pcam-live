@@ -1,321 +1,339 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NEOMA P-CAM | Physical Reflex &amp; Silicon Root-of-Trust</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NEOMA P-CAM | Physical Reflex & Silicon Root-of-Trust (7-Domain Suite)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #070b14;
-      --card-bg: #0d1527;
-      --border: #1e293b;
+      --bg: #070a12;
+      --card-bg: rgba(15, 23, 42, 0.75);
+      --border: rgba(255, 255, 255, 0.08);
+      --accent-blue: #3b82f6;
+      --accent-cyan: #06b6d4;
+      --accent-green: #10b981;
+      --accent-amber: #f59e0b;
       --text-main: #f8fafc;
-      --text-muted: #94a3b8;
-      --amber: #f59e0b;
-      --cyan: #06b6d4;
-      --emerald: #10b981;
-      --purple: #a855f7;
+      --text-sub: #94a3b8;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       background-color: var(--bg);
       color: var(--text-main);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      padding: 32px 24px;
-      line-height: 1.5;
-    }
-    .container { max-width: 1280px; margin: 0 auto; }
-
-    /* Top Header */
-    .header-bar {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      min-height: 100vh;
       display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      flex-wrap: wrap;
-      gap: 20px;
-      margin-bottom: 36px;
+      flex-direction: column;
+      background-image: 
+        radial-gradient(circle at 50% 0%, rgba(37, 99, 235, 0.15) 0%, transparent 60%),
+        radial-gradient(circle at 80% 20%, rgba(16, 185, 129, 0.08) 0%, transparent 50%);
     }
-    .header-left .title-row {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 8px;
+    .container { max-width: 1240px; margin: 0 auto; padding: 48px 24px; width: 100%; }
+    
+    /* Header */
+    .hero { text-align: center; margin-bottom: 56px; }
+    .badge-core {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 6px 14px; border-radius: 9999px;
+      background: rgba(59, 130, 246, 0.12); border: 1px solid rgba(59, 130, 246, 0.3);
+      color: #93c5fd; font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 600;
+      margin-bottom: 20px;
     }
-    .title-row h1 {
-      font-size: 1.85rem;
-      font-weight: 800;
-      letter-spacing: -0.02em;
+    .hero h1 {
+      font-size: 44px; font-weight: 800; letter-spacing: -0.02em;
+      background: linear-gradient(135deg, #ffffff 40%, #94a3b8 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      margin-bottom: 16px;
     }
-    .title-row .icon-lead {
-      color: var(--amber);
-      font-size: 1.85rem;
-    }
-    .badge-ver {
-      font-size: 0.75rem;
-      font-weight: 700;
-      color: var(--amber);
-      background: rgba(245, 158, 11, 0.12);
-      border: 1px solid var(--amber);
-      padding: 3px 8px;
-      border-radius: 6px;
-      letter-spacing: 0.05em;
-    }
-    .subtitle {
-      color: var(--text-muted);
-      font-size: 0.95rem;
-      max-width: 780px;
-    }
-    .header-controls {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-    .btn {
-      text-decoration: none;
-      font-size: 0.85rem;
-      font-weight: 600;
-      padding: 8px 14px;
-      border-radius: 8px;
-      transition: all 0.2s;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .btn-swagger {
-      background: #064e3b;
-      color: #34d399;
-      border: 1px solid #059669;
-    }
-    .btn-swagger:hover { background: #065f46; }
-    .btn-secondary {
-      background: #1e293b;
-      color: #e2e8f0;
-      border: 1px solid #334155;
-    }
-    .btn-secondary:hover { background: #334155; }
-    .btn-hf {
-      background: #2b2313;
-      color: #fbbf24;
-      border: 1px solid #78350f;
-    }
-    .btn-hf:hover { background: #3d3119; }
-    .btn-primary {
-      background: var(--amber);
-      color: #000;
-      border: 1px solid var(--amber);
-    }
-    .btn-primary:hover { background: #d97706; }
-    .badge-status {
-      font-size: 0.75rem;
-      font-weight: 700;
-      color: var(--emerald);
-      background: rgba(16, 185, 129, 0.12);
-      border: 1px solid var(--emerald);
-      padding: 6px 12px;
-      border-radius: 8px;
-      letter-spacing: 0.05em;
-    }
-
-    /* 4 Core Cards */
-    .card-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 20px;
-      margin-bottom: 48px;
-    }
-    .card {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 24px;
-      transition: transform 0.2s, border-color 0.2s;
-    }
-    .card:hover {
-      transform: translateY(-2px);
-      border-color: #334155;
-    }
-    .card-icon {
-      font-size: 1.5rem;
-      margin-bottom: 14px;
-      display: block;
-    }
-    .c-amber { color: var(--amber); }
-    .c-cyan { color: var(--cyan); }
-    .c-emerald { color: var(--emerald); }
-    .c-purple { color: var(--purple); }
-    .card h3 {
-      font-size: 1.1rem;
-      font-weight: 700;
-      margin-bottom: 10px;
-    }
-    .card p {
-      font-size: 0.875rem;
-      color: var(--text-muted);
+    .hero p {
+      font-size: 17px; color: var(--text-sub); max-width: 760px; margin: 0 auto 32px;
       line-height: 1.6;
     }
+    
+    /* Nav Buttons */
+    .nav-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-bottom: 24px; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 10px 18px; border-radius: 8px; text-decoration: none;
+      font-size: 14px; font-weight: 600; transition: all 0.2s ease;
+      background: rgba(30, 41, 59, 0.8); border: 1px solid var(--border); color: #e2e8f0;
+    }
+    .btn:hover { background: rgba(51, 65, 85, 0.9); transform: translateY(-1px); }
+    .btn-quant {
+      background: linear-gradient(135deg, #1d4ed8, #2563eb);
+      border-color: #60a5fa; color: #ffffff !important;
+      box-shadow: 0 0 20px rgba(37, 99, 235, 0.35);
+    }
+    .btn-quant:hover { background: linear-gradient(135deg, #2563eb, #3b82f6); box-shadow: 0 0 28px rgba(37, 99, 235, 0.55); }
+    .btn-warning {
+      background: rgba(245, 158, 11, 0.15); border-color: rgba(245, 158, 11, 0.4); color: #fde68a;
+    }
+    
+    /* Status Bar */
+    .status-bar {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3);
+      padding: 6px 14px; border-radius: 9999px; font-size: 12px; color: #6ee7b7; font-weight: 600;
+      margin-top: 8px;
+    }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: #10b981; box-shadow: 0 0 8px #10b981; }
 
-    /* 6 Enclaves Section */
-    .section-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 24px;
-      padding-bottom: 12px;
-      border-bottom: 1px solid var(--border);
+    /* Core Pillars */
+    .pillars-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px;
+      margin-bottom: 56px;
     }
-    .section-header h2 {
-      font-size: 1.25rem;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      gap: 8px;
+    .pillar-card {
+      background: var(--card-bg); border: 1px solid var(--border);
+      border-radius: 12px; padding: 24px; backdrop-filter: blur(12px);
     }
-    .section-meta {
-      font-family: monospace;
-      font-size: 0.85rem;
-      color: #64748b;
+    .pillar-icon { font-size: 24px; margin-bottom: 12px; }
+    .pillar-card h3 { font-size: 17px; font-weight: 700; margin-bottom: 8px; color: #f1f5f9; }
+    .pillar-card p { font-size: 13px; color: var(--text-sub); line-height: 1.5; }
+
+    /* Enclave Section */
+    .section-title {
+      font-size: 22px; font-weight: 700; margin-bottom: 24px;
+      display: flex; align-items: center; justify-content: space-between;
     }
-    .enclave-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
-      gap: 16px;
+    .section-sub { font-size: 13px; color: var(--text-sub); font-family: 'JetBrains Mono', monospace; }
+    .enclaves-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px;
+      margin-bottom: 48px;
     }
-    .enclave-item {
-      background: #0b1120;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 18px 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+    .enclave-card {
+      background: var(--card-bg); border: 1px solid var(--border);
+      border-radius: 12px; padding: 22px; position: relative; overflow: hidden;
+      transition: all 0.25s ease; backdrop-filter: blur(12px);
     }
-    .enclave-info h4 {
-      font-size: 0.95rem;
-      font-weight: 700;
-      margin-bottom: 4px;
+    .enclave-card:hover { transform: translateY(-2px); border-color: rgba(255, 255, 255, 0.2); }
+    
+    /* Institutional Highlight */
+    .enclave-quant {
+      border: 1px solid rgba(59, 130, 246, 0.55);
+      background: radial-gradient(circle at top right, rgba(37, 99, 235, 0.18), var(--card-bg) 75%);
+      box-shadow: 0 0 24px rgba(37, 99, 235, 0.2);
     }
-    .enclave-info code {
-      font-family: monospace;
-      font-size: 0.8rem;
-      color: #38bdf8;
+    
+    .card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+    .tag {
+      font-size: 11px; font-weight: 700; letter-spacing: 0.05em; padding: 4px 8px; border-radius: 4px;
+      font-family: 'JetBrains Mono', monospace;
     }
-    .enclave-state {
-      font-family: monospace;
-      font-size: 0.75rem;
-      background: rgba(16, 185, 129, 0.1);
-      color: var(--emerald);
-      border: 1px solid var(--emerald);
-      padding: 4px 10px;
-      border-radius: 6px;
+    .tag-inst { background: rgba(37, 99, 235, 0.2); color: #60a5fa; border: 1px solid rgba(96, 165, 250, 0.35); }
+    .tag-univ { background: rgba(148, 163, 184, 0.15); color: #cbd5e1; border: 1px solid rgba(148, 163, 184, 0.2); }
+    .tag-ind { background: rgba(16, 185, 129, 0.15); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.25); }
+
+    .pulse-dot { width: 8px; height: 8px; border-radius: 50%; background: #3b82f6; box-shadow: 0 0 8px #3b82f6; }
+    .pulse-green { background: #10b981; box-shadow: 0 0 8px #10b981; }
+
+    .enclave-card h3 { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+    .enclave-path { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #94a3b8; margin-bottom: 16px; }
+    
+    .metric-box {
+      background: rgba(0, 0, 0, 0.35); border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 8px; padding: 12px 14px; margin-bottom: 14px;
     }
-    .footer {
-      text-align: center;
-      margin-top: 60px;
-      padding-top: 20px;
-      border-top: 1px solid var(--border);
-      color: #64748b;
-      font-size: 0.85rem;
+    .metric-val { font-family: 'JetBrains Mono', monospace; font-size: 16px; font-weight: 700; color: #60a5fa; }
+    .metric-lbl { font-size: 11px; color: var(--text-sub); margin-top: 4px; }
+    
+    .card-footer { display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: var(--text-sub); }
+    .status-ok { color: #34d399; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; }
+
+    footer {
+      text-align: center; padding: 32px 0; border-top: 1px solid var(--border);
+      color: #64748b; font-size: 13px; margin-top: auto;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <header class="header-bar">
-      <div class="header-left">
-        <div class="title-row">
-          <span class="icon-lead">&#9889;</span>
-          <h1>NEOMA P-CAM</h1>
-          <span class="badge-ver">GP-PCAM v5.3.0</span>
-        </div>
-        <p class="subtitle">Proprietary Physical Reflex Engine &amp; Cryptographic Silicon Root-of-Trust. Delivering deterministic 0.015ms (15&mu;s) physical equilibrium convergence via Rust Unified Core.</p>
+    <!-- Hero Header -->
+    <header class="hero">
+      <div class="badge-core">⚡ GP-PCAM v5.3.0 UNIFIED SUITE</div>
+      <h1>NEOMA P-CAM</h1>
+      <p>Proprietary Physical Reflex Engine & Cryptographic Silicon Root-of-Trust.<br>Delivering deterministic 0.015ms (15µs) physical equilibrium convergence across 7 industrial & institutional enclaves.</p>
+      
+      <!-- Nav Links -->
+      <div class="nav-links">
+        <a href="https://api.neoma-pcam.com/docs" target="_blank" class="btn">📜 Swagger Docs (7-Domain)</a>
+        <a href="https://rapidapi.com/shs15199702/api/neoma-p-cam-quant-reflex-hft" target="_blank" class="btn btn-quant">⚡ Quant Reflex HFT ($499+)</a>
+        <a href="https://rapidapi.com/shs15199702/api/gp-pcam-universal-physical-solver" target="_blank" class="btn btn-warning">⚡ Universal Solver ($30/mo)</a>
+        <a href="https://rapidapi.com/shs15199702/api/gp-pcam-enterprise-hub" target="_blank" class="btn">🌐 Enterprise Hub</a>
+        <a href="https://huggingface.co/spaces/neoma-pcam/pcam-live-solver" target="_blank" class="btn">🤗 Hugging Face Demo</a>
       </div>
-      <div class="header-controls">
-        <a href="https://api.neoma-pcam.com/docs" target="_blank" class="btn btn-swagger">&#128220; Swagger Docs</a>
-        <a href="https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control" target="_blank" class="btn btn-secondary">&#127760; Enterprise Hub</a>
-        <a href="https://huggingface.co/spaces/Johnsgama/neoma-pcam-solver" target="_blank" class="btn btn-hf">&#129303; Hugging Face Demo</a>
-        <a href="https://rapidapi.com/shs15199702/api/gp-pcam-universal-physical-solver/playground/Solve%20Universal%20Equilibrium" target="_blank" class="btn btn-primary">&#9889; Universal Solver ($30/mo)</a>
-        <span class="badge-status">GATEWAY: ACTIVE</span>
+
+      <div class="status-bar">
+        <span class="dot"></span>
+        <span>PRODUCTION GATEWAY: ACTIVE (15µs SILICON LOOP ONLINE)</span>
       </div>
     </header>
 
-    <section class="card-grid">
-      <div class="card">
-        <span class="card-icon c-amber">&#9889;</span>
-        <h3>0.015ms Ultra-Low Latency Hardware Reflex</h3>
-        <p>Instantaneous equilibrium locking on isolated hardware tensor streams. Resolves catastrophic physical instability in 15 microseconds (0.015ms) without computational lag or iterative numerical stalls.</p>
+    <!-- 4 Core Pillars -->
+    <div class="pillars-grid">
+      <div class="pillar-card">
+        <div class="pillar-icon">⚡</div>
+        <h3>0.015ms Hardware Reflex</h3>
+        <p>Instantaneous equilibrium locking on isolated hardware tensor streams. Resolves catastrophic instability in 15 microseconds via Rust core.</p>
       </div>
-      <div class="card">
-        <span class="card-icon c-cyan">&#129504;</span>
+      <div class="pillar-card">
+        <div class="pillar-icon">🧠</div>
         <h3>Autonomous Cognitive Enclave</h3>
-        <p>Embedded domain-specific physical intelligence powered by LoRA Phi-3. Computes macroscopic thermodynamic state equations (&Delta;H, damping ratio) within a sealed boundary.</p>
+        <p>Embedded domain intelligence powered by Phi-3 SLM. Synthesizes temporal trajectory equations (ΔH, damping ζ) within sealed enclaves.</p>
       </div>
-      <div class="card">
-        <span class="card-icon c-emerald">&#128274;</span>
+      <div class="pillar-card">
+        <div class="pillar-icon">🔒</div>
         <h3>Silicon Root-of-Trust</h3>
-        <p>Hardware-level physical substrate verification generates deterministic cryptographic execution seals (SEAL-CORE...) and SHA-256 proofs on every convergence cycle.</p>
+        <p>Hardware-level physical substrate verification emits deterministic cryptographic execution seals (SEAL-CORE...) and SHA-256 proofs on every cycle.</p>
       </div>
-      <div class="card">
-        <span class="card-icon c-purple">&#128142;</span>
-        <h3>Golden Physics Vault</h3>
-        <p>Autonomous attestation logging. Converts verified equilibrium convergence into immutable, high-value engineering ground-truth records across multi-domain datasets.</p>
+      <div class="pillar-card">
+        <div class="pillar-icon">💎</div>
+        <h3>1:1.1 PoPW Tokenomics</h3>
+        <p>Zero-trust verification gate. Mints protocol compute credits strictly upon verified enterprise settlement with 9.1% node yield and 5.0% collateral.</p>
       </div>
-    </section>
-
-    <section>
-      <div class="section-header">
-        <h2><span>&#9889;</span> Dedicated Physical Reflex Enclaves (0.015ms Hardware Reflex Telemetry)</h2>
-        <span class="section-meta">Synchronous Time-Division Grid</span>
-      </div>
-      <div class="enclave-grid">
-        <div class="enclave-item">
-          <div class="enclave-info">
-            <h4>Universal Equilibrium</h4>
-            <code>/v1/solve-universal-equilibrium</code>
-          </div>
-          <span class="enclave-state">&zeta; = 0.9981 CONVERGED</span>
-        </div>
-        <div class="enclave-item">
-          <div class="enclave-info">
-            <h4>Battery Energetics</h4>
-            <code>/v1/battery/predict</code>
-          </div>
-          <span class="enclave-state">ONLINE &bull; DAMPING</span>
-        </div>
-        <div class="enclave-item">
-          <div class="enclave-info">
-            <h4>Bioreactor Kinematics</h4>
-            <code>/v1/pharma/predict</code>
-          </div>
-          <span class="enclave-state">ONLINE &bull; DAMPING</span>
-        </div>
-        <div class="enclave-item">
-          <div class="enclave-info">
-            <h4>Robotic Compliance</h4>
-            <code>/v1/robotics/predict</code>
-          </div>
-          <span class="enclave-state">ONLINE &bull; DAMPING</span>
-        </div>
-        <div class="enclave-item">
-          <div class="enclave-info">
-            <h4>Mobility Dynamics</h4>
-            <code>/v1/mobility/predict</code>
-          </div>
-          <span class="enclave-state">ONLINE &bull; DAMPING</span>
-        </div>
-        <div class="enclave-item">
-          <div class="enclave-info">
-            <h4>Precision Synthesis</h4>
-            <code>/v1/chemistry/predict</code>
-          </div>
-          <span class="enclave-state">ONLINE &bull; DAMPING</span>
-        </div>
-      </div>
-    </section>
-
-    <div class="footer">
-      <p>&copy; 2026 Neoma Physical AI Team. All rights reserved.</p>
     </div>
+
+    <!-- 7 Domain Enclaves -->
+    <div class="section-title">
+      <span>⚡ Dedicated Physical Reflex Enclaves (7-Domain Suite)</span>
+      <span class="section-sub">Synchronous Time-Division Grid • 15µs Telemetry</span>
+    </div>
+
+    <div class="enclaves-grid">
+      <!-- 1. Quant Microstructure (Institutional Highlight) -->
+      <div class="enclave-card enclave-quant">
+        <div class="card-top">
+          <span class="tag tag-inst">INSTITUTIONAL ENCLAVE</span>
+          <span class="pulse-dot"></span>
+        </div>
+        <h3>Quant Microstructure</h3>
+        <p class="enclave-path">POST /v1/quant/predict</p>
+        <div class="metric-box">
+          <div class="metric-val" style="color: #60a5fa;">15µs Tier (0.015ms)</div>
+          <div class="metric-lbl">Sub-0.03ms Hardware Reflex • LOB Damping</div>
+        </div>
+        <div class="card-footer">
+          <span class="status-ok" style="color: #60a5fa;">● ONLINE • DAMPING</span>
+          <span>Slippage Defense Shield</span>
+        </div>
+      </div>
+
+      <!-- 2. Universal Equilibrium -->
+      <div class="enclave-card">
+        <div class="card-top">
+          <span class="tag tag-univ">UNIVERSAL CORE</span>
+          <span class="pulse-green"></span>
+        </div>
+        <h3>Universal Equilibrium</h3>
+        <p class="enclave-path">POST /v1/solve-universal-equilibrium</p>
+        <div class="metric-box">
+          <div class="metric-val" style="color: #34d399;">ζ = 0.9981 CONVERGED</div>
+          <div class="metric-lbl">Thermodynamic Multi-Phase Solver</div>
+        </div>
+        <div class="card-footer">
+          <span class="status-ok">● ONLINE • EQUILIBRIUM</span>
+          <span>Core Solver ($30/mo)</span>
+        </div>
+      </div>
+
+      <!-- 3. Battery Energetics -->
+      <div class="enclave-card">
+        <div class="card-top">
+          <span class="tag tag-ind">INDUSTRIAL ENCLAVE</span>
+          <span class="pulse-green"></span>
+        </div>
+        <h3>Battery Energetics</h3>
+        <p class="enclave-path">POST /v1/battery/predict</p>
+        <div class="metric-box">
+          <div class="metric-val" style="color: #34d399;">ζ = 0.9800 STABLE</div>
+          <div class="metric-lbl">Thermal Runaway Pre-Arrest</div>
+        </div>
+        <div class="card-footer">
+          <span class="status-ok">● ONLINE • DAMPING</span>
+          <span>Electrochemical Stress</span>
+        </div>
+      </div>
+
+      <!-- 4. Bioreactor Kinematics -->
+      <div class="enclave-card">
+        <div class="card-top">
+          <span class="tag tag-ind">INDUSTRIAL ENCLAVE</span>
+          <span class="pulse-green"></span>
+        </div>
+        <h3>Bioreactor Kinematics</h3>
+        <p class="enclave-path">POST /v1/pharma/predict</p>
+        <div class="metric-box">
+          <div class="metric-val" style="color: #34d399;">ζ = 0.9100 COMPLIANT</div>
+          <div class="metric-lbl">Fluid Shear & Micro-Entropy</div>
+        </div>
+        <div class="card-footer">
+          <span class="status-ok">● ONLINE • DAMPING</span>
+          <span>Pharma Enclave</span>
+        </div>
+      </div>
+
+      <!-- 5. Robotic Compliance -->
+      <div class="enclave-card">
+        <div class="card-top">
+          <span class="tag tag-ind">INDUSTRIAL ENCLAVE</span>
+          <span class="pulse-green"></span>
+        </div>
+        <h3>Robotic Compliance</h3>
+        <p class="enclave-path">POST /v1/robotics/predict</p>
+        <div class="metric-box">
+          <div class="metric-val" style="color: #34d399;">ζ = 0.9300 ELASTIC</div>
+          <div class="metric-lbl">Structural Elasticity Compensation</div>
+        </div>
+        <div class="card-footer">
+          <span class="status-ok">● ONLINE • DAMPING</span>
+          <span>Actuator Shock Damping</span>
+        </div>
+      </div>
+
+      <!-- 6. Mobility Dynamics -->
+      <div class="enclave-card">
+        <div class="card-top">
+          <span class="tag tag-ind">INDUSTRIAL ENCLAVE</span>
+          <span class="pulse-green"></span>
+        </div>
+        <h3>Mobility Dynamics</h3>
+        <p class="enclave-path">POST /v1/mobility/predict</p>
+        <div class="metric-box">
+          <div class="metric-val" style="color: #34d399;">ζ = 0.9600 BALANCED</div>
+          <div class="metric-lbl">High-Speed Yaw Moment Recovery</div>
+        </div>
+        <div class="card-footer">
+          <span class="status-ok">● ONLINE • DAMPING</span>
+          <span>Active Suspension</span>
+        </div>
+      </div>
+
+      <!-- 7. Precision Synthesis -->
+      <div class="enclave-card">
+        <div class="card-top">
+          <span class="tag tag-ind">INDUSTRIAL ENCLAVE</span>
+          <span class="pulse-green"></span>
+        </div>
+        <h3>Precision Synthesis</h3>
+        <p class="enclave-path">POST /v1/chemistry/predict</p>
+        <div class="metric-box">
+          <div class="metric-val" style="color: #34d399;">ζ = 0.9400 QUENCHED</div>
+          <div class="metric-lbl">Exothermic Reaction Suppression</div>
+        </div>
+        <div class="card-footer">
+          <span class="status-ok">● ONLINE • DAMPING</span>
+          <span>Dynamic Phase Control</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+      <p>© 2026 Neoma Physical AI Team. All rights reserved. • SEAL-CORE Hardware Root-of-Trust Certified</p>
+    </footer>
   </div>
 </body>
 </html>
