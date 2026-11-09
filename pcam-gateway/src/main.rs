@@ -275,7 +275,12 @@ fn check_rapidapi_auth(headers: &HeaderMap) -> (bool, String) {
         .unwrap_or("NONE")
         .to_string();
 
-    (has_user && sub_tier != "NONE", sub_tier)
+    let is_paid_tier = has_user 
+        && sub_tier != "NONE" 
+        && !sub_tier.eq_ignore_ascii_case("BASIC") 
+        && !sub_tier.eq_ignore_ascii_case("FREE");
+
+    (is_paid_tier, sub_tier)
 }
 
 // 7대 핵심 엔드포인트 핸들러
