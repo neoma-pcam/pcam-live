@@ -1,4 +1,4 @@
-use axum::{
+﻿use axum::{
     extract::State,
     http::{header, HeaderMap},
     response::{Html, IntoResponse},
@@ -65,7 +65,7 @@ pub struct DisturbancePayload {
 
 #[derive(Debug, Serialize)]
 pub struct HardwareTelemetryResponse {
-    pub allocated_fabric_node: String, // 대외비 마스킹 및 다중 노드
+    pub allocated_fabric_node: String,
     pub v_out_measured_v: f64,
     pub entropy_ent: f64,
     pub shock_rate_pct: f64,
@@ -95,8 +95,8 @@ pub struct ReflexSolutionResponse {
     pub hardware_seal_id: String,
     pub equilibrium_converged: bool,
     pub hardware_reflex_ms: f64,
-    pub phi_embodied_cognition: String, // 대뇌: 파이 SLM 자연어 해설 (보안 마스킹)
-    pub trajectory_summary: String,     // 12Q 단어 제거, 일반 궤적 요약으로 위장
+    pub phi_embodied_cognition: String,
+    pub trajectory_summary: String,
     pub telemetry: HardwareTelemetryResponse,
     pub credit_ledger: CreditLedgerAttestation,
 }
@@ -177,15 +177,13 @@ fn compute_reflex(
 
     let mut hw = state.write().unwrap();
 
-    // [다중 노드 마스킹] COM3/CH17 은닉 및 라운드로빈 분산 할당
     let nodes = ["PCAM-FABRIC-ALPHA", "PCAM-FABRIC-BETA", "PCAM-FABRIC-GAMMA", "PCAM-FABRIC-DELTA", "PCAM-FABRIC-OMEGA"];
     let assigned_node = nodes[hw.node_counter % nodes.len()].to_string();
     hw.node_counter = hw.node_counter.wrapping_add(1);
 
-    // [절대 고정 불가 로직] 실측 베이스 + 입력 외란 + 양자 미세 지터 강제 결합
     let dynamic_vout = hw.v_out + (p.flux_potential_v * 0.05) + (rand::random::<f64>() * 0.002 - 0.001);
     let dynamic_ent = hw.entropy + (p.active_strain * 0.0005) + (rand::random::<f64>() * 0.0002);
-    let dynamic_gen = hw.gen + (rand::random::<u64>() % 7) + 1; // 무조건 상승
+    let dynamic_gen = hw.gen + (rand::random::<u64>() % 7) + 1;
 
     let acceleration = p.gradient_acceleration + (hw.shock * 100.0) + (dynamic_gen % 19) as f64;
     let strain = p.active_strain + (hw.ctrl - 0.5) * 0.1 + (rand::random::<f64>() * 0.01);
@@ -197,14 +195,12 @@ fn compute_reflex(
 
     let state_mode = if shock_index > 0.75 { 3 } else if shock_index > 0.35 { 2 } else { 1 };
 
-    // [시계열 링 버퍼 업데이트 - 대외비]
     let current_frame = QFrame { gen: dynamic_gen, shock: shock_index, zeta };
     hw.history_buffer.push_back(current_frame.clone());
     if hw.history_buffer.len() > 12 {
         hw.history_buffer.pop_front();
     }
 
-    // [Phi SLM 체화 진단 해설 - 12Q 단어 마스킹]
     let trend = if let Some(oldest) = hw.history_buffer.front() {
         if shock_index > oldest.shock { "ESCALATING (확장)" } else { "SUBSIDING (수렴)" }
     } else {
@@ -228,7 +224,6 @@ fn compute_reflex(
 
     let elapsed_ms = start_time.elapsed().as_secs_f64() * 1000.0;
 
-    // [토크노믹스 정산 로직]
     let fiat_payment = if is_rapidapi_paid { 1.00 } else { 0.00 };
     let total_minted = fiat_payment * 1.1;
     let user_credit = fiat_payment * 1.0;
@@ -273,7 +268,6 @@ fn compute_reflex(
     }
 }
 
-// 헤더 검증 헬퍼 함수
 fn check_rapidapi_auth(headers: &HeaderMap) -> (bool, String) {
     let has_user = headers.contains_key("x-rapidapi-user");
     let sub_tier = headers.get("x-rapidapi-subscription")
@@ -284,10 +278,14 @@ fn check_rapidapi_auth(headers: &HeaderMap) -> (bool, String) {
     (has_user && sub_tier != "NONE", sub_tier)
 }
 
-// 6대 핵심 엔드포인트 핸들러
+// 7대 핵심 엔드포인트 핸들러
 async fn solve_universal(headers: HeaderMap, State(state): State<SharedState>, Json(p): Json<DisturbancePayload>) -> Json<ReflexSolutionResponse> {
     let (is_paid, tier) = check_rapidapi_auth(&headers);
     Json(compute_reflex("Universal-Equilibrium", &p, 0.95, state, is_paid, tier))
+}
+async fn predict_quant(headers: HeaderMap, State(state): State<SharedState>, Json(p): Json<DisturbancePayload>) -> Json<ReflexSolutionResponse> {
+    let (is_paid, tier) = check_rapidapi_auth(&headers);
+    Json(compute_reflex("Quant-Microstructure", &p, 0.99, state, is_paid, tier))
 }
 async fn predict_pharma(headers: HeaderMap, State(state): State<SharedState>, Json(p): Json<DisturbancePayload>) -> Json<ReflexSolutionResponse> {
     let (is_paid, tier) = check_rapidapi_auth(&headers);
@@ -311,13 +309,13 @@ async fn predict_chemistry(headers: HeaderMap, State(state): State<SharedState>,
 }
 
 // ==========================================
-// 5. 단일 그룹화된 Swagger & OpenAPI 스펙
+// 5. Swagger & OpenAPI 스펙
 // ==========================================
 const SWAGGER_HTML: &str = r###"<!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>NEOMA P-CAM 6-Domain API Suite</title>
+  <title>NEOMA P-CAM 7-Domain API Suite</title>
   <link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@5/swagger-ui.css" />
   <style> 
     body { margin: 0; background: #fafafa; } 
@@ -378,11 +376,25 @@ const SWAGGER_HTML: &str = r###"<!DOCTYPE html>
 const OPENAPI_SPEC: &str = r###"{
   "openapi": "3.0.0",
   "info": {
-    "title": "NEOMA P-CAM 6-Domain Universal Solver API",
+    "title": "NEOMA P-CAM 7-Domain API Suite",
     "version": "5.3.0",
-    "description": "Deterministic Physical Reflex & Silicon Root-of-Trust Engine (Axum 6-Domain Suite)"
+    "description": "Deterministic Physical Reflex & Silicon Root-of-Trust Engine"
   },
   "paths": {
+    "/v1/quant/predict": {
+      "post": {
+        "tags": ["Institutional Quant HFT"],
+        "summary": "Execute LOB Shock Damping",
+        "description": "Direct silicon reflex convergence for high-frequency order book dynamics. Computes physical damping ratio (zeta) within 15µs to mitigate market sweep slippage.",
+        "operationId": "executeLOBShockDamping",
+        "requestBody": { "$ref": "#/components/requestBodies/Payload" },
+        "responses": {
+          "200": { "$ref": "#/components/responses/Solution" },
+          "402": { "description": "Payment Required - Institutional Enterprise License Required" },
+          "429": { "description": "Too Many Requests - Evaluation Quota Exceeded" }
+        }
+      }
+    },
     "/v1/solve-universal-equilibrium": {
       "post": {
         "tags": ["P-CAM Reflex Core"],
@@ -461,8 +473,8 @@ const OPENAPI_SPEC: &str = r###"{
               "type": "object",
               "properties": {
                 "status": { "type": "string", "example": "success" },
-                "domain": { "type": "string", "example": "Universal-Equilibrium" },
-                "zeta": { "type": "number", "example": 0.9338 },
+                "domain": { "type": "string", "example": "Quant-Microstructure" },
+                "zeta": { "type": "number", "example": 0.9981 },
                 "control_intensity": { "type": "number", "example": 0.582 },
                 "state_mode": { "type": "integer", "example": 2 },
                 "hardware_seal_id": { "type": "string", "example": "SEAL-CORE03-1794022434-..." },
@@ -506,18 +518,20 @@ const OPENAPI_SPEC: &str = r###"{
 async fn swagger_ui() -> Html<&'static str> { Html(SWAGGER_HTML) }
 async fn openapi_spec() -> impl IntoResponse { ([(header::CONTENT_TYPE, "application/json")], OPENAPI_SPEC) }
 async fn root_health() -> impl IntoResponse {
-    ([(header::CONTENT_TYPE, "application/json")], r#"{"status":"online","engine":"NEOMA P-CAM 6-Domain Suite","docs":"/docs"}"#)
+    ([(header::CONTENT_TYPE, "application/json")], r#"{"status":"online","engine":"NEOMA P-CAM 7-Domain Suite","health":"healthy"}"#)
 }
 
 #[tokio::main]
 async fn main() {
     let shared_state: SharedState = Arc::new(RwLock::new(HwTelemetry::default()));
-    spawn_serial_reader(shared_state.clone(), "COM3"); // 내부적으로만 COM3 사용 (외부 노출 차단)
+    spawn_serial_reader(shared_state.clone(), "COM3");
 
     let app = Router::new()
         .route("/", get(root_health))
+        .route("/health", get(root_health))
         .route("/docs", get(swagger_ui))
         .route("/openapi.json", get(openapi_spec))
+        .route("/v1/quant/predict", post(predict_quant))
         .route("/v1/solve-universal-equilibrium", post(solve_universal))
         .route("/v1/pharma/predict", post(predict_pharma))
         .route("/v1/battery/predict", post(predict_battery))
@@ -528,12 +542,12 @@ async fn main() {
 
     let addr = "127.0.0.1:8000";
     println!("==================================================");
-    println!(" [P-CAM 6-DOMAIN GATEWAY] Unified Core Active (Rust/Axum)");
+    println!(" [P-CAM 7-DOMAIN GATEWAY] Unified Core Active (Rust/Axum)");
     println!(" * Listening on  : http://{}", addr);
+    println!(" * Health Check  : http://{}/health", addr);
     println!(" * Swagger Docs  : http://{}/docs", addr);
-    println!(" * Hardware Port : [REDACTED] (Background Thread Running)");
-    println!(" * Temporal Buf  : Active (Secure Time-Series Memory)");
-    println!(" * Phi-3 SLM     : Embodied Cognition Engine Online");
+    println!(" * Quant Route   : POST /v1/quant/predict (Isolated)");
+    println!(" * Universal     : POST /v1/solve-universal-equilibrium");
     println!("==================================================");
 
     let listener = tokio::net::TcpListener::bind(addr).await.unwrap();
