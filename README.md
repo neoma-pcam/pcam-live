@@ -196,7 +196,7 @@ Across a **64-spin fully connected graph (2,016 coupled interaction edges)**, P-
 * **Universal Physical Solver (RapidAPI):** 👉 [GP-PCAM Universal Physical Solver ($30/mo)](https://rapidapi.com/shs15199702/api/gp-pcam-universal-physical-solver)
 * **Enterprise Hyper Physical Hub (RapidAPI):** 👉 [NEOMA P-CAM Enterprise Hub](https://rapidapi.com/shs15199702/api/gp-pcam-enterprise-hub)
 * **Interactive Web Telemetry Console:** 👉 [NEOMA P-CAM Live Web Portal](https://neoma-pcam.github.io/pcam-live/)
-* **Direct Production Gateway Node:** 👉 `https://api.neoma-pcam.com`
+* **Direct Production Gateway Node:** 👉 [https://api.neoma-pcam.com](https://api.neoma-pcam.com)
 
 ---
 
@@ -323,4 +323,5 @@ For institutional API access, high-throughput cloud enclave tunnels, or technica
 
 * **Client SDK & API Specification:** Apache 2.0 / MIT License (see [LICENSE](LICENSE))
 * **Enclave Core & Neural Hardware Logic:** Proprietary
+
 
