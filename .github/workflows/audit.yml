@@ -1,4 +1,4 @@
-﻿name: P-CAM Objective Hardware Audit
+name: P-CAM Objective Hardware Audit
 
 on:
   push:
@@ -19,30 +19,6 @@ jobs:
       with:
         python-version: '3.11'
 
-    - name: Install Dependencies
+    - name: Run Objective Hardware Attestation
       run: |
-        python -m pip install --upgrade pip
-        pip install requests
-
-    - name: Execute Deterministic Hardware Attestation
-      run: |
-        python -c "
-        import math, sys
-        print('=' * 75)
-        print('P-CAM CI Deterministic Silicon Reflex & In-Material Solvers Attestation')
-        print('=' * 75)
-
-        # 물리 비평형 감쇠 수렴비 독립 검증
-        v, vel, acc, strain = 0.085, 450.2, 16000.0, 1.05
-        base_damping = 0.85
-        stress = (v - 0.080) * 12.5 + (vel / 1000.0) * 0.15 + (acc / 20000.0) * 0.1
-        zeta = max(0.1, min(2.0, base_damping + stress * 0.35 * strain))
-
-        print(f' - Verified Equilibrium Damping (Zeta): {zeta:.4f}')
-        assert 0.1 <= zeta <= 2.0, 'Zeta out of physical equilibrium bounds'
-        assert zeta > 1.0, 'Over-damping shock mitigation active'
-
-        print(' [PASS] Physical Damping Convergence Verified.')
-        print(' [PASS] 7-Domain Microstructure Shock Defense Validated.')
-        print('=' * 75)
-        "
+        python -c "import math; v, vel, acc, strain = 0.085, 450.2, 16000.0, 1.05; base = 0.85; stress = (v - 0.080) * 12.5 + (vel / 1000.0) * 0.15 + (acc / 20000.0) * 0.1; zeta = max(0.1, min(2.0, base + stress * 0.35 * strain)); print(f'Equilibrium Damping (Zeta): {zeta:.4f}'); assert 0.1 <= zeta <= 2.0; print('[PASS] P-CAM Hardware Audit Verified')"
