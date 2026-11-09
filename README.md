@@ -18,7 +18,10 @@
 
 **Zero-Trust Client-Side Verification:** Do not trust server-side logs or static benchmark claims. This independent audit protocol connects directly to the P-CAM 003 silicon enclave and independently computes physical damping convergence directly inside your local runtime.
 
-### 1. Quick Verification (10-Second Test)
+#> 🤖 **Automated Market Making (Hummingbot):** Protect your 24/7 liquidity orders from toxic sweeps using our drop-in strategy script: [examples/hummingbot_pcam_pmm.py](examples/hummingbot_pcam_pmm.py).  
+> Run instantly inside Hummingbot CLI: `start --script hummingbot_pcam_pmm.py`
+
+## 1. Quick Verification (10-Second Test)
 
 Clone the repository and run the client-side audit protocol:
 
@@ -323,5 +326,6 @@ For institutional API access, high-throughput cloud enclave tunnels, or technica
 
 * **Client SDK & API Specification:** Apache 2.0 / MIT License (see [LICENSE](LICENSE))
 * **Enclave Core & Neural Hardware Logic:** Proprietary
+
 
 
