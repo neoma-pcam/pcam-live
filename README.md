@@ -1,6 +1,6 @@
 # NEOMA P-CAM & Silicon Root-of-Trust (v5.3.0)
 
-[![P-CAM Objective Hardware Audit](https://github.com/neoma-pcam/pcam-live/workflows/audit.yml/badge.svg)](https://github.com/neoma-pcam/pcam-live/actions)
+[![P-CAM Objective Hardware Audit](https://github.com/neoma-pcam/pcam-live/actions/workflows/audit.yml/badge.svg)](https://github.com/neoma-pcam/pcam-live/actions)
 [![Production Gateway](https://img.shields.io/badge/Production%20Gateway-15µs%20Active-emerald?style=flat&logo=fastapi)](https://api.neoma-pcam.com)
 [![Swagger API Docs](https://img.shields.io/badge/OpenAPI-7--Domain%20Suite-blue?style=flat&logo=swagger)](https://api.neoma-pcam.com/docs)
 [![RapidAPI Quant HFT](https://img.shields.io/badge/RapidAPI-Quant%20Reflex%20HFT-blue?style=flat&logo=rapidapi)](https://rapidapi.com/shs15199702/api/neoma-p-cam-quant-reflex-hft)
@@ -196,7 +196,7 @@ Across a **64-spin fully connected graph (2,016 coupled interaction edges)**, P-
 * **Universal Physical Solver (RapidAPI):** 👉 [GP-PCAM Universal Physical Solver ($30/mo)](https://rapidapi.com/shs15199702/api/gp-pcam-universal-physical-solver)
 * **Enterprise Hyper Physical Hub (RapidAPI):** 👉 [NEOMA P-CAM Enterprise Hub](https://rapidapi.com/shs15199702/api/gp-pcam-enterprise-hub)
 * **Interactive Web Telemetry Console:** 👉 [NEOMA P-CAM Live Web Portal](https://neoma-pcam.github.io/pcam-live/)
-* **Direct Production Gateway Node:** 👉 `[https://api.neoma-pcam.com](https://api.neoma-pcam.com)`
+* **Direct Production Gateway Node:** 👉 `https://api.neoma-pcam.com`
 
 ---
 
