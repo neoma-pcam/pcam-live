@@ -32,7 +32,7 @@ jobs:
         print('P-CAM CI Deterministic Silicon Reflex & In-Material Solvers Attestation')
         print('=' * 75)
 
-        # 1. 물리 비평형 감쇠 수렴비 독립 검증
+        # 물리 비평형 감쇠 수렴비 독립 검증
         v, vel, acc, strain = 0.085, 450.2, 16000.0, 1.05
         base_damping = 0.85
         stress = (v - 0.080) * 12.5 + (vel / 1000.0) * 0.15 + (acc / 20000.0) * 0.1
