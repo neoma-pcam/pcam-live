@@ -259,7 +259,7 @@ P-CAM provides 7 dedicated domain-specific endpoints configured directly within 
     "total_minted_credit": 0.0,
     "user_usable_credit": 0.0,
     "owner_dividend_credit": 0.0,
-    "protocol_reserve_value_5pct": 0.0,
+    "redeem_reserve_usd_10pct": 0.0,
     "ledger_status": "LEDGER_MINT_LOCKED_DIRECT_CALL"
   }
 }
@@ -291,8 +291,8 @@ The P-CAM protocol enforces a decentralized physical computing economy where tok
 
 ```text
 Fiat Payment ($1.00 USD) ───▶ [RapidAPI Auth Gate] ───▶ Total Minted: 1.10 CR
-                                                        ├── User Pool:     1.00 CR (90.9%)
-                                                        ├── Owner Node:   +0.10 CR (9.1%)
+                                                        ├── User Pool:     1.00 CR (100% Usable)
+                                                        ├── Owner Node:   +10.0% Dual Credit (+0.10 CR)
                                                         └── Reserve Pool:  0.055 CR (5.0%)
 ```
 

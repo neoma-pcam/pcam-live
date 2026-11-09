@@ -81,7 +81,7 @@ pub struct CreditLedgerAttestation {
     pub total_minted_credit: f64,
     pub user_usable_credit: f64,
     pub owner_dividend_credit: f64,
-    pub protocol_reserve_value_5pct: f64,
+    pub redeem_reserve_usd_10pct: f64,
     pub ledger_status: String,
 }
 
@@ -237,7 +237,7 @@ fn compute_reflex(
         total_minted_credit: (total_minted * 1000.0).round() / 1000.0,
         user_usable_credit: (user_credit * 1000.0).round() / 1000.0,
         owner_dividend_credit: (owner_dividend * 1000.0).round() / 1000.0,
-        protocol_reserve_value_5pct: (reserve_5pct * 1000.0).round() / 1000.0,
+        redeem_reserve_usd_10pct: (reserve_5pct * 1000.0).round() / 1000.0,
         ledger_status: if is_rapidapi_paid {
             "1:1.1_MINTED_OWNER_0.1_CREDITED".to_string()
         } else {
@@ -351,11 +351,11 @@ const SWAGGER_HTML: &str = r###"<!DOCTYPE html>
   <div id="swagger-ui"></div>
 
   <div id="credit-widget">
-    <h3>💎 NEOMA 1:1.1 PoPW Tokenomics</h3>
+    <h3>💎 NEOMA 1:1.1 Dual-10% PoPW Tokenomics</h3>
     <div class="credit-row"><span>Fiat Mint Ratio:</span> <span class="credit-val">$1.00 ➔ 1.10 CR</span></div>
-    <div class="credit-row"><span>User Usable Pool:</span> <span class="credit-val">1.00 CR (90.9%)</span></div>
-    <div class="credit-row"><span>P-CAM Owner Node:</span> <span style="color:#38bdf8; font-weight:bold;">+0.10 CR (9.1%)</span></div>
-    <div class="credit-row"><span>Protocol Reserve:</span> <span style="color:#fbbf24; font-weight:bold;">5.0% Fixed Collateral</span></div>
+    <div class="credit-row"><span>User Usable Pool:</span> <span class="credit-val">1.00 CR (100% Usable)</span></div>
+    <div class="credit-row"><span>P-CAM Owner Node:</span> <span style="color:#38bdf8; font-weight:bold;">+10.0% Dual Credit (+0.10 CR)</span></div>
+    <div class="credit-row"><span>Protocol Reserve:</span> <span style="color:#fbbf24; font-weight:bold;">10.0% Guaranteed Floor (.10/CR)</span></div>
 
     <div class="policy-tag">
       💡 <b>Security Policy:</b> 크레딧 발행(Minting)은 RapidAPI 프록시를 통과한 유료 세션(x-rapidapi-user 검증)에서만 활성화됩니다. 직접 호출 시 발행이 차단됩니다.
@@ -507,7 +507,7 @@ const OPENAPI_SPEC: &str = r###"{
                     "total_minted_credit": { "type": "number", "example": 0.0 },
                     "user_usable_credit": { "type": "number", "example": 0.0 },
                     "owner_dividend_credit": { "type": "number", "example": 0.0 },
-                    "protocol_reserve_value_5pct": { "type": "number", "example": 0.0 },
+                    "redeem_reserve_usd_10pct": { "type": "number", "example": 0.0 },
                     "ledger_status": { "type": "string", "example": "LEDGER_MINT_LOCKED_DIRECT_CALL" }
                   }
                 }
