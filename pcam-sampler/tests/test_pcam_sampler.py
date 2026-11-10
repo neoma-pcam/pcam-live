@@ -1,23 +1,39 @@
-﻿import sys
+﻿"""
+NEOMA P-CAM & D-Wave dimod 64-Spin Unit Test Suite
+=================================================
+Validates sub-millisecond in-material physical relaxation against a 64-spin Ising graph.
+
+[Zero-PRNG / 100% Deterministic Test Fixture]
+- All pseudo-random number generators (PRNG / random module) permanently eliminated.
+- Coupling matrix J_ij and local fields h_i are synthesized strictly via deterministic modular algebra.
+"""
+import sys
 import os
-import random
 import dimod
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from pcam_sampler import PCAMSampler
 
-def test_64spin_ising_solver():
+def test_64spin_ising_solver(seed: int = 7777):
     print("=" * 80)
     print(" [TEST] D-Wave dimod 호환 PCAMSampler 64-스핀 수렴 검증")
+    print(f" * Benchmark Instance : Seed {seed} (Deterministic Modular Math)")
     print("=" * 80)
 
     n_spins = 64
-    random.seed(7777)
-    h = {i: round(random.uniform(-0.5, 0.5), 3) for i in range(n_spins)}
+
+    # 1. [-0.500, 0.500] 범위의 국소 자기장 h_i (Zero-PRNG 모듈러 대수)
+    h = {
+        i: round((((i * 53 + seed * 97) % 1001) - 500) / 1000.0, 3)
+        for i in range(n_spins)
+    }
+
+    # 2. [-1.000, 1.000] 범위의 결합 강도 J_ij (Zero-PRNG 모듈러 대수)
     J = {}
     for i in range(n_spins):
         for j in range(i + 1, n_spins):
-            J[(i, j)] = round(random.uniform(-1.0, 1.0), 3)
+            k = (i * 37 + j * 17 + seed * 101) % 2001
+            J[(i, j)] = round((k - 1000) / 1000.0, 3)
 
     bqm = dimod.BinaryQuadraticModel.from_ising(h, J)
     sampler = PCAMSampler(endpoint="https://api.neoma-pcam.com/v1/solve-universal-equilibrium")
