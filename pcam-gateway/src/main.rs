@@ -353,6 +353,7 @@ async fn handle_stream_socket(
 ) {
     let (formal_domain, bias_damping) = resolve_domain_config(&domain_param);
     let (mut sender, mut receiver) = socket.split();
+    let mut tick_counter: u64 = 0; // 세션별 틱 카운터
 
     while let Some(msg_result) = receiver.next().await {
         let msg = match msg_result {
@@ -362,8 +363,23 @@ async fn handle_stream_socket(
 
         match msg {
             Message::Text(text) => {
+                // [무임승차 방어벽] 비유료 세션은 50틱 도달 시 즉각 차단
+                if !is_paid && tick_counter >= 50 {
+                    let quota_exceeded = serde_json::json!({
+                        "status": "error",
+                        "code": 402,
+                        "error": "Payment Required: Evaluation Quota Exceeded (50 ticks limit reached).",
+                        "instruction": "Continuous institutional HFT streaming requires an Enterprise API License.",
+                        "license_url": "https://rapidapi.com/neoma-pcam/api/neoma-pcam-quant-reflex-hft"
+                    });
+                    let _ = sender.send(Message::Text(quota_exceeded.to_string().into())).await;
+                    let _ = sender.send(Message::Close(None)).await;
+                    break;
+                }
+
                 match serde_json::from_str::<DisturbancePayload>(&text) {
                     Ok(payload) => {
+                        tick_counter += 1;
                         let response = compute_reflex(
                             formal_domain,
                             &payload,
@@ -388,7 +404,12 @@ async fn handle_stream_socket(
                 }
             }
             Message::Binary(bin) => {
+                if !is_paid && tick_counter >= 50 {
+                    let _ = sender.send(Message::Close(None)).await;
+                    break;
+                }
                 if let Ok(payload) = serde_json::from_slice::<DisturbancePayload>(&bin) {
+                    tick_counter += 1;
                     let response = compute_reflex(
                         formal_domain,
                         &payload,
@@ -409,7 +430,6 @@ async fn handle_stream_socket(
                     break;
                 }
             }
-            // 클라이언트 Pong 응답 수신 및 예외 메시지 처리 추가
             Message::Pong(_) => {}
             Message::Close(_) => break,
             _ => {}
