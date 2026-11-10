@@ -9,6 +9,7 @@
 [![Hugging Face Demo](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Live%20Demo-yellow)](https://huggingface.co/spaces/neoma-pcam/pcam-live-solver)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23644655.svg)](https://doi.org/10.5281/zenodo.23644655)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Discord Support Desk](https://img.shields.io/badge/Discord-Store%20Desk-5865F2?logo=discord&logoColor=white)](https://discord.gg/WveQC7m4A)
 
 ⚡ **Interactive Hardware Reflex Solver:** Test **0.015ms (15µs)** ultra-low latency deterministic physical equilibrium convergence and SEAL-CORE cryptographic proofs directly in your browser: [Launch P-CAM Live Solver on Hugging Face](https://huggingface.co/spaces/neoma-pcam/pcam-live-solver)
 
@@ -218,6 +219,22 @@ P-CAM provides 7 dedicated domain-specific endpoints configured directly within 
 | **Chemistry** | Industrial Enclaves | `/v1/chemistry/predict` | Exothermic runaway suppression and dynamic phase transition control |
 
 ---
+
+### 🌐 Multi-Protocol Transport & Streaming Interfaces
+
+All 7 physical solver domains support dual-mode transmission tailored for institutional low-latency and continuous high-throughput streams:
+
+1. **REST / HTTP/2 (Universal Gateway)**
+   - **Path**: `POST /v1/{domain}/predict` (e.g., `/v1/quant/predict`, `/v1/battery/predict`)
+   - **Characteristics**: Single-shot state verification, Zero-Trust cryptographic sealing (`SEAL-CORE`), and batch analysis.
+
+2. **Bidirectional Streaming (WebSocket)**
+   - **Path**: `WSS /v1/{domain}/stream`
+   - **Characteristics**: Eliminates per-request TCP handshakes. Designed for continuous order-book feed processing and dynamic $\zeta$ damping adaptation.
+
+3. **High-Performance M2M (gRPC Core)**
+   - **Service**: `rpc StreamEquilibriumReflex (stream DisturbancePacket) returns (stream ReflexResponse)`
+   - **Characteristics**: Protocol Buffers binary serialization with sub-millisecond execution for direct robotic controller (ROS 2) and collocated trading bot integrations.
 
 ## ⚡ Unified API Payload Specification
 
