@@ -106,9 +106,9 @@ pub struct ReflexSolutionResponse {
 }
 
 // ==========================================
-// 3. 백그라운드 시리얼 리더 (COM 포트 은닉)
+// 3. 백그라운드 시리얼 리더 (동적 포트 바인딩)
 // ==========================================
-fn spawn_serial_reader(state: SharedState, port_name: &'static str) {
+fn spawn_serial_reader(state: SharedState, port_name: String) {
     std::thread::spawn(move || {
         let baud_rate = 921600;
         let re_gen = Regex::new(r"(?i)GEN\s*[:#\s]+\s*(\d+)").unwrap();
@@ -118,7 +118,8 @@ fn spawn_serial_reader(state: SharedState, port_name: &'static str) {
         let re_ctrl = Regex::new(r"(?i)CTRL\s*[:\s]+\s*([\d\.]+)").unwrap();
 
         loop {
-            match serialport::new(port_name, baud_rate)
+            // &port_name으로 열기
+            match serialport::new(&port_name, baud_rate)
                 .timeout(std::time::Duration::from_millis(1000))
                 .open()
             {
@@ -652,8 +653,17 @@ async fn root_health() -> impl IntoResponse {
 
 #[tokio::main]
 async fn main() {
+    // 1. 환경 변수(PCAM_SERIAL_PORT) 최우선 감지 -> 미지정 시 OS 기본값 폴백
+    let serial_port = std::env::var("PCAM_SERIAL_PORT").unwrap_or_else(|_| {
+        if cfg!(target_os = "windows") {
+            "COM3".to_string()
+        } else {
+            "/dev/ttyUSB0".to_string() // Linux / Ubuntu 상용 서버 기본값
+        }
+    });
+
     let shared_state: SharedState = Arc::new(RwLock::new(HwTelemetry::default()));
-    spawn_serial_reader(shared_state.clone(), "COM3");
+    spawn_serial_reader(shared_state.clone(), serial_port.clone());
 
     let app = Router::new()
         .route("/", get(root_health))
@@ -667,7 +677,6 @@ async fn main() {
         .route("/v1/robotics/predict", post(predict_robotics))
         .route("/v1/mobility/predict", post(predict_mobility))
         .route("/v1/chemistry/predict", post(predict_chemistry))
-        // [신규] WSS 스트리밍 라우트 (README v5.3.0 스펙 일치)
         .route("/v1/:domain/stream", get(ws_stream_handler))
         .with_state(shared_state);
 
@@ -675,11 +684,9 @@ async fn main() {
     println!("==================================================");
     println!(" [P-CAM 7-DOMAIN GATEWAY] Unified Core Active (Rust/Axum)");
     println!(" * Listening on  : http://{}", addr);
+    println!(" * Hardware Port : {} (Override: PCAM_SERIAL_PORT)", serial_port);
     println!(" * Health Check  : http://{}/health", addr);
-    println!(" * Swagger Docs  : http://{}/docs", addr);
-    println!(" * Quant Route   : POST /v1/quant/predict");
-    println!(" * Universal     : POST /v1/solve-universal-equilibrium");
-    println!(" * WebSocket WSS : ws://{}/v1/:domain/stream (e.g. /v1/quant/stream)", addr);
+    println!(" * WebSocket WSS : ws://{}/v1/:domain/stream", addr);
     println!("==================================================");
 
     let listener = tokio::net::TcpListener::bind(addr).await.unwrap();
