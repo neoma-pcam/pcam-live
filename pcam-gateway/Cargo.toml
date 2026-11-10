@@ -4,12 +4,21 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-axum = "0.7"
+# 1. 웹 프레임워크 및 WebSocket 지원
+axum = { version = "0.7", features = ["ws"] }
 tokio = { version = "1", features = ["full"] }
+futures-util = "0.3"
+
+# 2. 직렬화 / 역직렬화
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
+
+# 3. 암호화 및 SEAL-CORE 토큰
 sha2 = "0.10"
+hmac = "0.12"
 hex = "0.4"
+
+# 4. 물리 하드웨어 연동 및 유틸리티
 serialport = "4.3"
 regex = "1.10"
-rand = "0.8"       # <--- 이 줄이 추가되어야 합니다.
+rand = "0.8"

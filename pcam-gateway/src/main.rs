@@ -1,10 +1,14 @@
 ﻿use axum::{
-    extract::State,
+    extract::{
+        ws::{Message, WebSocket, WebSocketUpgrade},
+        Path, State,
+    },
     http::{header, HeaderMap},
     response::{Html, IntoResponse},
     routing::{get, post},
     Json, Router,
 };
+use futures_util::{SinkExt, StreamExt};
 use regex::Regex;
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
@@ -283,7 +287,21 @@ fn check_rapidapi_auth(headers: &HeaderMap) -> (bool, String) {
     (is_paid_tier, sub_tier)
 }
 
-// 7대 핵심 엔드포인트 핸들러
+// 7대 도메인 설정 매핑 헬퍼 (WebSocket 스트림 자동 라우팅용)
+fn resolve_domain_config(domain: &str) -> (&'static str, f64) {
+    match domain.to_lowercase().as_str() {
+        "quant" | "quant-microstructure" => ("Quant-Microstructure", 0.99),
+        "universal" | "solve-universal-equilibrium" => ("Universal-Equilibrium", 0.95),
+        "pharma" | "pharma-bioreactor" => ("Pharma-Bioreactor", 0.91),
+        "battery" | "battery-energetics" => ("Battery-Energetics", 0.98),
+        "robotics" | "robotic-compliance" => ("Robotic-Compliance", 0.93),
+        "mobility" | "mobility-dynamics" => ("Mobility-Dynamics", 0.96),
+        "chemistry" | "precision-chemistry" => ("Precision-Chemistry", 0.94),
+        _ => ("Universal-Equilibrium", 0.95),
+    }
+}
+
+// 7대 핵심 REST 엔드포인트 핸들러
 async fn solve_universal(headers: HeaderMap, State(state): State<SharedState>, Json(p): Json<DisturbancePayload>) -> Json<ReflexSolutionResponse> {
     let (is_paid, tier) = check_rapidapi_auth(&headers);
     Json(compute_reflex("Universal-Equilibrium", &p, 0.95, state, is_paid, tier))
@@ -314,7 +332,93 @@ async fn predict_chemistry(headers: HeaderMap, State(state): State<SharedState>,
 }
 
 // ==========================================
-// 5. Swagger & OpenAPI 스펙
+// 5. 초저지연 WebSocket 스트리밍 핸들러 (신규)
+// ==========================================
+async fn ws_stream_handler(
+    Path(domain): Path<String>,
+    headers: HeaderMap,
+    ws: WebSocketUpgrade,
+    State(state): State<SharedState>,
+) -> impl IntoResponse {
+    let (is_paid, tier) = check_rapidapi_auth(&headers);
+    ws.on_upgrade(move |socket| handle_stream_socket(socket, domain, state, is_paid, tier))
+}
+
+async fn handle_stream_socket(
+    socket: WebSocket,
+    domain_param: String,
+    state: SharedState,
+    is_paid: bool,
+    tier: String,
+) {
+    let (formal_domain, bias_damping) = resolve_domain_config(&domain_param);
+    let (mut sender, mut receiver) = socket.split();
+
+    while let Some(msg_result) = receiver.next().await {
+        let msg = match msg_result {
+            Ok(m) => m,
+            Err(_) => break,
+        };
+
+        match msg {
+            Message::Text(text) => {
+                match serde_json::from_str::<DisturbancePayload>(&text) {
+                    Ok(payload) => {
+                        let response = compute_reflex(
+                            formal_domain,
+                            &payload,
+                            bias_damping,
+                            state.clone(),
+                            is_paid,
+                            tier.clone(),
+                        );
+                        if let Ok(json_str) = serde_json::to_string(&response) {
+                            if sender.send(Message::Text(json_str.into())).await.is_err() {
+                                break;
+                            }
+                        }
+                    }
+                    Err(err) => {
+                        let err_json = serde_json::json!({
+                            "status": "error",
+                            "error": format!("Invalid JSON payload: {}", err)
+                        });
+                        let _ = sender.send(Message::Text(err_json.to_string().into())).await;
+                    }
+                }
+            }
+            Message::Binary(bin) => {
+                if let Ok(payload) = serde_json::from_slice::<DisturbancePayload>(&bin) {
+                    let response = compute_reflex(
+                        formal_domain,
+                        &payload,
+                        bias_damping,
+                        state.clone(),
+                        is_paid,
+                        tier.clone(),
+                    );
+                    if let Ok(bin_resp) = serde_json::to_vec(&response) {
+                        if sender.send(Message::Binary(bin_resp.into())).await.is_err() {
+                            break;
+                        }
+                    }
+                }
+            }
+            Message::Ping(payload) => {
+                if sender.send(Message::Pong(payload)).await.is_err() {
+                    break;
+                }
+            }
+            // 클라이언트 Pong 응답 수신 및 예외 메시지 처리 추가
+            Message::Pong(_) => {}
+            Message::Close(_) => break,
+            _ => {}
+        }
+    }
+}
+
+// ==========================================
+// 6. Swagger & OpenAPI 스펙
 // ==========================================
 const SWAGGER_HTML: &str = r###"<!DOCTYPE html>
 <html lang="ko">
@@ -543,16 +647,19 @@ async fn main() {
         .route("/v1/robotics/predict", post(predict_robotics))
         .route("/v1/mobility/predict", post(predict_mobility))
         .route("/v1/chemistry/predict", post(predict_chemistry))
+        // [신규] WSS 스트리밍 라우트 (README v5.3.0 스펙 일치)
+        .route("/v1/:domain/stream", get(ws_stream_handler))
         .with_state(shared_state);
 
-    let addr = "127.0.0.1:8000";
+    let addr = "0.0.0.0:8000";
     println!("==================================================");
     println!(" [P-CAM 7-DOMAIN GATEWAY] Unified Core Active (Rust/Axum)");
     println!(" * Listening on  : http://{}", addr);
     println!(" * Health Check  : http://{}/health", addr);
     println!(" * Swagger Docs  : http://{}/docs", addr);
-    println!(" * Quant Route   : POST /v1/quant/predict (Isolated)");
+    println!(" * Quant Route   : POST /v1/quant/predict");
     println!(" * Universal     : POST /v1/solve-universal-equilibrium");
+    println!(" * WebSocket WSS : ws://{}/v1/:domain/stream (e.g. /v1/quant/stream)", addr);
     println!("==================================================");
 
     let listener = tokio::net::TcpListener::bind(addr).await.unwrap();
