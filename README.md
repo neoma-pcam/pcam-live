@@ -220,6 +220,22 @@ P-CAM provides 7 dedicated domain-specific endpoints configured directly within 
 
 ---
 
+### 🌐 Multi-Protocol Transport & Streaming Interfaces
+
+All 7 physical solver domains support dual-mode transmission tailored for institutional low-latency and continuous high-throughput streams:
+
+1. **REST / HTTP/2 (Universal Gateway)**
+   - **Path**: `POST /v1/{domain}/predict` (e.g., `/v1/quant/predict`, `/v1/battery/predict`)
+   - **Characteristics**: Single-shot state verification, Zero-Trust cryptographic sealing (`SEAL-CORE`), and batch analysis.
+
+2. **Bidirectional Streaming (WebSocket)**
+   - **Path**: `WSS /v1/{domain}/stream`
+   - **Characteristics**: Eliminates per-request TCP handshakes. Designed for continuous order-book feed processing and dynamic $\zeta$ damping adaptation.
+
+3. **High-Performance M2M (gRPC Core)**
+   - **Service**: `rpc StreamEquilibriumReflex (stream DisturbancePacket) returns (stream ReflexResponse)`
+   - **Characteristics**: Protocol Buffers binary serialization with sub-millisecond execution for direct robotic controller (ROS 2) and collocated trading bot integrations.
+
 ## ⚡ Unified API Payload Specification
 
 ### Request Body (`DisturbancePayload`)
