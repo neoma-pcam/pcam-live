@@ -9,6 +9,7 @@
 [![Hugging Face Demo](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Live%20Demo-yellow)](https://huggingface.co/spaces/neoma-pcam/pcam-live-solver)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23644655.svg)](https://doi.org/10.5281/zenodo.23644655)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Discord Support Desk](https://img.shields.io/badge/Discord-Store%20Desk-5865F2?logo=discord&logoColor=white)](https://discord.gg/WveQC7m4A)
 
 ⚡ **Interactive Hardware Reflex Solver:** Test **0.015ms (15µs)** ultra-low latency deterministic physical equilibrium convergence and SEAL-CORE cryptographic proofs directly in your browser: [Launch P-CAM Live Solver on Hugging Face](https://huggingface.co/spaces/neoma-pcam/pcam-live-solver)
 
