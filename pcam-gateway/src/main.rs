@@ -1,24 +1,21 @@
 ﻿use axum::{
-    extract::{
-        ws::{Message, WebSocket, WebSocketUpgrade},
-        Path, State,
-    },
-    http::{header, HeaderMap},
-    response::{Html, IntoResponse},
-    routing::{get, post},
+    extract::State,
+    http::{HeaderMap, StatusCode},
+    response::IntoResponse,
+    routing::post,
     Json, Router,
 };
-use futures_util::{SinkExt, StreamExt};
 use regex::Regex;
+use reqwest::Client;
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
-use std::collections::VecDeque;
+use std::collections::{HashMap, VecDeque};
 use std::io::{BufRead, BufReader};
-use std::sync::{Arc, RwLock};
+use std::sync::{atomic::{AtomicUsize, Ordering}, Arc, RwLock};
 use std::time::Instant;
 
 // ==========================================
-// 1. 시계열 링 버퍼 및 하드웨어 상태 공유 구조체
+// 1. 하드웨어 상태 및 원장(Ledger) 구조체
 // ==========================================
 #[derive(Debug, Clone)]
 pub struct QFrame {
@@ -29,32 +26,44 @@ pub struct QFrame {
 
 #[derive(Debug, Clone)]
 pub struct HwTelemetry {
+    pub uid: String,
     pub v_out: f64,
     pub entropy: f64,
     pub gen: u64,
     pub shock: f64,
     pub ctrl: f64,
     pub connected: bool,
-    pub history_buffer: VecDeque<QFrame>, // 대외비: 내부적으로만 12 프레임 유지
-    pub node_counter: usize,              // 다중 노드 분산용 카운터
+    pub history_buffer: VecDeque<QFrame>,
 }
 
 impl Default for HwTelemetry {
     fn default() -> Self {
         Self {
-            v_out: 0.085,
-            entropy: 0.0010,
-            gen: 0,
-            shock: 0.0,
-            ctrl: 0.5,
+            uid: "3511733393432".to_string(),
+            v_out: 0.0, entropy: 0.0, gen: 0, shock: 0.0, ctrl: 0.5,
             connected: false,
             history_buffer: VecDeque::with_capacity(12),
-            node_counter: 0,
         }
     }
 }
 
-type SharedState = Arc<RwLock<HwTelemetry>>;
+// [신규] 이중 가치 평가 모델 원장 상태
+#[derive(Debug, Default)]
+pub struct LedgerState {
+    pub user_balances: HashMap<String, f64>, // 고객별 CR 잔고
+    pub owner_dividend_cr: f64,              // 오너 기여 배당 (0.10 CR 누적)
+    pub protocol_reserve_usd: f64,           // 프로토콜 준비금 ($0.10 누적)
+    pub total_minted_cr: f64,                // 총 발행량
+    pub total_burned_cr: f64,                // 총 소각량 (연산 및 리딤)
+}
+
+pub struct AppState {
+    pub hw: Arc<RwLock<HwTelemetry>>,
+    pub http_client: Client,
+    pub demo_counter: AtomicUsize,
+    pub ledger: Arc<RwLock<LedgerState>>,
+}
+type SharedState = Arc<AppState>;
 
 // ==========================================
 // 2. 입출력 데이터 구조체
@@ -69,7 +78,7 @@ pub struct DisturbancePayload {
 
 #[derive(Debug, Serialize)]
 pub struct HardwareTelemetryResponse {
-    pub allocated_fabric_node: String,
+    pub hardware_uid: String,
     pub v_out_measured_v: f64,
     pub entropy_ent: f64,
     pub shock_rate_pct: f64,
@@ -99,16 +108,38 @@ pub struct ReflexSolutionResponse {
     pub hardware_seal_id: String,
     pub equilibrium_converged: bool,
     pub hardware_reflex_ms: f64,
-    pub phi_embodied_cognition: String,
+    pub cognitive_synthesis: String,
     pub trajectory_summary: String,
     pub telemetry: HardwareTelemetryResponse,
     pub credit_ledger: CreditLedgerAttestation,
 }
 
+#[derive(Debug, Serialize)]
+pub struct ErrorResponse {
+    pub error: String,
+    pub code: u16,
+    pub message: String,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct RedeemRequest {
+    pub amount_cr: f64,
+}
+
+#[derive(Debug, Serialize)]
+pub struct RedeemResponse {
+    pub status: String,
+    pub user_id: String,
+    pub redeemed_cr: f64,
+    pub payout_usd: f64,
+    pub remaining_reserve_usd: f64,
+    pub message: String,
+}
+
 // ==========================================
-// 3. 백그라운드 시리얼 리더 (동적 포트 바인딩)
+// 3. 백그라운드 시리얼 리더 (순수 실측)
 // ==========================================
-fn spawn_serial_reader(state: SharedState, port_name: String) {
+fn spawn_serial_reader(hw_state: Arc<RwLock<HwTelemetry>>, port_name: String) {
     std::thread::spawn(move || {
         let baud_rate = 921600;
         let re_gen = Regex::new(r"(?i)GEN\s*[:#\s]+\s*(\d+)").unwrap();
@@ -116,50 +147,32 @@ fn spawn_serial_reader(state: SharedState, port_name: String) {
         let re_ent = Regex::new(r"(?i)ENT\s*[:\s]+\s*([\d\.]+)").unwrap();
         let re_shock = Regex::new(r"(?i)(?:SHOCK|SHK)\s*[:\s]+\s*([\d\.]+)").unwrap();
         let re_ctrl = Regex::new(r"(?i)CTRL\s*[:\s]+\s*([\d\.]+)").unwrap();
+        let re_uid = Regex::new(r"(?i)UID\s*[:\s]+\s*([A-Za-z0-9]+)").unwrap();
 
         loop {
-            // &port_name으로 열기
-            match serialport::new(&port_name, baud_rate)
-                .timeout(std::time::Duration::from_millis(1000))
-                .open()
-            {
+            match serialport::new(&port_name, baud_rate).timeout(std::time::Duration::from_millis(1000)).open() {
                 Ok(port) => {
-                    if let Ok(mut w) = state.write() { w.connected = true; }
+                    if let Ok(mut w) = hw_state.write() { w.connected = true; }
                     let mut reader = BufReader::new(port);
                     let mut line = String::new();
-
                     while let Ok(bytes_read) = reader.read_line(&mut line) {
                         if bytes_read == 0 { break; }
                         let text = line.trim();
                         if text.is_empty() { continue; }
-
-                        let mut temp_gen = None;
-                        let mut temp_vout = None;
-                        let mut temp_ent = None;
-                        let mut temp_shock = None;
-                        let mut temp_ctrl = None;
-
-                        if let Some(caps) = re_gen.captures(text) { temp_gen = caps[1].parse::<u64>().ok(); }
-                        if let Some(caps) = re_vout.captures(text) { temp_vout = caps[1].parse::<f64>().ok(); }
-                        if let Some(caps) = re_ent.captures(text) { temp_ent = caps[1].parse::<f64>().ok(); }
-                        if let Some(caps) = re_shock.captures(text) { temp_shock = caps[1].parse::<f64>().ok(); }
-                        if let Some(caps) = re_ctrl.captures(text) { temp_ctrl = caps[1].parse::<f64>().ok(); }
-
-                        if temp_gen.is_some() || temp_vout.is_some() {
-                            if let Ok(mut w) = state.write() {
-                                w.connected = true;
-                                if let Some(v) = temp_gen { w.gen = v; }
-                                if let Some(v) = temp_vout { w.v_out = v; }
-                                if let Some(v) = temp_ent { w.entropy = v; }
-                                if let Some(v) = temp_shock { w.shock = v; }
-                                if let Some(v) = temp_ctrl { w.ctrl = v; }
-                            }
+                        if let Ok(mut w) = hw_state.write() {
+                            w.connected = true;
+                            if let Some(caps) = re_gen.captures(text) { w.gen = caps[1].parse().unwrap_or(w.gen); }
+                            if let Some(caps) = re_vout.captures(text) { w.v_out = caps[1].parse().unwrap_or(w.v_out); }
+                            if let Some(caps) = re_ent.captures(text) { w.entropy = caps[1].parse().unwrap_or(w.entropy); }
+                            if let Some(caps) = re_shock.captures(text) { w.shock = caps[1].parse().unwrap_or(w.shock); }
+                            if let Some(caps) = re_ctrl.captures(text) { w.ctrl = caps[1].parse().unwrap_or(w.ctrl); }
+                            if let Some(caps) = re_uid.captures(text) { w.uid = caps[1].to_string(); }
                         }
                         line.clear();
                     }
                 }
                 Err(_) => {
-                    if let Ok(mut w) = state.write() { w.connected = false; }
+                    if let Ok(mut w) = hw_state.write() { w.connected = false; }
                     std::thread::sleep(std::time::Duration::from_secs(2));
                 }
             }
@@ -168,508 +181,213 @@ fn spawn_serial_reader(state: SharedState, port_name: String) {
 }
 
 // ==========================================
-// 4. 동적 물리 연산 & SLM 합성
+// 4. 순수 물리 연산 & AI 결합 엔진
 // ==========================================
-fn compute_reflex(
-    domain: &str, 
-    p: &DisturbancePayload, 
-    bias_damping: f64, 
-    state: SharedState,
-    is_rapidapi_paid: bool,
-    tier_name: String
+async fn compute_reflex(
+    domain: &str, p: &DisturbancePayload, bias_damping: f64, state: SharedState,
+    is_rapidapi_paid: bool, tier_name: String, user_id: String, use_llm: bool
 ) -> ReflexSolutionResponse {
     let start_time = Instant::now();
 
-    let mut hw = state.write().unwrap();
-
-    let nodes = ["PCAM-FABRIC-ALPHA", "PCAM-FABRIC-BETA", "PCAM-FABRIC-GAMMA", "PCAM-FABRIC-DELTA", "PCAM-FABRIC-OMEGA"];
-    let assigned_node = nodes[hw.node_counter % nodes.len()].to_string();
-    hw.node_counter = hw.node_counter.wrapping_add(1);
-
-    let dynamic_vout = hw.v_out + (p.flux_potential_v * 0.05) + (rand::random::<f64>() * 0.002 - 0.001);
-    let dynamic_ent = hw.entropy + (p.active_strain * 0.0005) + (rand::random::<f64>() * 0.0002);
-    let dynamic_gen = hw.gen + (rand::random::<u64>() % 7) + 1;
-
-    let acceleration = p.gradient_acceleration + (hw.shock * 100.0) + (dynamic_gen % 19) as f64;
-    let strain = p.active_strain + (hw.ctrl - 0.5) * 0.1 + (rand::random::<f64>() * 0.01);
-
-    let shock_index = ((acceleration / 20000.0) * 0.6 + (strain / 2.0) * 0.4).clamp(0.0, 1.0);
-    let raw_zeta = bias_damping + (dynamic_vout * 0.15) + (strain * 0.03) + (hw.shock * 0.01);
-    let zeta = raw_zeta.clamp(0.1, 2.0);
-    let control_intensity = (0.25 + (shock_index * 0.55) + (dynamic_vout * 0.2)).clamp(0.1, 1.0);
-
-    let state_mode = if shock_index > 0.75 { 3 } else if shock_index > 0.35 { 2 } else { 1 };
-
-    let current_frame = QFrame { gen: dynamic_gen, shock: shock_index, zeta };
-    hw.history_buffer.push_back(current_frame.clone());
-    if hw.history_buffer.len() > 12 {
-        hw.history_buffer.pop_front();
-    }
-
-    let trend = if let Some(oldest) = hw.history_buffer.front() {
-        if shock_index > oldest.shock { "ESCALATING (확장)" } else { "SUBSIDING (수렴)" }
-    } else {
-        "INITIALIZING (초기화)"
+    let (real_uid, real_gen, real_vout, real_ent, real_shock, real_ctrl, is_connected) = {
+        let hw = state.hw.read().unwrap();
+        (hw.uid.clone(), hw.gen, hw.v_out, hw.entropy, hw.shock, hw.ctrl, hw.connected)
     };
 
-    let phi_cognition = format!(
-        "[Phi-3 Cognitive Synthesis] Temporal trajectory indicates {} disturbance. \
-        Physical reflex engaged at Zeta {:.4}. Entropy stabilized at {:.4}. \
-        Node [{}] dynamically allocated to absorb {:.1}% structural shock.",
-        trend, zeta, dynamic_ent, assigned_node, shock_index * 100.0
-    );
+    let acceleration = p.gradient_acceleration + (real_shock * 100.0);
+    let strain = p.active_strain + (real_ctrl - 0.5) * 0.1;
+    let shock_index = ((acceleration / 20000.0) * 0.6 + (strain / 2.0) * 0.4).clamp(0.0, 1.0);
+    let raw_zeta = bias_damping + (real_vout * 0.15) + (strain * 0.03) + (real_shock * 0.01);
+    let zeta = raw_zeta.clamp(0.1, 2.0);
+    let control_intensity = (0.25 + (shock_index * 0.55) + (real_vout * 0.2)).clamp(0.1, 1.0);
+    let state_mode = if shock_index > 0.75 { 3 } else if shock_index > 0.35 { 2 } else { 1 };
 
-    let history_summary = format!("Temporal Buffer Active: {} secure frames retained.", hw.history_buffer.len());
+    let trend = {
+        let mut hw = state.hw.write().unwrap();
+        hw.history_buffer.push_back(QFrame { gen: real_gen, shock: shock_index, zeta });
+        if hw.history_buffer.len() > 12 { hw.history_buffer.pop_front(); }
+        if let Some(oldest) = hw.history_buffer.front() {
+            if shock_index > oldest.shock { "ESCALATING" } else { "SUBSIDING" }
+        } else { "INITIALIZING" }
+    };
 
-    let entropy_input = format!("PCAM-{}-{}-{}-{}-{}", domain, dynamic_vout, acceleration, dynamic_ent, dynamic_gen);
+    let cognitive_synthesis = if use_llm {
+        let prompt = format!("System: Physical AI. Domain: {}. V_OUT: {:.4}V, ENT: {:.4}. Trend: {}. Explain Zeta {:.4}.", domain, real_vout, real_ent, trend, zeta);
+        match state.http_client.post("http://localhost:11434/api/generate").json(&serde_json::json!({ "model": "phi3:12q", "prompt": prompt, "stream": false })).send().await {
+            Ok(res) => res.json::<serde_json::Value>().await.ok().and_then(|v| v["response"].as_str().map(|s| format!("[Cognitive Synthesis] {}", s))).unwrap_or_else(|| "Failed to parse.".to_string()),
+            Err(_) => "[Cognitive Engine Offline] Pure hardware reflex executed.".to_string()
+        }
+    } else { format!("[HFT Mode] Ultra-low latency reflex. Zeta: {:.4}", zeta) };
+
+    let entropy_input = format!("PCAM-{}-{}-{}-{}-{}", domain, real_uid, real_vout, real_ent, real_gen);
     let mut hasher = Sha256::new();
     hasher.update(entropy_input.as_bytes());
-    let hash_hex = hex::encode(hasher.finalize());
-    let hardware_seal_id = format!("SEAL-CORE03-{}-{}", dynamic_gen, hash_hex.to_uppercase());
+    let hardware_seal_id = format!("SEAL-{}-{}", real_uid, hex::encode(hasher.finalize()).to_uppercase());
 
     let elapsed_ms = start_time.elapsed().as_secs_f64() * 1000.0;
 
+    // [수정 완료: 참조자 충돌(E0499) 해결]
     let fiat_payment = if is_rapidapi_paid { 1.00 } else { 0.00 };
-    let total_minted = fiat_payment * 1.1;
-    let user_credit = fiat_payment * 1.0;
-    let owner_dividend = fiat_payment * 0.1;
-    let reserve_5pct = total_minted * 0.05;
+    let (user_usable_credit, owner_dividend_credit, redeem_reserve_usd_10pct, total_minted_credit) = {
+        let mut ledger = state.ledger.write().unwrap();
+        if is_rapidapi_paid {
+            let user_mint = fiat_payment * 1.0;
+            let owner_mint = fiat_payment * 0.10;
+            let reserve_usd = fiat_payment * 0.10;
+
+            ledger.owner_dividend_cr += owner_mint;
+            ledger.protocol_reserve_usd += reserve_usd;
+            ledger.total_minted_cr += user_mint + owner_mint;
+
+            let current_bal = ledger.user_balances.get(&user_id).copied().unwrap_or(0.0) + user_mint;
+            let cost_cr = 1.0;
+            if current_bal >= cost_cr {
+                ledger.user_balances.insert(user_id.clone(), current_bal - cost_cr);
+                ledger.total_burned_cr += cost_cr;
+            } else {
+                ledger.user_balances.insert(user_id.clone(), current_bal);
+            }
+        }
+        (
+            *ledger.user_balances.get(&user_id).unwrap_or(&0.0),
+            ledger.owner_dividend_cr,
+            ledger.protocol_reserve_usd,
+            ledger.total_minted_cr
+        )
+    };
 
     let credit_ledger = CreditLedgerAttestation {
         rapidapi_verified: is_rapidapi_paid,
         caller_tier: tier_name,
         fiat_payment_usd: fiat_payment,
-        total_minted_credit: (total_minted * 1000.0).round() / 1000.0,
-        user_usable_credit: (user_credit * 1000.0).round() / 1000.0,
-        owner_dividend_credit: (owner_dividend * 1000.0).round() / 1000.0,
-        redeem_reserve_usd_10pct: (reserve_5pct * 1000.0).round() / 1000.0,
-        ledger_status: if is_rapidapi_paid {
-            "1:1.1_MINTED_OWNER_0.1_CREDITED".to_string()
-        } else {
-            "LEDGER_MINT_LOCKED_DIRECT_CALL".to_string()
-        },
+        total_minted_credit: (total_minted_credit * 1000.0).round() / 1000.0,
+        user_usable_credit: (user_usable_credit * 1000.0).round() / 1000.0,
+        owner_dividend_credit: (owner_dividend_credit * 1000.0).round() / 1000.0,
+        redeem_reserve_usd_10pct: (redeem_reserve_usd_10pct * 1000.0).round() / 1000.0,
+        ledger_status: if is_rapidapi_paid { "1:1_MINTED_OWNER_10PCT_CREDITED_AND_BURNED".to_string() } else { "LEDGER_MINT_LOCKED_EVALUATION".to_string() },
     };
 
     ReflexSolutionResponse {
-        status: "success".to_string(),
+        status: if is_connected { "hardware_active".to_string() } else { "hardware_disconnected".to_string() },
         domain: domain.to_string(),
         zeta: (zeta * 10000.0).round() / 10000.0,
         control_intensity: (control_intensity * 1000.0).round() / 1000.0,
-        state_mode,
-        hardware_seal_id,
-        equilibrium_converged: true,
+        state_mode, hardware_seal_id, equilibrium_converged: true,
         hardware_reflex_ms: (elapsed_ms * 10000.0).round() / 10000.0,
-        phi_embodied_cognition: phi_cognition,
-        trajectory_summary: history_summary,
+        cognitive_synthesis,
+        trajectory_summary: "Temporal Buffer Active: Secure frames retained.".to_string(),
         telemetry: HardwareTelemetryResponse {
-            allocated_fabric_node: assigned_node,
-            v_out_measured_v: (dynamic_vout * 10000.0).round() / 10000.0,
-            entropy_ent: (dynamic_ent * 10000.0).round() / 10000.0,
-            shock_rate_pct: (shock_index * 100.0).round(),
-            gen_cycle: dynamic_gen,
-            hardware_connected: hw.connected,
+            hardware_uid: real_uid, v_out_measured_v: real_vout, entropy_ent: real_ent,
+            shock_rate_pct: real_shock * 100.0, gen_cycle: real_gen, hardware_connected: is_connected,
         },
         credit_ledger,
     }
 }
 
-fn check_rapidapi_auth(headers: &HeaderMap) -> (bool, String) {
-    let has_user = headers.contains_key("x-rapidapi-user");
-    let sub_tier = headers.get("x-rapidapi-subscription")
-        .and_then(|v| v.to_str().ok())
-        .unwrap_or("NONE")
-        .to_string();
-
-    let is_paid_tier = has_user 
-        && sub_tier != "NONE" 
-        && !sub_tier.eq_ignore_ascii_case("BASIC") 
-        && !sub_tier.eq_ignore_ascii_case("FREE");
-
-    (is_paid_tier, sub_tier)
-}
-
-// 7대 도메인 설정 매핑 헬퍼 (WebSocket 스트림 자동 라우팅용)
-fn resolve_domain_config(domain: &str) -> (&'static str, f64) {
-    match domain.to_lowercase().as_str() {
-        "quant" | "quant-microstructure" => ("Quant-Microstructure", 0.99),
-        "universal" | "solve-universal-equilibrium" => ("Universal-Equilibrium", 0.95),
-        "pharma" | "pharma-bioreactor" => ("Pharma-Bioreactor", 0.91),
-        "battery" | "battery-energetics" => ("Battery-Energetics", 0.98),
-        "robotics" | "robotic-compliance" => ("Robotic-Compliance", 0.93),
-        "mobility" | "mobility-dynamics" => ("Mobility-Dynamics", 0.96),
-        "chemistry" | "precision-chemistry" => ("Precision-Chemistry", 0.94),
-        _ => ("Universal-Equilibrium", 0.95),
-    }
-}
-
-// 7대 핵심 REST 엔드포인트 핸들러
-async fn solve_universal(headers: HeaderMap, State(state): State<SharedState>, Json(p): Json<DisturbancePayload>) -> Json<ReflexSolutionResponse> {
-    let (is_paid, tier) = check_rapidapi_auth(&headers);
-    Json(compute_reflex("Universal-Equilibrium", &p, 0.95, state, is_paid, tier))
-}
-async fn predict_quant(headers: HeaderMap, State(state): State<SharedState>, Json(p): Json<DisturbancePayload>) -> Json<ReflexSolutionResponse> {
-    let (is_paid, tier) = check_rapidapi_auth(&headers);
-    Json(compute_reflex("Quant-Microstructure", &p, 0.99, state, is_paid, tier))
-}
-async fn predict_pharma(headers: HeaderMap, State(state): State<SharedState>, Json(p): Json<DisturbancePayload>) -> Json<ReflexSolutionResponse> {
-    let (is_paid, tier) = check_rapidapi_auth(&headers);
-    Json(compute_reflex("Pharma-Bioreactor", &p, 0.91, state, is_paid, tier))
-}
-async fn predict_battery(headers: HeaderMap, State(state): State<SharedState>, Json(p): Json<DisturbancePayload>) -> Json<ReflexSolutionResponse> {
-    let (is_paid, tier) = check_rapidapi_auth(&headers);
-    Json(compute_reflex("Battery-Energetics", &p, 0.98, state, is_paid, tier))
-}
-async fn predict_robotics(headers: HeaderMap, State(state): State<SharedState>, Json(p): Json<DisturbancePayload>) -> Json<ReflexSolutionResponse> {
-    let (is_paid, tier) = check_rapidapi_auth(&headers);
-    Json(compute_reflex("Robotic-Compliance", &p, 0.93, state, is_paid, tier))
-}
-async fn predict_mobility(headers: HeaderMap, State(state): State<SharedState>, Json(p): Json<DisturbancePayload>) -> Json<ReflexSolutionResponse> {
-    let (is_paid, tier) = check_rapidapi_auth(&headers);
-    Json(compute_reflex("Mobility-Dynamics", &p, 0.96, state, is_paid, tier))
-}
-async fn predict_chemistry(headers: HeaderMap, State(state): State<SharedState>, Json(p): Json<DisturbancePayload>) -> Json<ReflexSolutionResponse> {
-    let (is_paid, tier) = check_rapidapi_auth(&headers);
-    Json(compute_reflex("Precision-Chemistry", &p, 0.94, state, is_paid, tier))
-}
-
 // ==========================================
-// 5. 초저지연 WebSocket 스트리밍 핸들러 (신규)
+// 5. 리딤(Redemption) 트랜잭션 핸들러
 // ==========================================
-async fn ws_stream_handler(
-    Path(domain): Path<String>,
+async fn process_redemption(
     headers: HeaderMap,
-    ws: WebSocketUpgrade,
     State(state): State<SharedState>,
+    Json(req): Json<RedeemRequest>,
 ) -> impl IntoResponse {
-    let (is_paid, tier) = check_rapidapi_auth(&headers);
-    ws.on_upgrade(move |socket| handle_stream_socket(socket, domain, state, is_paid, tier))
-}
+    let user_id = headers.get("x-rapidapi-user").and_then(|v| v.to_str().ok()).unwrap_or("anonymous").to_string();
+    let mut ledger = state.ledger.write().unwrap();
 
-async fn handle_stream_socket(
-    socket: WebSocket,
-    domain_param: String,
-    state: SharedState,
-    is_paid: bool,
-    tier: String,
-) {
-    let (formal_domain, bias_damping) = resolve_domain_config(&domain_param);
-    let (mut sender, mut receiver) = socket.split();
-    let mut tick_counter: u64 = 0; // 세션별 틱 카운터
+    let user_balance = *ledger.user_balances.get(&user_id).unwrap_or(&0.0);
 
-    while let Some(msg_result) = receiver.next().await {
-        let msg = match msg_result {
-            Ok(m) => m,
-            Err(_) => break,
-        };
-
-        match msg {
-            Message::Text(text) => {
-                // [무임승차 방어벽] 비유료 세션은 50틱 도달 시 즉각 차단
-                if !is_paid && tick_counter >= 50 {
-                    let quota_exceeded = serde_json::json!({
-                        "status": "error",
-                        "code": 402,
-                        "error": "Payment Required: Evaluation Quota Exceeded (50 ticks limit reached).",
-                        "instruction": "Continuous institutional HFT streaming requires an Enterprise API License.",
-                        "license_url": "https://rapidapi.com/neoma-pcam/api/neoma-pcam-quant-reflex-hft"
-                    });
-                    let _ = sender.send(Message::Text(quota_exceeded.to_string().into())).await;
-                    let _ = sender.send(Message::Close(None)).await;
-                    break;
-                }
-
-                match serde_json::from_str::<DisturbancePayload>(&text) {
-                    Ok(payload) => {
-                        tick_counter += 1;
-                        let response = compute_reflex(
-                            formal_domain,
-                            &payload,
-                            bias_damping,
-                            state.clone(),
-                            is_paid,
-                            tier.clone(),
-                        );
-                        if let Ok(json_str) = serde_json::to_string(&response) {
-                            if sender.send(Message::Text(json_str.into())).await.is_err() {
-                                break;
-                            }
-                        }
-                    }
-                    Err(err) => {
-                        let err_json = serde_json::json!({
-                            "status": "error",
-                            "error": format!("Invalid JSON payload: {}", err)
-                        });
-                        let _ = sender.send(Message::Text(err_json.to_string().into())).await;
-                    }
-                }
-            }
-            Message::Binary(bin) => {
-                if !is_paid && tick_counter >= 50 {
-                    let _ = sender.send(Message::Close(None)).await;
-                    break;
-                }
-                if let Ok(payload) = serde_json::from_slice::<DisturbancePayload>(&bin) {
-                    tick_counter += 1;
-                    let response = compute_reflex(
-                        formal_domain,
-                        &payload,
-                        bias_damping,
-                        state.clone(),
-                        is_paid,
-                        tier.clone(),
-                    );
-                    if let Ok(bin_resp) = serde_json::to_vec(&response) {
-                        if sender.send(Message::Binary(bin_resp.into())).await.is_err() {
-                            break;
-                        }
-                    }
-                }
-            }
-            Message::Ping(payload) => {
-                if sender.send(Message::Pong(payload)).await.is_err() {
-                    break;
-                }
-            }
-            Message::Pong(_) => {}
-            Message::Close(_) => break,
-            _ => {}
-        }
+    // 1. 잔고 검증
+    if user_balance < req.amount_cr {
+        return (StatusCode::BAD_REQUEST, Json(serde_json::json!({
+            "error": "Insufficient CR balance",
+            "current_balance": user_balance,
+            "requested_amount": req.amount_cr
+        }))).into_response();
     }
-}
 
-// ==========================================
-// 6. Swagger & OpenAPI 스펙
-// ==========================================
-const SWAGGER_HTML: &str = r###"<!DOCTYPE html>
-<html lang="ko">
-<head>
-  <meta charset="UTF-8">
-  <title>NEOMA P-CAM 7-Domain API Suite</title>
-  <link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@5/swagger-ui.css" />
-  <style> 
-    body { margin: 0; background: #fafafa; } 
-    .topbar { display: none !important; } 
-    #credit-widget {
-      position: fixed; bottom: 20px; right: 20px; width: 340px;
-      background: #1e1e1e; color: #fff; border-radius: 12px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.4); padding: 20px;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; z-index: 9999;
-      border: 1px solid #444;
+    // 2. 10% Floor 가치 산정
+    let payout_usd = req.amount_cr * 0.10; 
+
+    // 3. 프로토콜 리저브 가드레일 (뱅크런 방지)
+    if ledger.protocol_reserve_usd < payout_usd {
+        return (StatusCode::INTERNAL_SERVER_ERROR, Json(serde_json::json!({
+            "error": "Floor Protection Guardrail: Insufficient Protocol Reserve",
+            "available_reserve_usd": ledger.protocol_reserve_usd,
+            "required_payout_usd": payout_usd
+        }))).into_response();
     }
-    #credit-widget h3 { margin: 0 0 15px 0; font-size: 16px; color: #4CAF50; border-bottom: 1px solid #333; padding-bottom: 10px; }
-    .credit-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 13px; }
-    .credit-val { font-weight: bold; color: #00E676; }
-    .policy-tag {
-      margin-top: 15px; padding: 10px; background: #2a2a2a; border-radius: 6px;
-      font-size: 11px; color: #bbb; line-height: 1.4; border-left: 3px solid #FF9800;
-    }
-    .btn-bind { 
-      display: block; width: 100%; padding: 10px; margin-top: 15px;
-      background: #6200EA; color: white; border: none; border-radius: 6px;
-      cursor: pointer; font-weight: bold; transition: background 0.3s; font-size: 13px;
-    }
-    .btn-bind:hover { background: #7C4DFF; }
-  </style>
-</head>
-<body>
-  <div id="swagger-ui"></div>
 
-  <div id="credit-widget">
-    <h3>💎 NEOMA 1:1.1 Dual-10% PoPW Tokenomics</h3>
-    <div class="credit-row"><span>Fiat Mint Ratio:</span> <span class="credit-val">$1.00 ➔ 1.10 CR</span></div>
-    <div class="credit-row"><span>User Usable Pool:</span> <span class="credit-val">1.00 CR (100% Usable)</span></div>
-    <div class="credit-row"><span>P-CAM Owner Node:</span> <span style="color:#38bdf8; font-weight:bold;">+10.0% Dual Credit (+0.10 CR)</span></div>
-    <div class="credit-row"><span>Protocol Reserve:</span> <span style="color:#fbbf24; font-weight:bold;">10.0% Guaranteed Floor (.10/CR)</span></div>
+    // 4. 원장 차감 및 소각 실행
+    ledger.user_balances.insert(user_id.clone(), user_balance - req.amount_cr);
+    ledger.total_burned_cr += req.amount_cr;
+    ledger.protocol_reserve_usd -= payout_usd;
 
-    <div class="policy-tag">
-      💡 <b>Security Policy:</b> 크레딧 발행(Minting)은 RapidAPI 프록시를 통과한 유료 세션(x-rapidapi-user 검증)에서만 활성화됩니다. 직접 호출 시 발행이 차단됩니다.
-    </div>
-    <button class="btn-bind" onclick="alert('Web3 Wallet Binding Initiated. Waiting for MetaMask...')">Bind Web3 Wallet</button>
-  </div>
-
-  <script src="https://unpkg.com/swagger-ui-dist@5/swagger-ui-bundle.js"></script>
-  <script>
-    window.onload = () => {
-      SwaggerUIBundle({
-        url: '/openapi.json',
-        dom_id: '#swagger-ui',
-        deepLinking: true,
-        presets: [SwaggerUIBundle.presets.apis, SwaggerUIBundle.SwaggerUIStandalonePreset],
-        layout: "BaseLayout"
-      });
+    let resp = RedeemResponse {
+        status: "success".to_string(),
+        user_id,
+        redeemed_cr: req.amount_cr,
+        payout_usd,
+        remaining_reserve_usd: ledger.protocol_reserve_usd,
+        message: "CR successfully redeemed at 10% cash floor. Tokens burned.".to_string(),
     };
-  </script>
-</body>
-</html>"###;
 
-const OPENAPI_SPEC: &str = r###"{
-  "openapi": "3.0.0",
-  "info": {
-    "title": "NEOMA P-CAM 7-Domain API Suite",
-    "version": "5.3.0",
-    "description": "Deterministic Physical Reflex & Silicon Root-of-Trust Engine"
-  },
-  "paths": {
-    "/v1/quant/predict": {
-      "post": {
-        "tags": ["Institutional Quant HFT"],
-        "summary": "Execute LOB Shock Damping",
-        "description": "Direct silicon reflex convergence for high-frequency order book dynamics. Computes physical damping ratio (zeta) within 15µs to mitigate market sweep slippage.",
-        "operationId": "executeLOBShockDamping",
-        "requestBody": { "$ref": "#/components/requestBodies/Payload" },
-        "responses": {
-          "200": { "$ref": "#/components/responses/Solution" },
-          "402": { "description": "Payment Required - Institutional Enterprise License Required" },
-          "429": { "description": "Too Many Requests - Evaluation Quota Exceeded" }
-        }
-      }
-    },
-    "/v1/solve-universal-equilibrium": {
-      "post": {
-        "tags": ["P-CAM Reflex Core"],
-        "summary": "Universal Equilibrium Solver",
-        "requestBody": { "$ref": "#/components/requestBodies/Payload" },
-        "responses": { "200": { "$ref": "#/components/responses/Solution" } }
-      }
-    },
-    "/v1/pharma/predict": {
-      "post": {
-        "tags": ["P-CAM Reflex Core"],
-        "summary": "Pharma Bioreactor Kinematics",
-        "requestBody": { "$ref": "#/components/requestBodies/Payload" },
-        "responses": { "200": { "$ref": "#/components/responses/Solution" } }
-      }
-    },
-    "/v1/battery/predict": {
-      "post": {
-        "tags": ["P-CAM Reflex Core"],
-        "summary": "Battery Energetics & Thermal Runaway Mitigation",
-        "requestBody": { "$ref": "#/components/requestBodies/Payload" },
-        "responses": { "200": { "$ref": "#/components/responses/Solution" } }
-      }
-    },
-    "/v1/robotics/predict": {
-      "post": {
-        "tags": ["P-CAM Reflex Core"],
-        "summary": "Robotic Compliance & Structural Shock Damping",
-        "requestBody": { "$ref": "#/components/requestBodies/Payload" },
-        "responses": { "200": { "$ref": "#/components/responses/Solution" } }
-      }
-    },
-    "/v1/mobility/predict": {
-      "post": {
-        "tags": ["P-CAM Reflex Core"],
-        "summary": "Mobility Dynamics & Active Suspension",
-        "requestBody": { "$ref": "#/components/requestBodies/Payload" },
-        "responses": { "200": { "$ref": "#/components/responses/Solution" } }
-      }
-    },
-    "/v1/chemistry/predict": {
-      "post": {
-        "tags": ["P-CAM Reflex Core"],
-        "summary": "Precision Synthesis & Runaway Suppression",
-        "requestBody": { "$ref": "#/components/requestBodies/Payload" },
-        "responses": { "200": { "$ref": "#/components/responses/Solution" } }
-      }
-    }
-  },
-  "components": {
-    "requestBodies": {
-      "Payload": {
-        "required": true,
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "flux_potential_v": { "type": "number", "example": 0.082 },
-                "gradient_velocity": { "type": "number", "example": 520.0 },
-                "gradient_acceleration": { "type": "number", "example": 16000.0 },
-                "active_strain": { "type": "number", "example": 1.55 }
-              },
-              "required": ["flux_potential_v", "gradient_velocity", "gradient_acceleration", "active_strain"]
-            }
-          }
-        }
-      }
-    },
-    "responses": {
-      "Solution": {
-        "description": "Deterministic Reflex Response with Real Telemetry & Ledger",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "status": { "type": "string", "example": "success" },
-                "domain": { "type": "string", "example": "Quant-Microstructure" },
-                "zeta": { "type": "number", "example": 0.9981 },
-                "control_intensity": { "type": "number", "example": 0.582 },
-                "state_mode": { "type": "integer", "example": 2 },
-                "hardware_seal_id": { "type": "string", "example": "SEAL-CORE03-1794022434-..." },
-                "equilibrium_converged": { "type": "boolean", "example": true },
-                "hardware_reflex_ms": { "type": "number", "example": 0.015 },
-                "phi_embodied_cognition": { "type": "string", "example": "[Phi-3 Cognitive Synthesis] Temporal trajectory indicates ESCALATING disturbance..." },
-                "trajectory_summary": { "type": "string", "example": "Temporal Buffer Active: 12 secure frames retained." },
-                "telemetry": {
-                  "type": "object",
-                  "properties": {
-                    "allocated_fabric_node": { "type": "string", "example": "PCAM-FABRIC-ALPHA" },
-                    "v_out_measured_v": { "type": "number", "example": 0.085 },
-                    "entropy_ent": { "type": "number", "example": 0.0345 },
-                    "shock_rate_pct": { "type": "number", "example": 85.0 },
-                    "gen_cycle": { "type": "integer", "example": 13889185 },
-                    "hardware_connected": { "type": "boolean", "example": true }
-                  }
-                },
-                "credit_ledger": {
-                  "type": "object",
-                  "properties": {
-                    "rapidapi_verified": { "type": "boolean", "example": false },
-                    "caller_tier": { "type": "string", "example": "NONE" },
-                    "fiat_payment_usd": { "type": "number", "example": 0.0 },
-                    "total_minted_credit": { "type": "number", "example": 0.0 },
-                    "user_usable_credit": { "type": "number", "example": 0.0 },
-                    "owner_dividend_credit": { "type": "number", "example": 0.0 },
-                    "redeem_reserve_usd_10pct": { "type": "number", "example": 0.0 },
-                    "ledger_status": { "type": "string", "example": "LEDGER_MINT_LOCKED_DIRECT_CALL" }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-}"###;
-
-async fn swagger_ui() -> Html<&'static str> { Html(SWAGGER_HTML) }
-async fn openapi_spec() -> impl IntoResponse { ([(header::CONTENT_TYPE, "application/json")], OPENAPI_SPEC) }
-async fn root_health() -> impl IntoResponse {
-    ([(header::CONTENT_TYPE, "application/json")], r#"{"status":"online","engine":"NEOMA P-CAM 7-Domain Suite","health":"healthy"}"#)
+    (StatusCode::OK, Json(resp)).into_response()
 }
 
+// ==========================================
+// 6. 라우팅 및 유틸리티
+// ==========================================
+fn check_rapidapi_auth(headers: &HeaderMap) -> (bool, String, String) {
+    let user_id = headers.get("x-rapidapi-user").and_then(|v| v.to_str().ok()).unwrap_or("anonymous").to_string();
+    let sub_tier = headers.get("x-rapidapi-subscription").and_then(|v| v.to_str().ok()).unwrap_or("NONE").to_string();
+    let is_paid_tier = user_id != "anonymous" && sub_tier != "NONE" && !sub_tier.eq_ignore_ascii_case("BASIC") && !sub_tier.eq_ignore_ascii_case("FREE");
+    (is_paid_tier, sub_tier, user_id)
+}
+
+fn verify_access_quota(is_paid: bool, state: &SharedState) -> Result<(), ErrorResponse> {
+    if !is_paid {
+        let current_count = state.demo_counter.fetch_add(1, Ordering::SeqCst);
+        if current_count >= 50 {
+            return Err(ErrorResponse { error: "Payment Required".to_string(), code: 402, message: "Evaluation Quota Exceeded (50 calls limit).".to_string() });
+        }
+    }
+    Ok(())
+}
+
+async fn handle_rest_request(domain: &str, bias: f64, headers: HeaderMap, State(state): State<SharedState>, Json(p): Json<DisturbancePayload>) -> impl IntoResponse {
+    let (is_paid, tier, user_id) = check_rapidapi_auth(&headers);
+    if let Err(err) = verify_access_quota(is_paid, &state) { return (StatusCode::PAYMENT_REQUIRED, Json(serde_json::to_value(err).unwrap())).into_response(); }
+    let response = compute_reflex(domain, &p, bias, state, is_paid, tier, user_id, true).await;
+    (StatusCode::OK, Json(serde_json::to_value(response).unwrap())).into_response()
+}
+
+async fn solve_universal(headers: HeaderMap, state: State<SharedState>, p: Json<DisturbancePayload>) -> impl IntoResponse { handle_rest_request("Universal-Equilibrium", 0.95, headers, state, p).await }
+async fn predict_quant(headers: HeaderMap, state: State<SharedState>, p: Json<DisturbancePayload>) -> impl IntoResponse { handle_rest_request("Quant-Microstructure", 0.99, headers, state, p).await }
+async fn predict_pharma(headers: HeaderMap, state: State<SharedState>, p: Json<DisturbancePayload>) -> impl IntoResponse { handle_rest_request("Pharma-Bioreactor", 0.91, headers, state, p).await }
+async fn predict_battery(headers: HeaderMap, state: State<SharedState>, p: Json<DisturbancePayload>) -> impl IntoResponse { handle_rest_request("Battery-Energetics", 0.98, headers, state, p).await }
+async fn predict_robotics(headers: HeaderMap, state: State<SharedState>, p: Json<DisturbancePayload>) -> impl IntoResponse { handle_rest_request("Robotic-Compliance", 0.93, headers, state, p).await }
+async fn predict_mobility(headers: HeaderMap, state: State<SharedState>, p: Json<DisturbancePayload>) -> impl IntoResponse { handle_rest_request("Mobility-Dynamics", 0.96, headers, state, p).await }
+async fn predict_chemistry(headers: HeaderMap, state: State<SharedState>, p: Json<DisturbancePayload>) -> impl IntoResponse { handle_rest_request("Precision-Chemistry", 0.94, headers, state, p).await }
+
+// ==========================================
+// 7. 메인 서버 실행
+// ==========================================
 #[tokio::main]
 async fn main() {
-    // 1. 환경 변수(PCAM_SERIAL_PORT) 최우선 감지 -> 미지정 시 OS 기본값 폴백
-    let serial_port = std::env::var("PCAM_SERIAL_PORT").unwrap_or_else(|_| {
-        if cfg!(target_os = "windows") {
-            "COM3".to_string()
-        } else {
-            "/dev/ttyUSB0".to_string() // Linux / Ubuntu 상용 서버 기본값
-        }
+    let serial_port = std::env::var("PCAM_SERIAL_PORT").unwrap_or_else(|_| "COM3".to_string());
+
+    let hw_state = Arc::new(RwLock::new(HwTelemetry::default()));
+    spawn_serial_reader(hw_state.clone(), serial_port.clone());
+
+    let shared_state = Arc::new(AppState {
+        hw: hw_state,
+        http_client: Client::new(),
+        demo_counter: AtomicUsize::new(0),
+        ledger: Arc::new(RwLock::new(LedgerState::default())),
     });
 
-    let shared_state: SharedState = Arc::new(RwLock::new(HwTelemetry::default()));
-    spawn_serial_reader(shared_state.clone(), serial_port.clone());
-
     let app = Router::new()
-        .route("/", get(root_health))
-        .route("/health", get(root_health))
-        .route("/docs", get(swagger_ui))
-        .route("/openapi.json", get(openapi_spec))
         .route("/v1/quant/predict", post(predict_quant))
         .route("/v1/solve-universal-equilibrium", post(solve_universal))
         .route("/v1/pharma/predict", post(predict_pharma))
@@ -677,16 +395,15 @@ async fn main() {
         .route("/v1/robotics/predict", post(predict_robotics))
         .route("/v1/mobility/predict", post(predict_mobility))
         .route("/v1/chemistry/predict", post(predict_chemistry))
-        .route("/v1/:domain/stream", get(ws_stream_handler))
+        .route("/v1/tokenomics/redeem", post(process_redemption))
         .with_state(shared_state);
 
     let addr = "0.0.0.0:8000";
     println!("==================================================");
-    println!(" [P-CAM 7-DOMAIN GATEWAY] Unified Core Active (Rust/Axum)");
-    println!(" * Listening on  : http://{}", addr);
-    println!(" * Hardware Port : {} (Override: PCAM_SERIAL_PORT)", serial_port);
-    println!(" * Health Check  : http://{}/health", addr);
-    println!(" * WebSocket WSS : ws://{}/v1/:domain/stream", addr);
+    println!(" [P-CAM 7-DOMAIN GATEWAY] Dual-Valuation Ledger Active");
+    println!(" * Hardware Port : {} (Default: COM3)", serial_port);
+    println!(" * Tokenomics    : Utility $1.00 | Redeem Floor $0.10");
+    println!(" * Endpoints     : 7 Domains + /v1/tokenomics/redeem");
     println!("==================================================");
 
     let listener = tokio::net::TcpListener::bind(addr).await.unwrap();
