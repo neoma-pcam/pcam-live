@@ -1,0 +1,30 @@
+{
+  "status": "hardware_active",
+  "domain": "Universal-Equilibrium",
+  "zeta": 1.0989,
+  "control_intensity": 0.798,
+  "state_mode": 3,
+  "hardware_reflex_ms": 0.0089,
+  "equilibrium_converged": true,
+  "hardware_seal_id": "SEAL-0051003C-D7EF2CE6E7007A13FC46784A4676B2052A4B56657868D00C80DC6F5D2CC50549",
+  "cognitive_synthesis": "[Physical AI Core] Domain: Universal-Equilibrium | Regime: Overdamped Stability | Equilibrium Converged (Sub-ms Deterministic)",
+  "telemetry": {
+    "hardware_uid": "0051003C",
+    "hardware_connected": true,
+    "v_out_measured_v": 0.5494,
+    "entropy_ent": 0.0011,
+    "shock_rate_pct": 200.0,
+    "gen_cycle": 653744
+  },
+  "trajectory_summary": "Temporal Buffer Active: Secure frames retained.",
+  "credit_ledger": {
+    "caller_tier": "NONE",
+    "rapidapi_verified": false,
+    "fiat_payment_usd": 0.0,
+    "total_minted_credit": 0.0,
+    "user_usable_credit": 0.0,
+    "owner_dividend_credit": 0.0,
+    "redeem_reserve_usd_10pct": 0.0,
+    "ledger_status": "LEDGER_MINT_LOCKED_EVALUATION"
+  }
+}
