@@ -570,32 +570,29 @@
     const elShock = document.getElementById('val-shock');
     const elSeal = document.getElementById('val-seal');
 
-    let cycleCount = 82920115;
-    const baseSeal = "SEAL-0051003C3434510C32333934-";
-    const hexChars = "0123456789ABCDEF";
-
-    setInterval(() => {
-        cycleCount++;
-        elCycle.innerText = cycleCount.toLocaleString();
-
-        const vout = (0.5498 + getDeterministicNoise() * 0.0014).toFixed(4);
-        elVout.innerText = `${vout} V`;
-
-        const entropy = (0.0012 + getDeterministicNoise() * 0.0002).toFixed(4);
-        elEntropy.innerText = `${entropy} ENT`;
-
-        const latency = (0.0160 + getDeterministicNoise() * 0.0004).toFixed(4);
-        elLatency.innerText = `${latency} ms`;
-
-        const shock = (200.0 + getDeterministicNoise() * 0.2).toFixed(1);
-        elShock.innerText = `${shock} %`;
-
-        if (getDeterministicNoise() > 0.8) {
-            let suffix = "";
-            for(let i=0; i<4; i++) suffix += hexChars[Math.floor(getDeterministicNoise() * 16)];
-            elSeal.innerText = baseSeal + suffix;
+    
+    // === 100% Genuine Hardware Telemetry Polling ===
+    async function syncRealSiliconTelemetry() {
+        try {
+            const res = await fetch('https://api.neoma-pcam.com/v1/telemetry');
+            if (res.ok) {
+                const data = await res.json();
+                if (data.hardware_connected) {
+                    if (elVout) elVout.innerText = Number(data.v_out_measured_v).toFixed(4) + ' V';
+                    if (elCycle) elCycle.innerText = Number(data.gen_cycle).toLocaleString();
+                    if (elEntropy) elEntropy.innerText = Number(data.entropy_ent).toFixed(4) + ' ENT';
+                    if (elShock) elShock.innerText = Number(data.shock_rate_pct).toFixed(1) + ' %';
+                    const badge = document.querySelector('.badge-live');
+                    if (badge) badge.innerText = "LINK: ACTIVE (REAL SILICON)";
+                }
+            }
+        } catch (err) {
+            console.error('Telemetry fetch error:', err);
         }
-    }, 50);
+    }
+    setInterval(syncRealSiliconTelemetry, 500);
+    syncRealSiliconTelemetry();
+
 
     // 4. Live Interactive Controller (Fetch API)
     async function sendPhysicalShock() {
@@ -624,6 +621,9 @@
 
             elVout.innerText = `${data.telemetry?.v_out_measured_v || 0.5504} V`;
             elSeal.innerText = data.hardware_seal_id || "SEAL-0051003C3434510C32333934-8F4C";
+            if (data.hardware_reflex_ms && elLatency) {
+                elLatency.innerText = Number(data.hardware_reflex_ms).toFixed(4) + " ms";
+            }
             alert(`[Enclave Success] RTT: ${rtt.toFixed(2)}ms | Zeta: ${data.zeta}`);
         } catch (e) {
             const rtt = performance.now() - startTime;
