@@ -12,8 +12,6 @@
 
 # NEOMA P-CAM 003: Physical AI Adaptive Damping Interface
 
-# NEOMA P-CAM 003: Physical AI Adaptive Damping Interface
-
 > **Project Status: Hardware-in-the-Loop (HIL) Interface Prototype & Client Attestation SDK**  
 > This repository provides the official client attestation harness and real-time streaming interface designed to benchmark ultra-low latency host integration with the P-CAM (Predictive Control Adaptive Material) dynamic damping core.
 
