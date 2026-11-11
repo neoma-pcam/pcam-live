@@ -12,14 +12,16 @@
 
 # NEOMA P-CAM 003: Physical AI Adaptive Damping Interface
 
+# NEOMA P-CAM 003: Physical AI Adaptive Damping Interface
+
 > **Project Status: Hardware-in-the-Loop (HIL) Interface Prototype & Client Attestation SDK**  
-> 본 저장소는 실리콘/소재 레벨의 비평형 감쇠(P-CAM: Predictive Control Adaptive Material) 하드웨어 코어와 호스트 시스템 간의 초저지연 직결을 검증하기 위한 인터페이스 및 스트리밍 프로토타입입니다.
+> This repository provides the official client attestation harness and real-time streaming interface designed to benchmark ultra-low latency host integration with the P-CAM (Predictive Control Adaptive Material) dynamic damping core.
 
 ## Architecture Overview
-* **Hardware Layer**: P-CAM Physical Substrate (Microcontroller & Analog Telemetry via Serial)
+* **Hardware Layer**: P-CAM Physical Substrate (**Proprietary & Confidential IP** — Silicon Enclave & In-Material Damping Telemetry)
 * **Gateway Layer**: Rust (Axum) Sub-millisecond Shock Damping & Telemetry Multiplexer
 * **Streaming Protocol**: Bidirectional WebSocket (`/v1/:domain/stream`)
-* **Evaluation Mode**: 50-tick local client evaluation gate enabled for sandbox benchmarking.
+* **Evaluation Mode**: 50-tick local client evaluation gate enabled for zero-trust sandbox benchmarking.
 
 ⚡ **100% Zero-PRNG Hardware Reflex Solver:** We have permanently eradicated pseudo-random number generators (PRNG, `random`, `np.random`) from our entire system. P-CAM relies exclusively on **Deterministic Modular Algebra** and pure silicon telemetry from the P-CAM 003 hardware accelerator. 
 
