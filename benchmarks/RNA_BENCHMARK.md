@@ -41,3 +41,12 @@ Active Edges    : 739 coupling edges
 Reflex Latency  : 0.0061 ms (6.1 µs)
 Physical Damping: zeta = 1.0254
 Hardware Seal   : SEAL-0051003C3434510C32333934-6764398500352925D88B28138BD11F6DEB36616CC7ACBCFF687EBD781D2CE123
+```
+## 5. Independent Reproducibility Suite
+
+```bash
+`git clone https://github.com/neoma-pcam/pcam-live.git`
+cd pcam-live
+python pcam_rna_folding.py
+```
+
