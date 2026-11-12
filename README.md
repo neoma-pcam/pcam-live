@@ -261,7 +261,7 @@ class PCAMSampler(dimod.Sampler):
     parameters = {}
     properties = {}
 
-    def __init__(self, endpoint="[https://api.neoma-pcam.com/v1/solve-universal-equilibrium](https://api.neoma-pcam.com/v1/solve-universal-equilibrium)"):
+    def __init__(self, endpoint="https://api.neoma-pcam.com/v1/solve-universal-equilibrium"):
         self.endpoint = endpoint
 
     def sample(self, bqm, **kwargs):
