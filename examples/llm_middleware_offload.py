@@ -3,7 +3,7 @@ NEOMA P-CAM: Cloud LLM & Data Center Inference Middleware Offload
 -----------------------------------------------------------------
 Drop-in pre-inference middleware wrapper for vLLM, PyTorch, or custom routing
 clusters. Offloads 90%+ of stiff non-linear state relaxation and dynamic
-boundary stabilization to P-CAM (/v1/equilibrium/predict) in <0.27ms on room-
+boundary stabilization to P-CAM (/v1/solve-universal-equilibrium) in <0.27ms on room-
 temperature silicon—slashing GPU cluster power draw and thermal throttling
 without requiring any server rack hardware modification.
 
@@ -30,7 +30,7 @@ class OffloadResult:
 class PCAMInferenceMiddleware:
     def __init__(self, rapidapi_key: str | None = None):
         self.api_key = rapidapi_key or os.getenv("PCAM_RAPIDAPI_KEY", "YOUR_RAPIDAPI_FREE_KEY")
-        self.endpoint = "https://neoma-p-cam-hyper-physical-control.p.rapidapi.com/v1/equilibrium/predict"
+        self.endpoint = "https://neoma-p-cam-hyper-physical-control.p.rapidapi.com/v1/solve-universal-equilibrium"
         self.headers = {
             "Content-Type": "application/json",
             "x-rapidapi-host": "neoma-p-cam-hyper-physical-control.p.rapidapi.com",
