@@ -1,9 +1,9 @@
-﻿# NEOMA P-CAM: Room-Temperature Physical Ising Solver & Silicon Root-of-Trust (v5.3.0)
+# NEOMA P-CAM: Room-Temperature Physical Ising Solver & Silicon Root-of-Trust (v5.3.0)
 
 [![Live Console](https://img.shields.io/badge/Live_Console-10b981?style=for-the-badge)](https://neoma-pcam.github.io/pcam-live/)
 [![Swagger API Docs](https://img.shields.io/badge/Swagger_API_Docs-3b82f6?style=for-the-badge)](https://api.neoma-pcam.com/docs)
 [![Quant HFT](https://img.shields.io/badge/Quant_Reflex_HFT_($499+)-8b5cf6?style=for-the-badge)](https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control)
-[![Universal Solver](https://img.shields.io/badge/Universal_Solver_($30/mo)-06b6d4?style=for-the-badge&labelColor=000000)](https://rapidapi.com/shs15199702/api/gp-pcam-universal-physical-solver)
+[![Universal Solver](https://img.shields.io/badge/Universal_Solver_(2,000 Free/mo)-06b6d4?style=for-the-badge&labelColor=000000)](https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control)
 [![Enterprise Hub](https://img.shields.io/badge/Enterprise_Hub-purple?style=for-the-badge)](https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control)
 [![D-Wave Ocean Compatible](https://img.shields.io/badge/D--Wave_Ocean_Compatible-1e293b?style=for-the-badge)](https://github.com/neoma-pcam/pcam-live/tree/main/pcam-sampler)
 [![Zenodo DOI](https://img.shields.io/badge/Zenodo_DOI-475569?style=for-the-badge)](https://doi.org/10.5281/zenodo.23644655)
@@ -31,7 +31,7 @@ Institutional clients, HFT quant desks, and autonomous systems can interface dir
 * **Interactive Web Telemetry Console:** 👉 [NEOMA P-CAM Live Web Portal (Real-time 50Hz)](https://neoma-pcam.github.io/pcam-live/)
 * **Interactive Swagger UI (OpenAPI Docs):** 👉 [P-CAM OpenAPI Specification (7-Domain)](https://api.neoma-pcam.com/docs)
 * **Quant Reflex HFT Enclave (RapidAPI):** 👉 [NEOMA P-CAM Quant Reflex HFT ($499+)](https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control)
-* **Universal Physical Solver (RapidAPI):** 👉 [GP-PCAM Universal Physical Solver ($30/mo)](https://rapidapi.com/shs15199702/api/gp-pcam-universal-physical-solver)
+* **Universal Physical Solver (RapidAPI):** 👉 [GP-PCAM Universal Physical Solver (2,000 Free/mo)](https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control)
 * **Enterprise Hyper Physical Hub (RapidAPI):** 👉 [NEOMA P-CAM Enterprise Hub](https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control)
 * **Direct Production Gateway Node:** 👉 [https://api.neoma-pcam.com](https://api.neoma-pcam.com)
 
@@ -182,7 +182,7 @@ Rather than cycling through trillions of software iterations, P-CAM leverages su
 
 | Domain | Production Endpoint | Target Physics & Industrial Use Case | Measured Latency | Dedicated Access |
 | :--- | :--- | :--- | :--- | :--- |
-| **Universal Core** | `/v1/solve-universal-equilibrium` | Thermodynamic & Physical Equilibrium Solver | `0.0066 ms` | [Universal Solver ($30/mo)](https://rapidapi.com/shs15199702/api/gp-pcam-universal-physical-solver) |
+| **Universal Core** | `/v1/solve-universal-equilibrium` | Thermodynamic & Physical Equilibrium Solver | `0.0066 ms` | [RapidAPI Hub (2,000 Free / $499+)](https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control) |
 | **Quant HFT** | `/v1/quant/predict` | LOB Microstructure Shock Damping & Slippage Arrest | `0.0066 ms` | [Quant HFT ($499+)](https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control) |
 | **Battery** | `/v1/battery/predict` | Solid-State Energetics & Thermal Runaway Suppression | `0.0072 ms` | [Enterprise Hub](https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control) |
 | **Pharma** | `/v1/pharma/predict` | Bioreactor Shear Stress & Dynamic Fluid Regulation | `0.0081 ms` | [Enterprise Hub](https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control) |
