@@ -29,7 +29,7 @@
 Institutional clients, HFT quant desks, and autonomous systems can interface directly with the P-CAM production cluster through the following verified access points:
 
 * **Interactive Web Telemetry Console:** 👉 [NEOMA P-CAM Live Web Portal (Real-time 50Hz)](https://neoma-pcam.github.io/pcam-live/)
-* **Interactive Swagger UI (OpenAPI Docs):** 👉 [P-CAM OpenAPI Specification (7-Domain)](https://api.neoma-pcam.com/docs)
+* **Interactive Swagger UI (OpenAPI Docs):** 👉 [P-CAM OpenAPI Specification (8-Domain)](https://api.neoma-pcam.com/docs)
 * **Quant Reflex HFT Enclave (RapidAPI):** 👉 [NEOMA P-CAM Quant Reflex HFT ($499+)](https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control)
 * **Universal Physical Solver (RapidAPI):** 👉 [GP-PCAM Universal Physical Solver (2,000 Free/mo)](https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control)
 * **Enterprise Hyper Physical Hub (RapidAPI):** 👉 [NEOMA P-CAM Enterprise Hub](https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control)
