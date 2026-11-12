@@ -48,7 +48,7 @@ Designed for **cloud-coupled execution routers, institutional TWAP/VWAP engines,
 ```python
 import requests
 
-url = "[https://neoma-p-cam-hyper-physical-control.p.rapidapi.com/v1/quant/predict](https://neoma-p-cam-hyper-physical-control.p.rapidapi.com/v1/quant/predict)"
+url = "https://neoma-p-cam-hyper-physical-control.p.rapidapi.com/v1/quant/predict"
 headers = {
     "Content-Type": "application/json",
     "x-rapidapi-host": "neoma-p-cam-hyper-physical-control.p.rapidapi.com",

@@ -8,7 +8,7 @@ import time
 import requests
 
 RAPIDAPI_KEY = os.getenv("PCAM_RAPIDAPI_KEY", "YOUR_RAPIDAPI_KEY")
-URL = "[https://neoma-p-cam-hyper-physical-control.p.rapidapi.com/v1/quant/predict](https://neoma-p-cam-hyper-physical-control.p.rapidapi.com/v1/quant/predict)"
+URL = "https://neoma-p-cam-hyper-physical-control.p.rapidapi.com/v1/quant/predict"
 
 HEADERS = {
     "Content-Type": "application/json",
