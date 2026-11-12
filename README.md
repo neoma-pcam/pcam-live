@@ -37,6 +37,39 @@ Institutional clients, HFT quant desks, and autonomous systems can interface dir
 
 ---
 
+
+
+---
+
+## ⚡ Hummingbot & Quant HFT Quickstart (2,000 Free Requests/mo)
+
+Algorithmic traders and market makers can plug P-CAM's sub-millisecond silicon damping (/v1/quant/predict) directly into **Hummingbot** or custom execution loops to mitigate toxic order flow and inventory skew without iterative Monte Carlo latency:
+
+```python
+import requests
+
+url = "https://neoma-p-cam-hyper-physical-control.p.rapidapi.com/v1/quant/predict"
+headers = {
+    "Content-Type": "application/json",
+    "x-rapidapi-host": "neoma-p-cam-hyper-physical-control.p.rapidapi.com",
+    "x-rapidapi-key": "YOUR_RAPIDAPI_FREE_KEY"  # 2,000 free calls/mo
+}
+payload = {
+    "flux_potential_v": 1.85,      # Normalized LOB imbalance shock
+    "gradient_velocity": 0.42,     # Mid-price velocity
+    "gradient_acceleration": 14.6, # Order flow acceleration
+    "active_strain": 0.015         # Net inventory skew
+}
+
+res = requests.post(url, json=payload, headers=headers).json()
+print(res["zeta"], res["control_intensity"], res["hardware_seal_id"])
+```
+
+* 📂 **Full Quant Quickstart:** [examples/quant_hft_quickstart.py](./examples/quant_hft_quickstart.py)
+* 🤖 **Hummingbot Market-Making Spread Guard:** [examples/hummingbot_lob_guard.py](./examples/hummingbot_lob_guard.py)
+
+---
+
 ## 🏛️ 2. Technical Philosophy: P-CAM & NEOMA
 
 * **P-CAM (Predictive Control Adaptive Material):** P-CAM does not operate as an abstract, disconnected mathematical simulation. By directly sensing physical substrate conditions (PA1 pin telemetry) in real time, P-CAM diagnoses, predicts, and dynamically controls adaptive material dynamics across hostile and high-frequency environments.
@@ -326,32 +359,3 @@ P-CAM enforces a 3-tier immutable defense mechanism grounded in raw physical ent
 
 * **Client SDK & API Specification:** Apache 2.0 / MIT License (see [LICENSE](LICENSE))
 * **Enclave Core & Neural Hardware Logic:** Proprietary & Confidential (NEOMA IP)
-
----
-
-## ⚡ Hummingbot & Quant HFT Quickstart (2,000 Free Requests/mo)
-
-Algorithmic traders and market makers can plug P-CAM's sub-millisecond silicon damping (/v1/quant/predict) directly into **Hummingbot** or custom execution loops to mitigate toxic order flow and inventory skew without iterative Monte Carlo latency:
-
-```python
-import requests
-
-url = "https://neoma-p-cam-hyper-physical-control.p.rapidapi.com/v1/quant/predict"
-headers = {
-    "Content-Type": "application/json",
-    "x-rapidapi-host": "neoma-p-cam-hyper-physical-control.p.rapidapi.com",
-    "x-rapidapi-key": "YOUR_RAPIDAPI_FREE_KEY"  # 2,000 free calls/mo
-}
-payload = {
-    "flux_potential_v": 1.85,      # Normalized LOB imbalance shock
-    "gradient_velocity": 0.42,     # Mid-price velocity
-    "gradient_acceleration": 14.6, # Order flow acceleration
-    "active_strain": 0.015         # Net inventory skew
-}
-
-res = requests.post(url, json=payload, headers=headers).json()
-print(res["zeta"], res["control_intensity"], res["hardware_seal_id"])
-```
-
-* 📂 **Full Quant Quickstart:** [examples/quant_hft_quickstart.py](./examples/quant_hft_quickstart.py)
-* 🤖 **Hummingbot Market-Making Spread Guard:** [examples/hummingbot_lob_guard.py](./examples/hummingbot_lob_guard.py)
