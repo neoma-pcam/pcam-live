@@ -183,7 +183,7 @@ Rather than cycling through trillions of software iterations, P-CAM leverages su
 | Domain | Production Endpoint | Target Physics & Industrial Use Case | Measured Latency | Dedicated Access |
 | :--- | :--- | :--- | :--- | :--- |
 | **Universal Core** | `/v1/solve-universal-equilibrium` | Thermodynamic & Physical Equilibrium Solver | `0.0066 ms` | [Universal Solver ($30/mo)](https://rapidapi.com/shs15199702/api/gp-pcam-universal-physical-solver) |
-| **Quant HFT** | `/v1/quant/predict` | LOB Microstructure Shock Damping & Slippage Arrest | `0.0066 ms` | [Quant HFT ($499+)](https://rapidapi.com/shs15199702/api/neoma-p-cam-quant-reflex-hft) |
+| **Quant HFT** | `/v1/quant/predict` | LOB Microstructure Shock Damping & Slippage Arrest | `0.0066 ms` | [Quant HFT ($499+)](https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control) |
 | **Battery** | `/v1/battery/predict` | Solid-State Energetics & Thermal Runaway Suppression | `0.0072 ms` | [Enterprise Hub](https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control) |
 | **Pharma** | `/v1/pharma/predict` | Bioreactor Shear Stress & Dynamic Fluid Regulation | `0.0081 ms` | [Enterprise Hub](https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control) |
 | **Robotics** | `/v1/robotics/predict` | High-Frequency Compliance & Kinematic Singularity Damping | `0.0068 ms` | [Enterprise Hub](https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control) |
