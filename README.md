@@ -65,6 +65,7 @@ res = requests.post(url, json=payload, headers=headers).json()
 print(res["zeta"], res["control_intensity"], res["hardware_seal_id"])
 ```
 
+* 🌐 **All-Industry 7-Domain Starter & Mapping Guide:** [`examples/all_industry_starter.py`](./examples/all_industry_starter.py) | [`examples/README.md`](./examples/README.md)
 * 📉 **Slippage Mitigation & TWAP/VWAP Slicer:** [examples/slippage_execution_optimizer.py](./examples/slippage_execution_optimizer.py)
 * 🤖 **Hummingbot Spread & Inventory Guard:** [examples/hummingbot_lob_guard.py](./examples/hummingbot_lob_guard.py)
 * 📂 **30-Second Quant Latency & Seal Test:** [examples/quant_hft_quickstart.py](./examples/quant_hft_quickstart.py)
