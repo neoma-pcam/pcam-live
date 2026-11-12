@@ -1,6 +1,6 @@
 """
 NEOMA P-CAM: Quant HFT & LOB Shock Damping Quickstart
-Free Tier (2,000 requests/mo): [https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control](https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control)
+Free Tier (2,000 requests/mo): https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control
 """
 
 import os

@@ -10,7 +10,7 @@ law across all domains, every P-CAM industrial endpoint accepts the same
   4. active_strain          : Cumulative structural / thermal / inventory load
 
 Free Sandbox (2,000 calls/mo across all 7 domains):
-[https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control](https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control)
+https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control
 """
 
 import argparse
@@ -103,9 +103,9 @@ class PCAMUniversalClient:
         self.api_key = rapidapi_key or os.getenv("PCAM_RAPIDAPI_KEY", "YOUR_RAPIDAPI_FREE_KEY")
         self.use_direct = use_direct_gateway
         self.base_url = (
-            "[https://api.neoma-pcam.com](https://api.neoma-pcam.com)"
+            "https://api.neoma-pcam.com"
             if use_direct_gateway
-            else "[https://neoma-p-cam-hyper-physical-control.p.rapidapi.com](https://neoma-p-cam-hyper-physical-control.p.rapidapi.com)"
+            else "https://neoma-p-cam-hyper-physical-control.p.rapidapi.com"
         )
 
     def solve(

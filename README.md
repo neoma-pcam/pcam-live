@@ -33,7 +33,7 @@ Institutional clients, HFT quant desks, and autonomous systems can interface dir
 * **Quant Reflex HFT Enclave (RapidAPI):** 👉 [NEOMA P-CAM Quant Reflex HFT ($499+)](https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control)
 * **Universal Physical Solver (RapidAPI):** 👉 [GP-PCAM Universal Physical Solver (2,000 Free/mo)](https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control)
 * **Enterprise Hyper Physical Hub (RapidAPI):** 👉 [NEOMA P-CAM Enterprise Hub](https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control)
-* **Direct Production Gateway Node:** 👉 [https://api.neoma-pcam.com](https://api.neoma-pcam.com)
+* **Direct Production Gateway Node:** 👉 https://api.neoma-pcam.com
 
 ---
 
@@ -338,8 +338,8 @@ P-CAM enforces a 3-tier immutable defense mechanism grounded in raw physical ent
 
 ## 📬 12. Enterprise Inquiries & Partnership
 
-* **Official Web Portal:** [https://neoma-pcam.github.io/pcam-live/](https://neoma-pcam.github.io/pcam-live/)
-* **Interactive API Docs:** [https://api.neoma-pcam.com/docs](https://api.neoma-pcam.com/docs)
+* **Official Web Portal:** https://neoma-pcam.github.io/pcam-live/
+* **Interactive API Docs:** https://api.neoma-pcam.com/docs
 * **Technical & Partnership Inquiry:** [contact@neoma-pcam.com](mailto:contact@neoma-pcam.com)
 * **Executive Office:** [ceo@neoma-pcam.com](mailto:ceo@neoma-pcam.com)
 

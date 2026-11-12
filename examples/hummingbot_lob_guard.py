@@ -24,7 +24,7 @@ class QuoteAdjustment:
 class PCAMHummingbotGuard:
     def __init__(self, rapidapi_key: str | None = None):
         self.api_key = rapidapi_key or os.getenv("PCAM_RAPIDAPI_KEY", "YOUR_RAPIDAPI_KEY")
-        self.endpoint = "[https://neoma-p-cam-hyper-physical-control.p.rapidapi.com/v1/quant/predict](https://neoma-p-cam-hyper-physical-control.p.rapidapi.com/v1/quant/predict)"
+        self.endpoint = "https://neoma-p-cam-hyper-physical-control.p.rapidapi.com/v1/quant/predict"
         self.headers = {
             "Content-Type": "application/json",
             "x-rapidapi-host": "neoma-p-cam-hyper-physical-control.p.rapidapi.com",
