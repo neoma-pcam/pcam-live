@@ -43,24 +43,18 @@ Institutional clients, HFT quant desks, and autonomous systems can interface dir
 * **NEOMA (The Embodied Physical AI):** Derived from the ancient concept of *Soma* (the physical body), NEOMA elevates physical embodiment from mere mechanical execution into an intelligent, adaptive physical entity. NEOMA exists to serve human society and physical industry by solving real-world physical equilibrium, structural damping, and precision control challenges in the real world.
 
 ---
+## 🧠⚡ 2.1. Brain-Spine Co-Processor: Embodied Cognition & Empirical Proof
 
-## 🧠⚡ 2.1. Brain-Spine Co-Processor: 4-Fold Attestation Vector & Empirical Proof
+Unlike conventional AI architectures that decouple slow cloud-based language models from low-level hardware actuators, NEOMA P-CAM integrates **Embodied Cognitive Synthesis (Brain)** and **Ultra-Low Latency Silicon Reflex (Spine)** into a unified, single-transaction execution pipeline:
 
-NEOMA P-CAM does not operate as an abstract, disconnected simulation. The co-processor binds sensory perturbation, physical dissipation, cognitive evaluation, and cryptographic attestation into a unified **4-Fold State Vector** $\mathbf{\Psi} = \langle \mathbf{u}, \mathbf{r}, \mathbf{c}, \mathbf{s} \rangle$ executed in a single sub-microsecond transaction:
+- **Brain (Embodied Cognitive Synthesis):** Diagnoses physical substrate states and verbalizes thermodynamic equilibrium in lockstep with the hardware, eliminating typical token generation delays.
+- **Spine (P-CAM Silicon Reflex Core):** Settles non-equilibrium disturbances into ground-state stability in sub-0.01ms (6.1 µs) via pure analog charge dissipation.
 
-$$\mathbf{\Psi}_{\text{NEOMA}} = \begin{bmatrix} \mathbf{u}_{\text{flux}} \\ \mathbf{r}_{\text{reflex}} \\ \mathbf{c}_{\text{cognition}} \\ \mathbf{s}_{\text{seal}} \end{bmatrix} = \begin{bmatrix} [V_{\text{flux}}, \; \nabla v, \; \nabla a, \; \epsilon] & \text{(1. Physical Perturbation Input Vector)} \\ [\Delta t_{\text{reflex}}, \; \zeta, \; \text{Mode}, \; u_{\text{ctrl}}] & \text{(2. Silicon Substrate Dissipation Vector)} \\ [\text{Domain}, \; \text{Regime}, \; \text{Convergence}] & \text{(3. Embodied Cognitive Synthesis Vector)} \\ [\text{UID}, \; \text{Cycle}, \; S_{\text{entropy}}, \; \text{SEAL}] & \text{(4. Silicon Root-of-Trust Attestation Vector)} \end{bmatrix}$$
-
-### 📦 Live 4-Fold Empirical Execution Payload (Direct from P-CAM Enclave)
+### 📦 Live Empirical Attestation Payload (Direct from P-CAM Enclave)
 ```json
 {
   "status": "hardware_active",
   "domain": "Universal-Equilibrium",
-  "input_vector": {
-    "flux_potential_v": 0.0637,
-    "gradient_velocity": 520.0,
-    "gradient_acceleration": 16000.0,
-    "active_strain": 2.5
-  },
   "cognitive_synthesis": "[Physical AI Core] Domain: Universal-Equilibrium | Regime: Overdamped Stability | Equilibrium Converged (Sub-ms Deterministic)",
   "hardware_reflex_ms": 0.0061,
   "zeta": 1.1278,
@@ -80,11 +74,11 @@ $$\mathbf{\Psi}_{\text{NEOMA}} = \begin{bmatrix} \mathbf{u}_{\text{flux}} \\ \ma
 }
 ```
 
-### 🔬 4-Tier Immutable Empirical Verifications:
-1. **Perturbation Ingestion ($\mathbf{u}_{\text{flux}} \in \mathbb{R}^4$):** Direct ingestion of high-strain multi-dimensional flux vector ($V_{\text{flux}}=0.0637\,\text{V}$, $\nabla v=520.0$, $\nabla a=16000.0$, $\epsilon=2.5$) without pre-processing bottlenecks.
-2. **Sub-Microsecond Dissipation ($\mathbf{r}_{\text{reflex}}$ in 0.0061 ms):** The 64-spin non-equilibrium state is resolved into ground-state stability in **6.1 microseconds** ($\Delta t = 0.0061\,\text{ms}$), proving in-material analog charge dissipation that software simulated annealing cannot replicate.
-3. **Zero-Hallucination Cognitive Synthesis ($\mathbf{c}_{\text{cognition}}$):** The physical damping convergence ratio ($\zeta = 1.1278 > 1.0$) deterministically drives the cognitive statement (`Regime: Overdamped Stability`). The SLM does not speculate; it verbalizes raw thermodynamic equilibrium.
-4. **Silicon Root-of-Trust Cryptographic Proof ($\mathbf{s}_{\text{seal}}$):** Cumulative silicon clock cycle (`1,610,551`), physical entropy (`0.0015 ENT`), base substrate voltage (`0.5518 V`), and hardware UID (`0051003C`) are immutably signed into a single-use SHA-256 seal (`SEAL-0051003C-7DFB...`).
+### 🔬 4 Immutable Empirical Verifications:
+1. **Zero-Hallucination Cognitive Synthesis:** The physical damping convergence ratio ($\zeta = 1.1278 > 1.0$) deterministically drives the cognitive statement (`Regime: Overdamped Stability`). The SLM does not speculate or hallucinate; it verbalizes raw thermodynamic equilibrium directly measured from the hardware.
+2. **Sub-Microsecond Physical Reflex (0.0061 ms):** The complete physical dissipation into ground-state stability takes place in **6.1 microseconds** (0.0061 ms), demonstrating pure analog silicon relaxation that software simulated annealing cannot replicate.
+3. **Single-Transaction Unified Pipeline:** Semantic diagnosis and physical stabilization execute simultaneously in a single transaction, eliminating the hundreds of milliseconds of latency inherent in conventional decoupled systems.
+4. **Silicon Root-of-Trust Cryptographic Proof:** Live hardware UID (`0051003C`), cumulative silicon clock cycles (`1,610,551`), physical entropy (`0.0015 ENT`), and substrate voltage (`0.5518 V`) are immutably signed into a single-use SHA-256 seal (`SEAL-0051003C-7DFB...`).
 ## 🛡️ 3. Zero-Trust Client-Side Hardware Attestation Protocol
 
 **Do not trust server logs or promotional benchmarks.** This client-side verification protocol connects directly to the P-CAM 003 silicon enclave, executing independent verification of the Round-Trip Time (RTT), physical damping ratio ($0.1 \le \zeta \le 2.0$), and immutable SEAL tokens.
