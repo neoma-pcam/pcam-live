@@ -41,33 +41,33 @@ Institutional clients, HFT quant desks, and autonomous systems can interface dir
 
 ---
 
-## ⚡ Hummingbot & Quant HFT Quickstart (2,000 Free Requests/mo)
+## ⚡ Execution Slicing & Slippage Mitigation Quickstart (2,000 Free Requests/mo)
 
-Algorithmic traders and market makers can plug P-CAM's sub-millisecond silicon damping (/v1/quant/predict) directly into **Hummingbot** or custom execution loops to mitigate toxic order flow and inventory skew without iterative Monte Carlo latency:
+Designed for **cloud-coupled execution routers, institutional TWAP/VWAP engines, and Hummingbot strategies**. Rather than sitting inside microsecond tick-to-trade hot paths, P-CAM acts as a sub-millisecond physical equilibrium co-processor (/v1/quant/predict) at 1s–60s slicing intervals to dampen non-linear market impact, reduce execution slippage (bps), and generate Zero-PRNG Transaction Cost Analysis (TCA) audit seals:
 
 ```python
 import requests
 
-url = "https://neoma-p-cam-hyper-physical-control.p.rapidapi.com/v1/quant/predict"
+url = "[https://neoma-p-cam-hyper-physical-control.p.rapidapi.com/v1/quant/predict](https://neoma-p-cam-hyper-physical-control.p.rapidapi.com/v1/quant/predict)"
 headers = {
     "Content-Type": "application/json",
     "x-rapidapi-host": "neoma-p-cam-hyper-physical-control.p.rapidapi.com",
     "x-rapidapi-key": "YOUR_RAPIDAPI_FREE_KEY"  # 2,000 free calls/mo
 }
 payload = {
-    "flux_potential_v": 1.85,      # Normalized LOB imbalance shock
-    "gradient_velocity": 0.42,     # Mid-price velocity
-    "gradient_acceleration": 14.6, # Order flow acceleration
-    "active_strain": 0.015         # Net inventory skew
+    "flux_potential_v": 2.297,     # Child slice size vs. top-5 order book liquidity pressure
+    "gradient_velocity": 0.64,     # Short-window spread drift (bps)
+    "gradient_acceleration": 9.8,  # Order book depletion acceleration
+    "active_strain": 0.70          # Remaining unexecuted parent order ratio
 }
 
 res = requests.post(url, json=payload, headers=headers).json()
 print(res["zeta"], res["control_intensity"], res["hardware_seal_id"])
 ```
 
-* 📂 **Full Quant Quickstart:** [examples/quant_hft_quickstart.py](./examples/quant_hft_quickstart.py)
-* 🤖 **Hummingbot Market-Making Spread Guard:** [examples/hummingbot_lob_guard.py](./examples/hummingbot_lob_guard.py)
-
+* 📉 **Slippage Mitigation & TWAP/VWAP Slicer:** [examples/slippage_execution_optimizer.py](./examples/slippage_execution_optimizer.py)
+* 🤖 **Hummingbot Spread & Inventory Guard:** [examples/hummingbot_lob_guard.py](./examples/hummingbot_lob_guard.py)
+* 📂 **30-Second Quant Latency & Seal Test:** [examples/quant_hft_quickstart.py](./examples/quant_hft_quickstart.py)
 ---
 
 ## 🏛️ 2. Technical Philosophy: P-CAM & NEOMA
