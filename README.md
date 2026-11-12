@@ -29,7 +29,7 @@
 Institutional clients, HFT quant desks, and autonomous systems can interface directly with the P-CAM production cluster through the following verified access points:
 
 * **Interactive Web Telemetry Console:** 👉 [NEOMA P-CAM Live Web Portal (Real-time 50Hz)](https://neoma-pcam.github.io/pcam-live/)
-* **Interactive Swagger UI (OpenAPI Docs):** 👉 [P-CAM OpenAPI Specification (8-Domain)](https://api.neoma-pcam.com/docs)
+* **Interactive Swagger UI (OpenAPI Docs):** 👉 [P-CAM OpenAPI Specification (7-Domain)](https://api.neoma-pcam.com/docs)
 * **Quant Reflex HFT Enclave (RapidAPI):** 👉 [NEOMA P-CAM Quant Reflex HFT ($499+)](https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control)
 * **Universal Physical Solver (RapidAPI):** 👉 [GP-PCAM Universal Physical Solver (2,000 Free/mo)](https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control)
 * **Enterprise Hyper Physical Hub (RapidAPI):** 👉 [NEOMA P-CAM Enterprise Hub](https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control)
@@ -115,7 +115,7 @@ Unlike conventional AI architectures that decouple slow cloud-based language mod
   "equilibrium_converged": true,
   "hardware_seal_id": "SEAL-0051003C-7DFB566AB2613119A42DDA2B7B374362190FCF7F5B5E718342FA5F9363BF1D6F",
   "telemetry": {
-    "hardware_uid": "0051003C",
+    "hardware_uid": "0051003C3434510C32333934",
     "v_out_measured_v": 0.5518,
     "entropy_ent": 0.0015,
     "gen_cycle": 1610551,
@@ -230,7 +230,7 @@ Rather than cycling through trillions of software iterations, P-CAM leverages su
 
 ---
 
-## 🏭 5. 8-Domain Production Endpoints
+## 🏭 5. 7-Domain Production Endpoints
 
 | Domain | Production Endpoint | Target Physics & Industrial Use Case | Measured Latency | Dedicated Access |
 | :--- | :--- | :--- | :--- | :--- |
@@ -241,7 +241,6 @@ Rather than cycling through trillions of software iterations, P-CAM leverages su
 | **Robotics** | `/v1/robotics/predict` | High-Frequency Compliance & Kinematic Singularity Damping | `0.0068 ms` | [Enterprise Hub](https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control) |
 | **Mobility** | `/v1/mobility/predict` | Hydroplaning Recovery & Active Chassis Suspension | `0.0075 ms` | [Enterprise Hub](https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control) |
 | **Chemistry** | `/v1/chemistry/predict` | Exothermic Runaway Quenching & Kinetic Stabilization | `0.0079 ms` | [Enterprise Hub](https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control) |
-| **Tokenomics** | `/v1/tokenomics/redeem` | PoPW Utility Credit Redemption ($0.10 Fiat Floor) | `0.0099 ms` | [Enterprise Hub](https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control) |
 
 ---
 
@@ -320,19 +319,7 @@ Across a **64-spin fully connected graph (2,016 coupled interaction edges)**, P-
 | **Measured Voltage ($V_{out}$)**| Real Silicon Substrate | **0.5504 V** | **PASS (Active Sensing)** |
 | **Hardware Attestation** | Silicon Root-of-Trust | SEAL-PoPW-0051003C... | **PASS (Cryptographic)** |
 
----
-
-## 💎 8. Proof-of-Physical-Work (PoPW) & $0.10 Fiat Floor Tokenomics
-
-Every physical computation mints verifiable utility credits and signs an immutable cryptographic proof (`hardware_seal_id`) tied directly to the silicon UID (`0051003C3434510C32333934`).
-
-* **1:1 Utility Minting:** $1.00 USD user payment mints 1.00 CR for computational execution.
-* **10% Audited Fiat Floor:** Every minted credit is backed by a permanent $0.10 USD protocol cash reserve vault.
-* **Cash Redemption Guard:** The `/v1/tokenomics/redeem` endpoint is strictly locked against unauthorized free evaluation accounts, disbursing cash payouts exclusively to verified, fiat-paying enterprise nodes.
-
----
-
-## 🚦 9. Smart Access Quota Policy
+## 🚦 8. Smart Access Quota Policy
 
 1. **Official Web Portal & Swagger UI (Unlimited):** Access via [neoma-pcam.github.io/pcam-live](https://neoma-pcam.github.io/pcam-live/) and [/docs](https://api.neoma-pcam.com/docs). Unlimited 365-day real-time monitoring and interactive UI evaluation with zero deductions.
 2. **RapidAPI Institutional SLA:** Dedicated high-throughput enterprise gateways bypassing public rate limits to guarantee sub-millisecond SLA latencies.
@@ -340,7 +327,7 @@ Every physical computation mints verifiable utility credits and signs an immutab
 
 ---
 
-## 📦 10. Unified API Response Specification (v5.3.0)
+## 📦 9. Unified API Response Specification (v5.3.0)
 
 ```json
 {
@@ -361,16 +348,6 @@ Every physical computation mints verifiable utility credits and signs an immutab
     "gen_cycle": 82920115,
     "hardware_connected": true,
     "measured_latency_ms": 0.0162
-  },
-  "credit_ledger": {
-    "rapidapi_verified": true,
-    "caller_tier": "ENTERPRISE",
-    "fiat_payment_usd": 1.0,
-    "total_minted_credit": 1.10,
-    "user_usable_credit": 49999.0,
-    "owner_dividend_credit": 0.10,
-    "redeem_reserve_usd_10pct": 49.90,
-    "ledger_status": "LEDGER_MINT_CONFIRMED"
   }
 }
 ```
