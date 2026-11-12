@@ -113,7 +113,6 @@ class PCAMSampler(dimod.Sampler):
             "hardware_reflex_ms": data.get("hardware_reflex_ms"),
             "hardware_seal_id": data.get("hardware_seal_id"),
             "telemetry": data.get("telemetry", {}),
-            "credit_ledger": data.get("credit_ledger", {})
         }
 
         return dimod.SampleSet.from_samples_bqm(

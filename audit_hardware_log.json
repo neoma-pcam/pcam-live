@@ -16,15 +16,5 @@
     "shock_rate_pct": 200.0,
     "gen_cycle": 653744
   },
-  "trajectory_summary": "Temporal Buffer Active: Secure frames retained.",
-  "credit_ledger": {
-    "caller_tier": "NONE",
-    "rapidapi_verified": false,
-    "fiat_payment_usd": 0.0,
-    "total_minted_credit": 0.0,
-    "user_usable_credit": 0.0,
-    "owner_dividend_credit": 0.0,
-    "redeem_reserve_usd_10pct": 0.0,
-    "ledger_status": "LEDGER_MINT_LOCKED_EVALUATION"
-  }
+  "trajectory_summary": "Temporal Buffer Active: Secure frames retained."
 }
