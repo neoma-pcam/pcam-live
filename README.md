@@ -327,6 +327,8 @@ class PCAMSampler(dimod.Sampler):
                 "zeta": zeta,
             },
         )
+```
+
 ---
 
 ## 🤖 6.1. Model Context Protocol (MCP) Server (Rust — Claude / Cursor / Agents)
@@ -345,6 +347,7 @@ Allow LLM agents to offload stiff non-linear equilibrium equations and 64-spin I
   }
 }
 ```
+
 
 - **Tools Exposed:** `solve_nonlinear_equilibrium` (7-domain solver), `solve_ising_optimization` (64-spin Hamiltonian), and `verify_silicon_seal` (Hardware UID `0051003C3434510C32333934` PUF verification).
 
@@ -418,19 +421,20 @@ P-CAM enforces a 3-tier immutable defense mechanism grounded in raw physical ent
 
 ```bibtex
 @software{neoma_pcam_2026,
-  author = {Neoma Physical AI Team},
-  title = {NEOMA P-CAM: Room-Temperature Physical Ising Solver & Silicon Root-of-Trust},
-  year = {2026},
+  author    = {Neoma Physical AI Team},
+  title     = {NEOMA P-CAM: Room-Temperature Physical Ising Solver & Silicon Root-of-Trust},
+  year      = {2026},
   publisher = {Zenodo},
-  doi = {10.5281/zenodo.23644655},
-  url = {https://doi.org/10.5281/zenodo.23644655}
+  doi       = {10.5281/zenodo.23644655},
+  url       = {[https://doi.org/10.5281/zenodo.23644655](https://doi.org/10.5281/zenodo.23644655)}
 }
 ```
 
-* **Client SDK & API Specification:** Apache 2.0 / MIT License (see [LICENSE](LICENSE))
-* **Enclave Core & Neural Hardware Logic:** Proprietary & Confidential (NEOMA IP)
-```markdown
+- **Client SDK & API Specification:** Apache 2.0 / MIT License (see [LICENSE](LICENSE))
+- **Enclave Core & Neural Hardware Logic:** Proprietary & Confidential (NEOMA IP)
+
 ### Legal, Trademark & Liability Disclaimer
+
 - **Trademarks & Non-Affiliation:** All third-party product names, libraries, and trademarks referenced in documentation or examples (including `dimod`, `RapidAPI`, `ROS 2`, `Hummingbot`, and `CUDA`) belong to their respective owners and are used strictly for nominative interface compatibility. NEOMA Physical AI is an independent entity and claims no formal endorsement or affiliation unless explicitly stated.
 - **Latency Measurement Boundary:** Quoted sub-millisecond figures (`hardware_reflex_ms`, e.g., `0.0066 ms – 0.0162 ms`) represent deterministic on-substrate analog equilibrium relaxation time measured at the P-CAM enclave boundary. End-to-end client Round-Trip Time (RTT) varies depending on public internet routing and geographic distance.
 - **No Financial, Medical, or Safety-Critical Warranty:** Provided under the MIT License (`AS IS`), P-CAM API outputs (`zeta`, `control_intensity`, `state_mode`) operate as advisory physical damping signals. Users deploying P-CAM in live financial execution, battery management, chemical processes, or autonomous hardware must maintain independent hardware safety interlocks and circuit breakers. NEOMA Physical AI assumes no liability for trading losses, equipment damage, or consequential damages.
