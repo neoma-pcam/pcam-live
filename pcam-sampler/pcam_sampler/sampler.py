@@ -1,42 +1,54 @@
 """
 PCAMSampler: D-Wave Ocean SDK Compatible In-Material Physical Solver
 """
+import os
 import time
+from urllib.parse import urlparse
 import requests
 import dimod
 from typing import Dict, Any, Optional
 
+
 class PCAMSampler(dimod.Sampler):
     """
-    D-Wave dimod.Sampler interface connected to the NEOMA P-CAM 
+    D-Wave dimod.Sampler interface connected to the NEOMA P-CAM
     Deterministic Physical Reflex & Ising Solver Gateway.
     """
-    
     properties = {
         "description": "NEOMA P-CAM In-Material Physical Relaxation Solver",
-        "version": "1.0.0",
+        "version": "1.0.1",
         "max_variables": 1024,
-        "category": "physical_in_material_annealer"
+        "category": "physical_in_material_annealer",
     }
-    
     parameters = {
         "flux_bias": [],
         "damping_target": [],
-        "rapidapi_key": []
+        "api_key": [],
+        "rapidapi_key": [],
     }
 
+    DEFAULT_ENDPOINT = "https://neoma-p-cam-hyper-physical-control.p.rapidapi.com/v1/solve-universal-equilibrium"
+    DEFAULT_RAPIDAPI_HOST = "neoma-p-cam-hyper-physical-control.p.rapidapi.com"
+
     def __init__(
-        self, 
-        endpoint: str = "http://127.0.0.1:8000/v1/solve-universal-equilibrium",
-        rapidapi_key: Optional[str] = None
+        self,
+        api_key: Optional[str] = None,
+        endpoint: str = DEFAULT_ENDPOINT,
+        rapidapi_key: Optional[str] = None,
     ):
         """
         Args:
-            endpoint: P-CAM 게이트웨이 엔드포인트 URL (로컬 또는 프로덕션)
-            rapidapi_key: RapidAPI 유료 게이트웨이 사용 시 인증 키
+            api_key: RapidAPI 인증 키 (미입력 시 PCAM_RAPIDAPI_KEY 환경변수 자동 참조)
+            endpoint: P-CAM 게이트웨이 엔드포인트 URL (기본값: RapidAPI 프로덕션 게이트웨이)
+            rapidapi_key: 하위 호환용 RapidAPI 인증 키 인자
         """
+        # 기존 코드에서 첫 번째 인자로 endpoint URL을 넘긴 경우 하위 호환 처리
+        if api_key and api_key.startswith(("http://", "https://")):
+            endpoint = api_key
+            api_key = None
+
         self.endpoint = endpoint
-        self.rapidapi_key = rapidapi_key
+        self.rapidapi_key = api_key or rapidapi_key or os.getenv("PCAM_RAPIDAPI_KEY")
 
     def sample(self, bqm: dimod.BinaryQuadraticModel, **parameters) -> dimod.SampleSet:
         """
@@ -45,7 +57,6 @@ class PCAMSampler(dimod.Sampler):
         # 1. BQM을 표준 이징 모델 (h, J)로 추출
         linear, quadratic, offset = bqm.to_ising()
         n_variables = len(bqm.variables)
-        
         if n_variables == 0:
             return dimod.SampleSet.from_samples_bqm([{}], bqm)
 
@@ -53,7 +64,7 @@ class PCAMSampler(dimod.Sampler):
         total_couplings = len(quadratic)
         coupling_energy = sum(abs(v) for v in quadratic.values()) if total_couplings > 0 else 0.0
         avg_coupling = (coupling_energy / total_couplings) if total_couplings > 0 else 0.0
-        
+
         # 3. 이징 그래프 위상을 P-CAM 비평형 외란 텐서로 매핑
         flux_potential_v = round(0.082 + min(0.015, avg_coupling * 0.01), 4)
         gradient_velocity = round(500.0 + (n_variables * 1.5), 2)
@@ -64,13 +75,16 @@ class PCAMSampler(dimod.Sampler):
             "flux_potential_v": flux_potential_v,
             "gradient_velocity": gradient_velocity,
             "gradient_acceleration": gradient_acceleration,
-            "active_strain": active_strain
+            "active_strain": active_strain,
         }
 
         # 4. P-CAM 게이트웨이 호출
         headers = {"Content-Type": "application/json"}
         if self.rapidapi_key:
-            headers["x-rapidapi-host"] = "gp-pcam-universal-physical-solver.p.rapidapi.com"
+            parsed_host = urlparse(self.endpoint).netloc
+            headers["x-rapidapi-host"] = (
+                parsed_host if "rapidapi.com" in parsed_host else self.DEFAULT_RAPIDAPI_HOST
+            )
             headers["x-rapidapi-key"] = self.rapidapi_key
 
         t0 = time.perf_counter()
@@ -91,7 +105,8 @@ class PCAMSampler(dimod.Sampler):
             h_i = linear.get(var, 0.0)
             coupling_sum = sum(
                 quadratic.get((var, other), quadratic.get((other, var), 0.0))
-                for other in bqm.variables if other != var
+                for other in bqm.variables
+                if other != var
             )
             # 유효 국소장 계산
             eff_field = h_i + (coupling_sum * (control_intensity * zeta))
@@ -106,7 +121,6 @@ class PCAMSampler(dimod.Sampler):
 
         # 7. 해밀토니안 에너지 산출 및 D-Wave 표준 SampleSet 생성
         energy = bqm.energy(sample_result)
-        
         info = {
             "zeta": zeta,
             "state_mode": data.get("state_mode"),
@@ -116,8 +130,8 @@ class PCAMSampler(dimod.Sampler):
         }
 
         return dimod.SampleSet.from_samples_bqm(
-            [sample_result], 
-            bqm, 
-            energy=[energy], 
-            info=[info]
+            [sample_result],
+            bqm,
+            energy=[energy],
+            info=[info],
         )
