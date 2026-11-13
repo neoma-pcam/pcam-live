@@ -7,7 +7,7 @@
 [![Enterprise Hub](https://img.shields.io/badge/Enterprise_Hub_($499+)-purple?style=for-the-badge)](https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control)
 [![dimod BQM Compatible](https://img.shields.io/badge/Interface-dimod%20BQM%20Compatible-00d2ff)](https://github.com/neoma-pcam/pcam-live/tree/main/pcam-sampler)
 [![Zenodo DOI](https://img.shields.io/badge/Zenodo_DOI-475569?style=for-the-badge)](https://doi.org/10.5281/zenodo.23644655)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](LICENSE)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](LICENSE) [![Enclave Health](https://github.com/neoma-pcam/pcam-live/actions/workflows/pcam_uptime_status.yml/badge.svg)](https://github.com/neoma-pcam/pcam-live/actions/workflows/pcam_uptime_status.yml)
 
 > **⚡ 100% Zero-PRNG Hardware Reflex Solver:** We have permanently eradicated pseudo-random number generators (PRNG, `random`, `np.random`) from our entire system. P-CAM relies exclusively on **Deterministic Modular Algebra** and pure silicon telemetry from the P-CAM 003 hardware accelerator.
 
@@ -127,6 +127,8 @@ NEOMA P-CAM is delivered strictly as a **cloud-server-supported physical co-proc
 4. **Hardware-Level Root Blocking of Information Leakage:** The room-temperature P-CAM 003 analog silicon substrate contains **no non-volatile storage or persistent memory bus**—physical charge dissipates immediately into equilibrium (`zeta`, `control_intensity`) and resets, making cross-tenant leakage or data extraction physically impossible. A single-use SHA-256 receipt (`SEAL-PoPW`) is returned so clients keep full compliance auditability on their own side.
 5. **Demand-Driven Multi-Board Scale-Out:** Within NEOMA's central cloud enclave, multi-board P-CAM 003 clusters expand horizontally via externally powered industrial USB hubs behind a single load-balanced gateway—scaling throughput linearly on demand without megawatt-scale power or liquid-cooling infrastructure.
 6. **Client-Side Packet Verifiability & Volatile-Only State:** Engineers can inspect our open-source client wrappers (`examples/llm_middleware_offload.py`, `pcam_objective_audit.py`) or run a local packet sniffer (`tcpdump` / Wireshark) at their firewall boundary to independently verify that zero raw tensors, prompts, or PII ever leave their network. Any transient `Temporal Buffer` referenced in telemetry exists solely as an ephemeral, volatile analog derivative window that resets immediately without disk persistence.
+
+- 🛡️ **Official Security Policy & Self-Audit Tools:** See [`SECURITY.md`](SECURITY.md) and run [`examples/verify_zero_leak_packet.py`](examples/verify_zero_leak_packet.py) inside your firewall to verify **0-byte proprietary data egress**.
 
 ---
 <!-- PCAM-SUPPLY-ARCH-END -->
