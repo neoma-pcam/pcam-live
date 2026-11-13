@@ -134,16 +134,16 @@ NEOMA P-CAM is delivered strictly as a **cloud-server-supported physical co-proc
 <!-- PCAM-SUPPLY-ARCH-END -->
 
 <!-- PCAM-BOUNDARY-START -->
-## 🧭 1.2. Operational Boundaries: Strictly Cloud-Enclave-Only Delivery
+## 🧭 1.2. Operational Boundaries: Shared Cloud-Only Platform & Zero-Retention Security
 
-All P-CAM 003 analog silicon boards remain **permanently sealed inside NEOMA's central cloud enclave** under direct physical and cryptographic custody—hardware is never shipped on-premise. Below is our exact cloud operating envelope:
+All P-CAM 003 analog silicon nodes remain **permanently inside NEOMA's central cloud enclave as a shared, open-access platform for everyone**—never shipped on-premise and never locked to a single exclusive tenant. Security and cross-tenant isolation are enforced at the physical boundary (4 dimensionless scalars + zero non-volatile memory + `< 0.02 ms` analog charge reset), allowing all users to share the same silicon infrastructure safely:
 
-| Cloud Deployment Tier | Typical Control / Compute Cadence | Recommended Use Cases | Not Intended For |
+| Cloud Platform Tier | Typical Control / Compute Cadence | Recommended Use Cases | Not Intended For |
 | :--- | :--- | :--- | :--- |
-| **Public Cloud API / RapidAPI**<br>*(Multi-Tenant Enclave · 2,000 Free/mo)* | **1 Hz – 100 Hz**<br>*(Supervisory & Batch)* | • Execution slicing (TWAP/VWAP) & slippage damping<br>• GPU / LLM pre-inference non-linear boundary offload<br>• 3-year prognostic & multi-fault CSV dataset synthesis | Sub-millisecond (`< 1 ms`) hard real-time inner servo loops over public internet (constrained by WAN speed-of-light RTT) |
-| **Dedicated Cloud Enclave**<br>*(Single-Tenant Board Inside NEOMA Cloud · $499+)* | **10 Hz – 250 Hz**<br>*(Dedicated Private Link)* | • High-throughput enterprise AI clusters & quant desks allocated a dedicated physical board inside NEOMA's cloud with zero noisy-neighbor jitter | Safety-critical actuator cutoff without local client hardware interlocks |
+| **Open Developer & Research API**<br>*(Shared Enclave · 2,000 Free/mo)* | **1 Hz – 100 Hz**<br>*(Supervisory & Batch)* | • Execution slicing (TWAP/VWAP) & slippage damping<br>• GPU / LLM pre-inference non-linear boundary offload<br>• 3-year prognostic & multi-fault CSV dataset synthesis | Sub-millisecond (`< 1 ms`) hard real-time inner servo loops over public internet (constrained by WAN speed-of-light RTT) |
+| **Enterprise High-Throughput Tier**<br>*(Shared Enclave · $499+ Priority SLA)* | **10 Hz – 250 Hz**<br>*(Priority Rate & Throughput)* | • High-volume production AI clusters & quant desks requiring elevated rate limits and priority SLA on the shared cloud cluster | Safety-critical actuator cutoff without local client hardware interlocks |
 
-- 🔒 **Strictly Cloud-Enclave-Only (Zero Physical Shipment):** P-CAM physical boards are never shipped, leased, or installed on-premise outside NEOMA's central cloud facility. Keeping 100% of silicon hardware inside NEOMA's controlled cloud enclave prevents physical tampering or IP leakage while guaranteeing clients zero hardware maintenance and zero data retention.
+- 🌐 **Shared Platform for Everyone (Zero Node Lock-In & Zero Physical Shipment):** P-CAM nodes are never monopolized by a single tenant or shipped outside NEOMA's cloud facility. Because every transaction enters as 4 anonymized scalars (`106 bytes`) and physically dissipates in under `0.02 ms` with zero disk persistence, everyone shares the same high-efficiency silicon platform with complete data privacy.
 - ⚖️ **Run 1:1 Software PID vs. P-CAM Benchmark:** Install [`requirements.txt`](requirements.txt) and run [`examples/pid_vs_pcam_benchmark.py`](examples/pid_vs_pcam_benchmark.py) to compare conventional PID ringing against live P-CAM overdamped equilibrium under an identical 200% shock.
 
 ---
