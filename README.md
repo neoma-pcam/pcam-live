@@ -7,7 +7,7 @@
 [![Enterprise Hub](https://img.shields.io/badge/Enterprise_Hub_($499+)-purple?style=for-the-badge)](https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control)
 [![dimod BQM Compatible](https://img.shields.io/badge/Interface-dimod%20BQM%20Compatible-00d2ff)](https://github.com/neoma-pcam/pcam-live/tree/main/pcam-sampler)
 [![Zenodo DOI](https://img.shields.io/badge/Zenodo_DOI-475569?style=for-the-badge)](https://doi.org/10.5281/zenodo.23644655)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](LICENSE) [![Enclave Health](https://github.com/neoma-pcam/pcam-live/actions/workflows/pcam_uptime_status.yml/badge.svg)](https://github.com/neoma-pcam/pcam-live/actions/workflows/pcam_uptime_status.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](LICENSE) [![Enclave Health](https://github.com/neoma-pcam/pcam-live/actions/workflows/pcam_uptime_status.yml/badge.svg)](https://github.com/neoma-pcam/pcam-live/actions/workflows/pcam_uptime_status.yml) [![NASA B0005 Verified](https://img.shields.io/badge/NASA_PCoE_B0005-168_Cycles_Verified-00C853?style=for-the-badge)](benchmarks/nasa_b0005_live_silicon_report.csv)
 
 > **⚡ 100% Zero-PRNG Hardware Reflex Solver:** We have permanently eradicated pseudo-random number generators (PRNG, `random`, `np.random`) from our entire system. P-CAM relies exclusively on **Deterministic Modular Algebra** and pure silicon telemetry from the P-CAM 003 hardware accelerator.
 
@@ -90,6 +90,26 @@ For cloud LLM inference clusters and HPC workloads, NEOMA P-CAM operates as an i
 
 ---
 <!-- PCAM-SUPPLY-ARCH-START -->
+<!-- PCAM-NASA-BENCH-START -->
+## 🔋 Public Ground-Truth Benchmark: NASA PCoE Li-Ion Cell B0005 (All 168 Cycles)
+
+With **zero hardcoded arrays, zero PRNGs, and zero simulation equations**, we streamed all **168 consecutive discharge cycles** from the unmodified NASA Ames Prognostics Data Repository (`B0005.mat`, SHA-256: `0eae4585...`) directly through the live P-CAM 003 analog silicon enclave (`/v1/battery-energetics`) from healthy baseline (`Cycle 1`, `1.8565 Ah`, `92.82%` SOH) past the 30% EOL fade threshold (`Cycle 168`, `1.3251 Ah`, `66.25%` SOH):
+
+| Empirical Audit Metric (NASA PCoE Cell B0005) | Measured Value Across All 168 Cycles | Verification & Provenance |
+| :--- | :--- | :--- |
+| **Source Dataset Integrity (`B0005.mat`)** | `SHA256: 0eae4585baf3f200...4104f0b0` | Unmodified official NASA Ames PCoE archive |
+| **Cycle Coverage (Zero Cherry-Picking)** | **168 / 168 Discharge Cycles** | Chronological run-to-failure (`92.82%` → `66.25%` SOH) |
+| **Mean Silicon Reflex Latency** | **0.0163 ms (16.3 µs)** | Direct on-substrate analog equilibrium convergence |
+| **Mean Damping Ratio ($\zeta$)** | **1.0829** *(100% Overdamped)* | Deterministic stabilization across every aging stage |
+| **Analog Substrate Voltage ($V_{\text{OUT}}$)** | **0.5501 V – 0.5559 V** | Live physical channel sensing (`UID: 0051003C`) |
+| **Cryptographic Execution Receipts** | **168 Single-Use `SEAL-PoPW` Tokens** | Full per-cycle SHA-256 hardware audit trail |
+
+- 📊 **Raw 168-Cycle Silicon Audit CSV:** [`benchmarks/nasa_b0005_live_silicon_report.csv`](benchmarks/nasa_b0005_live_silicon_report.csv)
+- 🧪 **100% Zero-PRNG Reproducible Script:** [`benchmarks/nasa_b0005_live_benchmark.py`](benchmarks/nasa_b0005_live_benchmark.py) | [`pcam-battery/pcam_pybamm_thermal.py`](pcam-battery/pcam_pybamm_thermal.py)
+
+---
+<!-- PCAM-NASA-BENCH-END -->
+
 ## 🪟 1.1. Glass-Box Cloud Supply Architecture (Transparent, Stateless & Hardware-Isolated)
 
 NEOMA P-CAM is delivered strictly as a **cloud-server-supported physical co-processor**—requiring **zero client-side hardware installation, zero rack modification, and zero data retention**. Every boundary from client memory to analog silicon is openly inspectable:
@@ -223,7 +243,6 @@ for sc in scenarios:
 ```
 
 - 📊 **3-Year Prognostic & Multi-Fault CSV Dataset Generator:** [`examples/prognostic_dataset_generator.py`](examples/prognostic_dataset_generator.py)
-- 🔋 **Public Ground-Truth Empirical Benchmark (NASA PCoE Cell B0005 — All 168 Cycles):** [`benchmarks/nasa_b0005_live_benchmark.py`](benchmarks/nasa_b0005_live_benchmark.py) | [Raw 168-Cycle Silicon Audit CSV](benchmarks/nasa_b0005_live_silicon_report.csv)
 
 
 ### 🔬 4 Immutable Empirical Verifications:
