@@ -15,16 +15,17 @@ import csv
 import os
 import requests
 
-BASE_HOST = "neoma-p-cam-hyper-physical-control.p.rapidapi.com"
+RAPIDAPI_HOST = "neoma-p-cam-hyper-physical-control.p.rapidapi.com"
+DIRECT_HOST = "https://api.neoma-pcam.com"
 
 DOMAIN_ENDPOINTS = {
-    "universal": f"https://{BASE_HOST}/v1/solve-universal-equilibrium",
-    "battery": f"https://{BASE_HOST}/v1/battery/predict",
-    "robotics": f"https://{BASE_HOST}/v1/robotics/predict",
-    "mobility": f"https://{BASE_HOST}/v1/mobility/predict",
-    "chemistry": f"https://{BASE_HOST}/v1/chemistry/predict",
-    "pharma": f"https://{BASE_HOST}/v1/pharma/predict",
-    "quant": f"https://{BASE_HOST}/v1/quant/predict",
+    "universal": "/v1/solve-universal-equilibrium",
+    "battery": "/v1/battery/predict",
+    "robotics": "/v1/robotics/predict",
+    "mobility": "/v1/mobility/predict",
+    "chemistry": "/v1/chemistry/predict",
+    "pharma": "/v1/pharma/predict",
+    "quant": "/v1/quant/predict",
 }
 
 
@@ -80,13 +81,15 @@ def build_deterministic_scenarios(full_36m: bool = False):
     return scenarios
 
 
-def generate_dataset(domain: str, api_key: str, output_csv: str, full_36m: bool = False):
-    endpoint = DOMAIN_ENDPOINTS[domain]
-    headers = {
-        "Content-Type": "application/json",
-        "x-rapidapi-host": BASE_HOST,
-        "x-rapidapi-key": api_key,
-    }
+def generate_dataset(domain: str, api_key: str, output_csv: str, full_36m: bool = False, use_direct: bool = False):
+    base_url = DIRECT_HOST if use_direct else f"https://{RAPIDAPI_HOST}"
+    endpoint = f"{base_url}{DOMAIN_ENDPOINTS[domain]}"
+    fallback_endpoint = f"{base_url}{DOMAIN_ENDPOINTS['universal']}"
+
+    headers = {"Content-Type": "application/json"}
+    if not use_direct:
+        headers["x-rapidapi-host"] = RAPIDAPI_HOST
+        headers["x-rapidapi-key"] = api_key
 
     scenarios = build_deterministic_scenarios(full_36m=full_36m)
     rows = []
@@ -100,14 +103,21 @@ def generate_dataset(domain: str, api_key: str, output_csv: str, full_36m: bool 
             "active_strain": sc["active_strain"],
         }
         resp = requests.post(endpoint, json=payload, headers=headers, timeout=10)
+        if resp.status_code == 404 and endpoint != fallback_endpoint:
+            print(f"[!] Route {DOMAIN_ENDPOINTS[domain]} unavailable on proxy; switching to /v1/solve-universal-equilibrium")
+            endpoint = fallback_endpoint
+            resp = requests.post(endpoint, json=payload, headers=headers, timeout=10)
+
         resp.raise_for_status()
         res = resp.json()
+        telemetry = res.get("telemetry") or {}
 
         row = {
             "horizon_label": sc["horizon_label"],
             "elapsed_days": sc["elapsed_days"],
             "scenario_type": sc["scenario_type"],
-            "domain": res.get("domain", domain),
+            "target_domain": domain,
+            "solver_domain": res.get("domain", domain),
             "flux_potential_v": sc["flux_potential_v"],
             "gradient_velocity": sc["gradient_velocity"],
             "gradient_acceleration": sc["gradient_acceleration"],
@@ -116,6 +126,8 @@ def generate_dataset(domain: str, api_key: str, output_csv: str, full_36m: bool 
             "remediation_zeta": res.get("zeta"),
             "control_intensity": res.get("control_intensity"),
             "equilibrium_converged": res.get("equilibrium_converged"),
+            "v_out_measured_v": telemetry.get("v_out_measured_v"),
+            "entropy_ent": telemetry.get("entropy_ent"),
             "hardware_reflex_ms": res.get("hardware_reflex_ms"),
             "hardware_seal_id": res.get("hardware_seal_id"),
             "cognitive_synthesis": res.get("cognitive_synthesis"),
@@ -141,6 +153,7 @@ if __name__ == "__main__":
     parser.add_argument("--api-key", default=os.getenv("PCAM_RAPIDAPI_KEY", "YOUR_RAPIDAPI_FREE_KEY"))
     parser.add_argument("--output", default="pcam_3yr_prognostic_fault_dataset.csv")
     parser.add_argument("--full-36m", action="store_true", help="Generate all 36 monthly steps instead of quarterly")
+    parser.add_argument("--direct", action="store_true", help="Use direct gateway (api.neoma-pcam.com)")
     args = parser.parse_args()
 
-    generate_dataset(args.domain, args.api_key, args.output, args.full_36m)
+    generate_dataset(args.domain, args.api_key, args.output, args.full_36m, args.direct)
