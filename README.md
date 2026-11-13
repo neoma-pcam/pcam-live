@@ -264,7 +264,7 @@ class PCAMSampler(dimod.Sampler):
     def __init__(
         self,
         api_key=None,
-        endpoint="[https://neoma-p-cam-hyper-physical-control.p.rapidapi.com/v1/solve-universal-equilibrium](https://neoma-p-cam-hyper-physical-control.p.rapidapi.com/v1/solve-universal-equilibrium)",
+        endpoint="https://neoma-p-cam-hyper-physical-control.p.rapidapi.com/v1/solve-universal-equilibrium",
     ):
         self.endpoint = endpoint
         self.api_key = api_key or os.getenv("PCAM_RAPIDAPI_KEY", "YOUR_RAPIDAPI_FREE_KEY")
