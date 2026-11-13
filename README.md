@@ -33,7 +33,7 @@ Institutional clients, HFT quant desks, and autonomous systems can interface dir
 * **Quant Reflex HFT Enclave (RapidAPI):** 👉 [NEOMA P-CAM Quant Reflex HFT ($499+)](https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control)
 * **Universal Physical Solver (RapidAPI):** 👉 [GP-PCAM Universal Physical Solver (2,000 Free/mo)](https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control)
 * **Enterprise Hyper Physical Hub (RapidAPI):** 👉 [NEOMA P-CAM Enterprise Hub](https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control)
-* **Direct Production Gateway Node:** 👉 https://api.neoma-pcam.com
+
 
 ---
 
