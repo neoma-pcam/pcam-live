@@ -223,6 +223,7 @@ for sc in scenarios:
 ```
 
 - 📊 **3-Year Prognostic & Multi-Fault CSV Dataset Generator:** [`examples/prognostic_dataset_generator.py`](examples/prognostic_dataset_generator.py)
+- 🔋 **Public Ground-Truth Empirical Benchmark (NASA PCoE Cell B0005 — All 168 Cycles):** [`benchmarks/nasa_b0005_live_benchmark.py`](benchmarks/nasa_b0005_live_benchmark.py) | [Raw 168-Cycle Silicon Audit CSV](benchmarks/nasa_b0005_live_silicon_report.csv)
 
 
 ### 🔬 4 Immutable Empirical Verifications:

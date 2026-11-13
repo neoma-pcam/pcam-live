@@ -1,4 +1,4 @@
-﻿# Core IP & Internal Suites
+# Core IP & Internal Suites
 NEOMA_BrainSpine_Reflex_v1.0*
 agents/
 battery/
@@ -45,3 +45,4 @@ target/
 pcam-gateway/target/
 
 pcam-gateway/
+benchmarks/.cache/
