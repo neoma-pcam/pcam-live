@@ -246,13 +246,14 @@ Rather than cycling through trillions of software iterations, P-CAM leverages su
 
 ## ⚛️ 6. D-Wave Ocean SDK Integration (`dimod` Compatible)
 
-Directly replace cloud QPU or simulated annealing samplers in quantum annealing workflows with the physical P-CAM silicon accelerator using the standard `dimod.Sampler` interface:
+Directly replace cloud QPU or simulated annealing samplers in quantum annealing workflows with the physical P-CAM silicon accelerator using the standard `dimod.Sampler` interface (authenticated via RapidAPI — **2,000 free solves/month**):
 
 ```bash
 pip install dimod requests
 ```
 
 ```python
+import os
 import requests
 import dimod
 
@@ -260,8 +261,18 @@ class PCAMSampler(dimod.Sampler):
     parameters = {}
     properties = {}
 
-    def __init__(self, endpoint="https://api.neoma-pcam.com/v1/solve-universal-equilibrium"):
+    def __init__(
+        self,
+        api_key=None,
+        endpoint="[https://neoma-p-cam-hyper-physical-control.p.rapidapi.com/v1/solve-universal-equilibrium](https://neoma-p-cam-hyper-physical-control.p.rapidapi.com/v1/solve-universal-equilibrium)",
+    ):
         self.endpoint = endpoint
+        self.api_key = api_key or os.getenv("PCAM_RAPIDAPI_KEY", "YOUR_RAPIDAPI_FREE_KEY")
+        self.headers = {
+            "Content-Type": "application/json",
+            "x-rapidapi-host": "neoma-p-cam-hyper-physical-control.p.rapidapi.com",
+            "x-rapidapi-key": self.api_key,
+        }
 
     def sample(self, bqm, **kwargs):
         # Map 64-spin Ising Hamiltonian energy terms to P-CAM physical parameters
@@ -272,9 +283,11 @@ class PCAMSampler(dimod.Sampler):
             "flux_potential_v": round(0.5504 + abs(linear_mean), 4),
             "gradient_velocity": round(520.0 + abs(quad_mean) * 100, 2),
             "gradient_acceleration": 16000.0,
-            "active_strain": 1.55
+            "active_strain": 1.55,
         }
-        res = requests.post(self.endpoint, json=payload, timeout=5).json()
+        resp = requests.post(self.endpoint, json=payload, headers=self.headers, timeout=5)
+        resp.raise_for_status()
+        res = resp.json()
 
         # Construct ground-state sample assignment from deterministic equilibrium response
         sample = {v: (1 if (i % 2 == 0) else -1) for i, v in enumerate(bqm.variables)}
@@ -288,8 +301,8 @@ class PCAMSampler(dimod.Sampler):
             },
         )
 
-# Initialize the Room-Temperature Physical Solver
-sampler = PCAMSampler()
+# Initialize the Room-Temperature Physical Solver (uses PCAM_RAPIDAPI_KEY or explicit key)
+sampler = PCAMSampler(api_key="YOUR_RAPIDAPI_FREE_KEY")
 
 # Formulate a 64-Spin Ising problem
 h = {i: 0.1 * (i % 5) for i in range(64)}
@@ -302,7 +315,6 @@ print(f"Energy: {sampleset.first.energy:.4f} J")
 print(f"Reflex Latency: {sampleset.info['hardware_reflex_ms']} ms")
 print(f"Silicon PoPW Seal: {sampleset.info['hardware_seal_id']}")
 ```
-
 
 ---
 
@@ -322,8 +334,8 @@ Across a **64-spin fully connected graph (2,016 coupled interaction edges)**, P-
 ## 🚦 8. Smart Access Quota Policy
 
 1. **Official Web Portal (Unlimited):** Access via [neoma-pcam.github.io/pcam-live](https://neoma-pcam.github.io/pcam-live/). Unlimited 365-day real-time monitoring and interactive UI evaluation with zero deductions.
-2. **RapidAPI Institutional SLA:** Dedicated high-throughput enterprise gateways bypassing public rate limits to guarantee sub-millisecond SLA latencies.
-3. **Unauthorized Direct Scripts (2,000-Tick Circuit Breaker):** Unauthenticated calls (e.g., raw `curl`, external scripts without API keys) are restricted by a **2,000-Tick Evaluation Gate**. Exceeding 2,000 calls triggers a `402 Payment Required` circuit breaker to protect the physical enclave.
+2. **RapidAPI Metered & Institutional Gateways (2,000 Free/mo + SLA):** All production workloads, SDK solvers (`PCAMSampler`), and 7-domain API integrations authenticate via RapidAPI (`2,000 free requests/month` on the Universal Solver plan, scaling to dedicated sub-millisecond Enterprise SLA gateways).
+3. **Unauthenticated Attestation Gate (2,000-Tick Circuit Breaker):** Direct keyless enclave access is reserved strictly for lightweight client-side hardware verification (`pcam_objective_audit.py`) and is enforced by a **2,000-Tick Circuit Breaker**. Exceeding 2,000 calls triggers a `402 Payment Required` cutoff to prevent commercial free-riding.
 
 ---
 
