@@ -16,7 +16,9 @@ jobs:
         run: |
           python3 - << 'EOF'
           import json
+          import sys
           import time
+          import urllib.error
           import urllib.request
 
           url = "https://api.neoma-pcam.com/v1/solve-universal-equilibrium"
@@ -27,22 +29,41 @@ jobs:
               "active_strain": 1.10
           }).encode("utf-8")
 
-          req = urllib.request.Request(url, data=payload, headers={"Content-Type": "application/json"}, method="POST")
-          t0 = time.perf_counter()
-          with urllib.request.urlopen(req, timeout=10) as resp:
-              rtt_ms = (time.perf_counter() - t0) * 1000.0
-              body = json.loads(resp.read().decode("utf-8"))
+          headers = {
+              "Content-Type": "application/json",
+              "Accept": "application/json",
+              "User-Agent": "NEOMA-PCAM-Enclave-Monitor/5.3"
+          }
 
-          telem = body.get("telemetry", {})
-          uid = telem.get("hardware_uid", "")
-          zeta = float(body.get("zeta", 0.0))
-          reflex_ms = float(body.get("hardware_reflex_ms", 0.0))
-          seal = body.get("hardware_seal_id", "")
+          last_err = None
+          for attempt in range(1, 4):
+              try:
+                  req = urllib.request.Request(url, data=payload, headers=headers, method="POST")
+                  t0 = time.perf_counter()
+                  with urllib.request.urlopen(req, timeout=15) as resp:
+                      rtt_ms = (time.perf_counter() - t0) * 1000.0
+                      body = json.loads(resp.read().decode("utf-8"))
 
-          assert body.get("status") == "hardware_active", f"Unexpected status: {body}"
-          assert uid == "0051003C3434510C32333934", f"UID mismatch: {uid}"
-          assert 0.1 <= zeta <= 2.0, f"Zeta out of bounds: {zeta}"
-          assert seal.startswith("SEAL-0051003C"), f"Invalid seal: {seal}"
+                  telem = body.get("telemetry", {})
+                  uid = telem.get("hardware_uid", "")
+                  zeta = float(body.get("zeta", 0.0))
+                  reflex_ms = float(body.get("hardware_reflex_ms", 0.0))
+                  seal = body.get("hardware_seal_id", "")
 
-          print(f"[PASS] Enclave Active | UID: {uid} | HW Reflex: {reflex_ms:.4f} ms | Zeta: {zeta:.4f} | CI RTT: {rtt_ms:.2f} ms")
+                  assert body.get("status") == "hardware_active", f"Unexpected status: {body}"
+                  assert uid == "0051003C3434510C32333934", f"UID mismatch: {uid}"
+                  assert 0.1 <= zeta <= 2.0, f"Zeta out of bounds: {zeta}"
+                  assert seal.startswith("SEAL-0051003C"), f"Invalid seal: {seal}"
+
+                  print(f"[PASS] Enclave Active | UID: {uid} | HW Reflex: {reflex_ms:.4f} ms | Zeta: {zeta:.4f} | CI RTT: {rtt_ms:.2f} ms")
+                  sys.exit(0)
+              except urllib.error.HTTPError as e:
+                  err_body = e.read().decode("utf-8", errors="replace")
+                  last_err = f"Attempt {attempt} HTTP {e.code}: {err_body}"
+              except Exception as e:
+                  last_err = f"Attempt {attempt} Error: {e}"
+              time.sleep(2)
+
+          print(f"[FAIL] {last_err}")
+          sys.exit(1)
           EOF
