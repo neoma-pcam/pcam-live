@@ -133,6 +133,22 @@ NEOMA P-CAM is delivered strictly as a **cloud-server-supported physical co-proc
 ---
 <!-- PCAM-SUPPLY-ARCH-END -->
 
+<!-- PCAM-BOUNDARY-START -->
+## 🧭 1.2. Operational Boundaries: Where P-CAM Excels (and Where Not to Use Cloud API)
+
+Senior engineers judge a physical co-processor as much by its declared operating envelope as by its peak benchmarks. Below is our exact engineering boundary across deployment tiers:
+
+| Deployment Tier | Typical Control / Compute Cadence | Recommended Use Cases | Not Intended For |
+| :--- | :--- | :--- | :--- |
+| **Public Cloud API / RapidAPI**<br>*(2,000 Free/mo · WAN RTT)* | **1 Hz – 100 Hz**<br>*(Supervisory & Batch)* | • Execution slicing (TWAP/VWAP) & slippage damping<br>• GPU / LLM pre-inference non-linear boundary offload<br>• 3-year prognostic & multi-fault CSV dataset synthesis | Sub-millisecond (`< 1 ms`) hard real-time inner servo loops over public internet (constrained by WAN speed-of-light RTT) |
+| **Dedicated Cloud Enclave**<br>*(Single-Tenant Board · $499+)* | **10 Hz – 250 Hz**<br>*(Dedicated Private Link)* | • High-throughput enterprise AI clusters & quant desks requiring isolated silicon with zero noisy-neighbor jitter | Safety-critical actuator cutoff without local hardware interlocks |
+| **On-Premise Edge Appliance**<br>*(Direct Local Bus)* | **Sub-millisecond**<br>*(On-Substrate `< 0.02 ms`)* | • Direct factory cell, battery testbed, and autonomous chassis damping on isolated local networks | Unverified commercial redistribution without hardware license |
+
+- ⚖️ **Run 1:1 Software PID vs. P-CAM Benchmark:** Install [`requirements.txt`](requirements.txt) and run [`examples/pid_vs_pcam_benchmark.py`](examples/pid_vs_pcam_benchmark.py) to compare conventional PID ringing against live P-CAM overdamped equilibrium under an identical 200% shock.
+
+---
+<!-- PCAM-BOUNDARY-END -->
+
 ## 🏛️ 2. Technical Philosophy: P-CAM & NEOMA
 
 * **P-CAM (Predictive Control Adaptive Material):** P-CAM does not operate as an abstract, disconnected mathematical simulation. By directly sensing physical substrate conditions (real-time analog channel telemetry) in real time, P-CAM diagnoses, predicts, and dynamically controls adaptive material dynamics across hostile and high-frequency environments.
