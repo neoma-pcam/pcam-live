@@ -4,11 +4,11 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pcam-sampler"
-version = "1.0.0"
+version = "1.0.1"
 description = "D-Wave Ocean SDK compatible In-Material Physical Solver for NEOMA P-CAM"
 readme = "README.md"
 authors = [
-  { name = "NEOMA Lab", email = "engineering@neoma-pcam.com" }
+    { name = "NEOMA Lab", email = "engineering@neoma-pcam.com" }
 ]
 license = "Apache-2.0"
 classifiers = [
@@ -25,4 +25,5 @@ requires-python = ">=3.8"
 
 [project.urls]
 Homepage = "https://github.com/neoma-pcam/pcam-live"
-Documentation = "https://api.neoma-pcam.com/docs"
+Documentation = "https://neoma-pcam.github.io/pcam-live/"
+Gateway = "https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control"
