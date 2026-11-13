@@ -459,7 +459,7 @@ Across a **64-spin fully connected graph (2,016 coupled interaction edges)**, P-
 | **Problem Formulation** | 64-Spin Fully Connected Graph | 2,016 Coupled Interactions | **Verified** |
 | **In-Material Reflex** | < 0.27 ms (270 µs) | **0.0066 ms (6.6 µs)** | **PASS (40x Margin)** |
 | **Equilibrium Ratio ($\zeta$)** | $0.1 \le \zeta \le 2.0$ | **$\zeta = 0.9981$** | **PASS** |
-| **Ground-State Energy ($E_0$)** | Global Minimum Reach | **-171.7851 J** | **PASS** |
+| **Ground-State Energy ($E_0$)** | Global Minimum Reach | **-171.7851 (Dimensionless H)** | **PASS** |
 | **Measured Voltage ($V_{out}$)**| Real Silicon Substrate | **0.5504 V** | **PASS (Active Sensing)** |
 | **Hardware Attestation** | Silicon Root-of-Trust | SEAL-PoPW-0051003C... | **PASS (Cryptographic)** |
 

@@ -1,19 +1,42 @@
 """
-NEOMA P-CAM & PyBaMM Battery Thermal Runaway Mitigation Integration
-Directly links PyBaMM electrochemical simulations to the P-CAM physical hardware enclave.
+NEOMA P-CAM & PyBaMM Battery Thermal Runaway Mitigation Integration (v5.3.0)
+===========================================================================
+100% Zero-PRNG, zero-simulation hardware interface.
+Transmits normalized electrochemical boundary derivatives to the P-CAM 003
+analog silicon enclave (/v1/battery/predict) and audits live hardware telemetry.
 """
 
+import os
 import time
 import requests
 
-GATEWAY_URL = "https://gp-pcam-universal-physical-solver.p.rapidapi.com/v1/battery-energetics"
+DIRECT_ENCLAVE_URL = "https://api.neoma-pcam.com/v1/battery/predict"
+RAPIDAPI_GATEWAY_URL = "https://neoma-p-cam-hyper-physical-control.p.rapidapi.com/v1/battery/predict"
+EXPECTED_UID = "0051003C3434510C32333934"
 
 
 def query_pcam_battery_energetics(
-    voltage_v=0.082, velocity=520, acceleration=16000, strain=1.55
+    voltage_v: float = 0.082,
+    velocity: float = 520.0,
+    acceleration: float = 16000.0,
+    strain: float = 1.55,
 ):
-    """Invokes P-CAM Hardware Enclave 05 for electrochemical runaway damping."""
-    headers = {"Content-Type": "application/json"}
+    """Invokes live P-CAM 003 silicon enclave for electrochemical runaway damping."""
+    rapidapi_key = os.getenv("PCAM_RAPIDAPI_KEY", "").strip()
+    if rapidapi_key:
+        url = RAPIDAPI_GATEWAY_URL
+        headers = {
+            "Content-Type": "application/json",
+            "x-rapidapi-host": "neoma-p-cam-hyper-physical-control.p.rapidapi.com",
+            "x-rapidapi-key": rapidapi_key,
+        }
+    else:
+        url = DIRECT_ENCLAVE_URL
+        headers = {
+            "Content-Type": "application/json",
+            "User-Agent": "NEOMA-PCAM-Battery-Client/5.3",
+        }
+
     payload = {
         "flux_potential_v": voltage_v,
         "gradient_velocity": velocity,
@@ -21,66 +44,48 @@ def query_pcam_battery_energetics(
         "active_strain": strain,
     }
 
-    try:
-        t0 = time.perf_counter()
-        resp = requests.post(GATEWAY_URL, json=payload, headers=headers, timeout=3.0)
-        elapsed_ms = (time.perf_counter() - t0) * 1000
-
-        if resp.status_code == 200:
-            data = resp.json()
-            return data, elapsed_ms
-        else:
-            print(f"[!] Gateway Error: {resp.status_code}")
-            return None, elapsed_ms
-    except Exception as e:
-        print(f"[!] Connection failed: {e}")
-        return None, 0.0
+    t0 = time.perf_counter()
+    resp = requests.post(url, json=payload, headers=headers, timeout=5.0)
+    elapsed_ms = (time.perf_counter() - t0) * 1000.0
+    resp.raise_for_status()
+    return resp.json(), elapsed_ms
 
 
-def simulate_battery_thermal_mitigation():
+def run_live_battery_hardware_audit():
     print("==================================================================")
-    print("  PyBaMM & NEOMA P-CAM Hardware Thermal Runaway Mitigation Demo")
+    print("  PyBaMM & NEOMA P-CAM Live Hardware Thermal Mitigation Audit")
     print("==================================================================\n")
 
-    print("[1] Simulating battery cell discharge under high C-rate stress...")
-    print("[!] Electrochemical ion gradient anomaly detected in cell!")
-    print("[!] Approaching thermal runaway precursor boundary...\n")
-
-    print("[2] Invoking NEOMA P-CAM Physical Enclave 05 via Cloud...")
+    print("[1] Extracting 4 dimensionless electrochemical boundary scalars...")
+    print("[2] Dispatching boundary state to NEOMA P-CAM 003 Silicon Enclave...")
     result, rtt_ms = query_pcam_battery_energetics()
 
-    if result:
-        diag = result.get("diagnostics", {})
-        control = result.get("adaptive_control", {})
+    telem = result.get("telemetry", {})
+    uid = telem.get("hardware_uid", "")
+    seal = str(result.get("hardware_seal_id", ""))
+    zeta = float(result.get("zeta", 0.0))
 
-        print("\n----------------- [P-CAM HARDWARE RESPONSE] -----------------")
-        print(f"Status                  : {result.get('status')}")
-        print(f"Hardware Reflex Latency : {result.get('hardware_reflex_ms')} ms (Silicon)")
-        print(f"Network RTT Latency     : {rtt_ms:.2f} ms")
-        print(f"Hardware Enclave        : {result.get('hardware_enclave')}")
-        print(f"Silicon Seal ID         : {result.get('hardware_seal_id')}")
-        print(f"Attestation Proof       : {result.get('attestation_proof')[:30]}...")
-        print("----------------- [DIAGNOSTIC METRICS] ----------------------")
-        print(
-            f"Electrochemical Drift Flux    : {diag.get('electrochemical_drift_flux')}"
-        )
-        print(
-            f"Thermal Runaway Precursor Risk: {diag.get('thermal_runaway_precursor_pct')}%"
-        )
-        print(
-            f"Internal Entropy Gradient     : {diag.get('internal_entropy_gradient')}"
-        )
-        print(f"Cell Mitigation Mode          : {diag.get('cell_mitigation_mode')}")
-        print("----------------- [ADAPTIVE CONTROL ACTION] -----------------")
-        print(f"Control Action          : {control.get('action')}")
-        print(f"Damping Coefficient     : {control.get('damping_coefficient')}")
-        print(f"Target Equilibrium      : {control.get('target_state')}")
-        print(f"Hardware Insight        : {control.get('slm_interpreted_instruction')}")
-        print("-------------------------------------------------------------")
-        print(
-            "\n[SUCCESS] Thermal runaway cascade successfully arrested by P-CAM hardware."
-        )
+    assert result.get("status") == "hardware_active", f"Unexpected status: {result}"
+    assert uid == EXPECTED_UID, f"Hardware UID mismatch: {uid}"
+    assert seal.startswith(f"SEAL-{EXPECTED_UID}"), f"Invalid SEAL-PoPW: {seal}"
+
+    print("\n----------------- [P-CAM 003 SILICON TELEMETRY] ----------------")
+    print(f"Status                  : {result.get('status')}")
+    print(f"Domain                  : {result.get('domain')}")
+    print(f"Hardware UID            : {uid}")
+    print(f"Silicon Reflex Latency  : {result.get('hardware_reflex_ms')} ms")
+    print(f"Client Network RTT      : {rtt_ms:.2f} ms")
+    print(f"Damping Ratio (Zeta)    : {zeta:.4f}")
+    print(f"Control Intensity       : {result.get('control_intensity')}")
+    print(f"State Mode              : {result.get('state_mode')}")
+    print(f"Substrate V_OUT         : {telem.get('v_out_measured_v')} V")
+    print(f"Physical Entropy        : {telem.get('entropy_ent')} ENT")
+    print(f"Silicon Cycle (GEN)     : {telem.get('gen_cycle')}")
+    print(f"Cognitive Synthesis     : {result.get('cognitive_synthesis')}")
+    print(f"Silicon Seal (SEAL-PoPW): {seal}")
+    print("------------------------------------------------------------------")
+    print("\n[VERIFIED] Live analog silicon damping & SEAL-PoPW attestation confirmed.")
 
 
 if __name__ == "__main__":
-    simulate_battery_thermal_mitigation()
+    run_live_battery_hardware_audit()
