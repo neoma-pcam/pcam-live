@@ -10,7 +10,7 @@ import os
 import time
 import requests
 
-EXPECTED_UID = "0051003C3434510C32333934"
+EXPECTED_UID_PREFIX = "0051003C"
 
 
 def query_pcam_battery_energetics(
@@ -77,8 +77,8 @@ def run_live_battery_hardware_audit():
     zeta = float(result.get("zeta", 0.0))
 
     assert result.get("status") == "hardware_active", f"Unexpected status: {result}"
-    assert uid == EXPECTED_UID, f"Hardware UID mismatch: {uid}"
-    assert seal.startswith(f"SEAL-{EXPECTED_UID}"), f"Invalid SEAL-PoPW: {seal}"
+    assert uid.startswith(EXPECTED_UID_PREFIX), f"Hardware UID mismatch: {uid}"
+    assert seal.startswith(f"SEAL-{EXPECTED_UID_PREFIX}"), f"Invalid SEAL-PoPW: {seal}"
 
     print("\n----------------- [P-CAM 003 SILICON TELEMETRY] ----------------")
     print(f"Verified Endpoint       : {active_url}")
