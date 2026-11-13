@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pcam-sampler"
-version = "1.0.1"
+version = "1.0.2"
 description = "D-Wave Ocean SDK compatible In-Material Physical Solver for NEOMA P-CAM"
 readme = "README.md"
 authors = [

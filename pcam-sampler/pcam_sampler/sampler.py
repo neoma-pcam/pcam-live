@@ -16,7 +16,7 @@ class PCAMSampler(dimod.Sampler):
     """
     properties = {
         "description": "NEOMA P-CAM In-Material Physical Relaxation Solver",
-        "version": "1.0.1",
+        "version": "1.0.2",
         "max_variables": 1024,
         "category": "physical_in_material_annealer",
     }
@@ -132,6 +132,5 @@ class PCAMSampler(dimod.Sampler):
         return dimod.SampleSet.from_samples_bqm(
             [sample_result],
             bqm,
-            energy=[energy],
-            info=[info],
+            info=info,
         )
