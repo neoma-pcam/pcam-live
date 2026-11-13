@@ -163,6 +163,8 @@ for sc in scenarios:
     )
 ```
 
+- 📊 **3-Year Prognostic & Multi-Fault CSV Dataset Generator:** [`examples/prognostic_dataset_generator.py`](examples/prognostic_dataset_generator.py)
+
 
 ### 🔬 4 Immutable Empirical Verifications:
 1. **Zero-Hallucination Cognitive Synthesis:** The physical damping convergence ratio ($\zeta = 1.1278 > 1.0$) deterministically drives the cognitive statement (`Regime: Overdamped Stability`). The SLM does not speculate or hallucinate; it verbalizes raw thermodynamic equilibrium directly measured from the hardware.
