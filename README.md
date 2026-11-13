@@ -354,7 +354,7 @@ Across a **64-spin fully connected graph (2,016 coupled interaction edges)**, P-
 
 ---
 
-## 🔒 11. Silicon Root-of-Trust & Dynamic Material PUF
+## 🔒 10. Silicon Root-of-Trust & Dynamic Material PUF
 
 P-CAM enforces a 3-tier immutable defense mechanism grounded in raw physical entropy:
 1. **Physical Challenge-Response:** Validates intrinsic micro-voltage impedance responses generated across real silicon and material samples.
@@ -363,7 +363,7 @@ P-CAM enforces a 3-tier immutable defense mechanism grounded in raw physical ent
 
 ---
 
-## 📬 12. Enterprise Inquiries & Partnership
+## 📬 11. Enterprise Inquiries & Partnership
 
 * **Official Web Portal:** https://neoma-pcam.github.io/pcam-live/
 * **Interactive API Docs:** https://api.neoma-pcam.com/docs
@@ -372,7 +372,7 @@ P-CAM enforces a 3-tier immutable defense mechanism grounded in raw physical ent
 
 ---
 
-## 📑 13. Citation & License
+## 📑 12. Citation & License
 
 ```bibtex
 @software{neoma_pcam_2026,
