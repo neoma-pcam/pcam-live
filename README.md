@@ -89,6 +89,47 @@ For cloud LLM inference clusters and HPC workloads, NEOMA P-CAM operates as an i
 * 🖥️ **10-Line LLM / Inference Middleware Wrapper:** [`examples/llm_middleware_offload.py`](./examples/llm_middleware_offload.py)
 
 ---
+<!-- PCAM-SUPPLY-ARCH-START -->
+## 🪟 1.1. Glass-Box Cloud Supply Architecture (Transparent, Stateless & Hardware-Isolated)
+
+NEOMA P-CAM is delivered strictly as a **cloud-server-supported physical co-processor**—requiring **zero client-side hardware installation, zero rack modification, and zero data retention**. Every boundary from client memory to analog silicon is openly inspectable:
+
+```text
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ CLIENT PREMISES (Inside Your Firewall — Raw IP & Data Never Leave)          │
+│  • Proprietary Weights / Source Code / Sensor Streams / PII stay local      │
+│  • Lightweight Middleware normalizes state -> 4 dimensionless scalars only   │
+│  • 0ms Fail-Safe Bypass: auto-routes to local control on network timeout    │
+└──────────────────────────────────────┬──────────────────────────────────────┘
+                                       │ HTTPS / TLS 1.3 (4 Scalars Only)
+                                       ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ NEOMA SINGLE API GATEWAY (api.neoma-pcam.com / RapidAPI Hub)                │
+│  • Stateless Pass-Through: ZERO payload logging, ZERO DB, ZERO AI training  │
+│  • Anti-Extraction Guard: blocks grid-scan reverse-engineering attempts     │
+└──────────────────────────────────────┬──────────────────────────────────────┘
+                                       │ Internal Serial Bus (Isolated)
+                                       ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ NEOMA CLOUD SILICON ENCLAVE (Multi-Board P-CAM 003 USB Cluster)             │
+│  • NO Flash / SSD / Non-Volatile Memory on the analog silicon substrate     │
+│  • Charge dissipates in < 0.02 ms -> physical state resets immediately      │
+│  • Scales linearly via industrial powered USB hubs (< 5% host CPU, mW-class)│
+└──────────────────────────────────────┬──────────────────────────────────────┘
+                                       │ Returns Equilibrium + Audit Receipt
+                                       ▼
+                     [ zeta , control_intensity , SEAL-PoPW ]
+```
+
+1. **Frictionless Drop-In Connection (Zero Client Hardware):** Clients never buy, wire, or maintain physical boards in their server racks. Existing GPU clusters, cloud backends, and control loops connect via standard HTTPS REST calls or a 10-line middleware wrapper.
+2. **Client-Side Boundary De-Identification & 0ms Fail-Safe Bypass:** Raw business logic, model weights, and sensitive telemetry never leave client premises—only **4 dimensionless boundary scalars** (`flux_potential_v`, `gradient_velocity`, `gradient_acceleration`, `active_strain`) cross the network. If connectivity degrades, the client middleware bypasses immediately (`0 ms`) to local control without downtime.
+3. **End-to-End Stateless Pass-Through (Zero Data Accumulation):** Neither the client middleware wrapper nor the NEOMA cloud gateway logs, stores, aggregates, or retains request payloads. Client traffic is never accumulated into a data lake or used to train models.
+4. **Hardware-Level Root Blocking of Information Leakage:** The room-temperature P-CAM 003 analog silicon substrate contains **no non-volatile storage or persistent memory bus**—physical charge dissipates immediately into equilibrium (`zeta`, `control_intensity`) and resets, making cross-tenant leakage or data extraction physically impossible. A single-use SHA-256 receipt (`SEAL-PoPW`) is returned so clients keep full compliance auditability on their own side.
+5. **Demand-Driven Multi-Board Scale-Out:** Within NEOMA's central cloud enclave, multi-board P-CAM 003 clusters expand horizontally via externally powered industrial USB hubs behind a single load-balanced gateway—scaling throughput linearly on demand without megawatt-scale power or liquid-cooling infrastructure.
+
+---
+<!-- PCAM-SUPPLY-ARCH-END -->
+
 ## 🏛️ 2. Technical Philosophy: P-CAM & NEOMA
 
 * **P-CAM (Predictive Control Adaptive Material):** P-CAM does not operate as an abstract, disconnected mathematical simulation. By directly sensing physical substrate conditions (real-time analog channel telemetry) in real time, P-CAM diagnoses, predicts, and dynamically controls adaptive material dynamics across hostile and high-frequency environments.
