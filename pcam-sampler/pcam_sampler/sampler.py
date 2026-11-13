@@ -1,5 +1,5 @@
 """
-PCAMSampler: D-Wave Ocean SDK Compatible In-Material Physical Solver
+PCAMSampler: dimod BQM Compatible In-Material Physical Solver
 """
 import os
 import time
@@ -11,7 +11,7 @@ from typing import Dict, Any, Optional
 
 class PCAMSampler(dimod.Sampler):
     """
-    D-Wave dimod.Sampler interface connected to the NEOMA P-CAM
+    Standard dimod.Sampler interface connected to the NEOMA P-CAM
     Deterministic Physical Reflex & Ising Solver Gateway.
     """
     properties = {
@@ -52,7 +52,7 @@ class PCAMSampler(dimod.Sampler):
 
     def sample(self, bqm: dimod.BinaryQuadraticModel, **parameters) -> dimod.SampleSet:
         """
-        D-Wave 표준 BQM을 수신하여 P-CAM 물리 완화 루프를 통해 기저 상태를 도출합니다.
+        표준 dimod BQM을 수신하여 P-CAM 물리 완화 루프를 통해 기저 상태를 도출합니다.
         """
         # 1. BQM을 표준 이징 모델 (h, J)로 추출
         linear, quadratic, offset = bqm.to_ising()
@@ -119,7 +119,7 @@ class PCAMSampler(dimod.Sampler):
         else:
             sample_result = sample_spin
 
-        # 7. 해밀토니안 에너지 산출 및 D-Wave 표준 SampleSet 생성
+        # 7. 해밀토니안 에너지 산출 및 표준 dimod SampleSet 생성
         energy = bqm.energy(sample_result)
         info = {
             "zeta": zeta,
