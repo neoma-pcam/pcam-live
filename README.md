@@ -139,7 +139,7 @@ Beyond instantaneous reflex damping, P-CAM serves as a **physical ground-truth d
 import requests
 
 # Uses the existing Swagger schema without any endpoint or payload modification
-URL = "[https://neoma-p-cam-hyper-physical-control.p.rapidapi.com/v1/solve-universal-equilibrium](https://neoma-p-cam-hyper-physical-control.p.rapidapi.com/v1/solve-universal-equilibrium)"
+URL = "https://neoma-p-cam-hyper-physical-control.p.rapidapi.com/v1/solve-universal-equilibrium"
 HEADERS = {
     "Content-Type": "application/json",
     "x-rapidapi-host": "neoma-p-cam-hyper-physical-control.p.rapidapi.com",
