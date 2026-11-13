@@ -321,9 +321,9 @@ Across a **64-spin fully connected graph (2,016 coupled interaction edges)**, P-
 
 ## 🚦 8. Smart Access Quota Policy
 
-1. **Official Web Portal & Swagger UI (Unlimited):** Access via [neoma-pcam.github.io/pcam-live](https://neoma-pcam.github.io/pcam-live/) and [/docs](https://api.neoma-pcam.com/docs). Unlimited 365-day real-time monitoring and interactive UI evaluation with zero deductions.
+1. **Official Web Portal (Unlimited):** Access via [neoma-pcam.github.io/pcam-live](https://neoma-pcam.github.io/pcam-live/). Unlimited 365-day real-time monitoring and interactive UI evaluation with zero deductions.
 2. **RapidAPI Institutional SLA:** Dedicated high-throughput enterprise gateways bypassing public rate limits to guarantee sub-millisecond SLA latencies.
-3. **Unauthorized Direct Scripts (50-Tick Circuit Breaker):** Unauthenticated calls (e.g., raw `curl`, external scripts without API keys) are restricted by a **50-Tick Evaluation Gate**. Exceeding 50 calls triggers a `402 Payment Required` circuit breaker to protect the physical enclave.
+3. **Unauthorized Direct Scripts (2,000-Tick Circuit Breaker):** Unauthenticated calls (e.g., raw `curl`, external scripts without API keys) are restricted by a **2,000-Tick Evaluation Gate**. Exceeding 2,000 calls triggers a `402 Payment Required` circuit breaker to protect the physical enclave.
 
 ---
 
