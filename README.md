@@ -318,6 +318,25 @@ print(f"Silicon PoPW Seal: {sampleset.info['hardware_seal_id']}")
 
 ---
 
+## 🤖 6.1. Model Context Protocol (MCP) Server (Rust — Claude / Cursor / Agents)
+
+Allow LLM agents to offload stiff non-linear equilibrium equations and 64-spin Ising optimization directly to the P-CAM co-processor via the native Rust `stdio` MCP server ([`pcam-mcp/`](./pcam-mcp/README.md)):
+
+```json
+{
+  "mcpServers": {
+    "neoma-pcam": {
+      "command": "./pcam-mcp/target/release/pcam-mcp",
+      "env": {
+        "PCAM_RAPIDAPI_KEY": "YOUR_RAPIDAPI_FREE_KEY"
+      }
+    }
+  }
+}
+```
+
+- **Tools Exposed:** `solve_nonlinear_equilibrium` (7-domain solver), `solve_ising_optimization` (64-spin Hamiltonian), and `verify_silicon_seal` (Hardware UID `0051003C3434510C32333934` PUF verification).
+
 ## ⚡ 7. Empirical Benchmark: Stiff 64-Spin Ising Matrix
 
 Across a **64-spin fully connected graph (2,016 coupled interaction edges)**, P-CAM settles to deterministic ground-state equilibrium in **0.0066 ms (6.6 µs)** via room-temperature silicon charge dissipation.
