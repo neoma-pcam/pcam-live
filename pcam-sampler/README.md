@@ -3,7 +3,7 @@
 [![PyPI version](https://img.shields.io/pypi/v/pcam-sampler.svg)](https://pypi.org/project/pcam-sampler/)
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
-D-Wave Ocean SDK (`dimod.Sampler`) compatible In-Material Physical Relaxation Solver for NEOMA P-CAM (authenticated via RapidAPI — **2,000 free solves/month**).
+Dimod BQM Compatible compatible In-Material Physical Relaxation Solver for NEOMA P-CAM (authenticated via RapidAPI — **2,000 free solves/month**).
 
 ## Installation
 
