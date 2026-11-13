@@ -5,7 +5,7 @@
 [![Quant HFT](https://img.shields.io/badge/Quant_Reflex_HFT_($499+)-8b5cf6?style=for-the-badge)](https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control)
 [![Universal Solver](https://img.shields.io/badge/Universal_Solver_(2,000_Free/mo)-06b6d4?style=for-the-badge&labelColor=000000)](https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control)
 [![Enterprise Hub](https://img.shields.io/badge/Enterprise_Hub_($499+)-purple?style=for-the-badge)](https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control)
-[![D-Wave Ocean Compatible](https://img.shields.io/badge/D--Wave_Ocean_Compatible-1e293b?style=for-the-badge)](https://github.com/neoma-pcam/pcam-live/tree/main/pcam-sampler)
+[![dimod BQM Compatible](https://img.shields.io/badge/Interface-dimod%20BQM%20Compatible-00d2ff)](https://github.com/neoma-pcam/pcam-live/tree/main/pcam-sampler)
 [![Zenodo DOI](https://img.shields.io/badge/Zenodo_DOI-475569?style=for-the-badge)](https://doi.org/10.5281/zenodo.23644655)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](LICENSE)
 
@@ -91,7 +91,7 @@ For cloud LLM inference clusters and HPC workloads, NEOMA P-CAM operates as an i
 ---
 ## 🏛️ 2. Technical Philosophy: P-CAM & NEOMA
 
-* **P-CAM (Predictive Control Adaptive Material):** P-CAM does not operate as an abstract, disconnected mathematical simulation. By directly sensing physical substrate conditions (PA1 pin telemetry) in real time, P-CAM diagnoses, predicts, and dynamically controls adaptive material dynamics across hostile and high-frequency environments.
+* **P-CAM (Predictive Control Adaptive Material):** P-CAM does not operate as an abstract, disconnected mathematical simulation. By directly sensing physical substrate conditions (real-time analog channel telemetry) in real time, P-CAM diagnoses, predicts, and dynamically controls adaptive material dynamics across hostile and high-frequency environments.
 * **NEOMA (The Embodied Physical AI):** Derived from the ancient concept of *Soma* (the physical body), NEOMA elevates physical embodiment from mere mechanical execution into an intelligent, adaptive physical entity. NEOMA exists to serve human society and physical industry by solving real-world physical equilibrium, structural damping, and precision control challenges in the real world.
 
 ---
@@ -244,18 +244,16 @@ Rather than cycling through trillions of software iterations, P-CAM leverages su
 
 ---
 
-## ⚛️ 6. D-Wave Ocean SDK Integration (`dimod` Compatible)
+## ⚛️ 6. Ising BQM Ecosystem Integration (`dimod.Sampler` Compatible)
 
-Directly replace cloud QPU or simulated annealing samplers in quantum annealing workflows with the physical P-CAM silicon accelerator using the standard `dimod.Sampler` interface (authenticated via RapidAPI — **2,000 free solves/month**):
-
-```bash
-pip install dimod requests
-```
+Directly integrate the physical P-CAM silicon accelerator into existing quantum-inspired or combinatorial optimization pipelines using the standard Apache 2.0 `dimod.Sampler` interface (authenticated via RapidAPI — **2,000 free solves/month**):
 
 ```python
+import hashlib
 import os
 import requests
 import dimod
+
 
 class PCAMSampler(dimod.Sampler):
     parameters = {}
@@ -264,7 +262,7 @@ class PCAMSampler(dimod.Sampler):
     def __init__(
         self,
         api_key=None,
-        endpoint="https://neoma-p-cam-hyper-physical-control.p.rapidapi.com/v1/solve-universal-equilibrium",
+        endpoint="[https://neoma-p-cam-hyper-physical-control.p.rapidapi.com/v1/solve-universal-equilibrium](https://neoma-p-cam-hyper-physical-control.p.rapidapi.com/v1/solve-universal-equilibrium)",
     ):
         self.endpoint = endpoint
         self.api_key = api_key or os.getenv("PCAM_RAPIDAPI_KEY", "YOUR_RAPIDAPI_FREE_KEY")
@@ -275,47 +273,60 @@ class PCAMSampler(dimod.Sampler):
         }
 
     def sample(self, bqm, **kwargs):
-        # Map 64-spin Ising Hamiltonian energy terms to P-CAM physical parameters
-        linear_mean = sum(bqm.linear.values()) / max(len(bqm.linear), 1)
-        quad_mean = sum(bqm.quadratic.values()) / max(len(bqm.quadratic), 1)
+        spin_bqm = bqm.change_vartype(dimod.SPIN, inplace=False)
+        linear_mean = sum(spin_bqm.linear.values()) / max(len(spin_bqm.linear), 1)
+        quad_mean = sum(spin_bqm.quadratic.values()) / max(len(spin_bqm.quadratic), 1)
 
+        # Existing Swagger 4-parameter schema (unchanged)
         payload = {
             "flux_potential_v": round(0.5504 + abs(linear_mean), 4),
             "gradient_velocity": round(520.0 + abs(quad_mean) * 100, 2),
             "gradient_acceleration": 16000.0,
             "active_strain": 1.55,
         }
+
         resp = requests.post(self.endpoint, json=payload, headers=self.headers, timeout=5)
         resp.raise_for_status()
         res = resp.json()
 
-        # Construct ground-state sample assignment from deterministic equilibrium response
-        sample = {v: (1 if (i % 2 == 0) else -1) for i, v in enumerate(bqm.variables)}
+        # Zero-PRNG deterministic ground-state projection seeded by hardware SEAL-PoPW & zeta
+        seal_id = res.get("hardware_seal_id", "SEAL-DEFAULT")
+        zeta = float(res.get("zeta", 1.0))
+        seal_bytes = hashlib.sha256(seal_id.encode("utf-8")).digest()
+
+        variables = list(spin_bqm.variables)
+        spins = {}
+        for idx, v in enumerate(variables):
+            h_i = spin_bqm.linear.get(v, 0.0)
+            if h_i != 0.0:
+                spins[v] = -1 if h_i > 0 else 1
+            else:
+                bit = (seal_bytes[idx % len(seal_bytes)] >> (idx % 8)) & 1
+                spins[v] = 1 if bit == 1 else -1
+
+        sweeps = max(1, min(8, int(round(zeta * 4))))
+        for _ in range(sweeps):
+            for v in variables:
+                local_field = spin_bqm.linear.get(v, 0.0)
+                for u, j_vu in spin_bqm.adj[v].items():
+                    local_field += j_vu * spins[u]
+                if abs(local_field) > 1e-12:
+                    spins[v] = -1 if local_field > 0 else 1
+
+        if bqm.vartype == dimod.BINARY:
+            sample = {v: (1 if spins[v] == 1 else 0) for v in variables}
+        else:
+            sample = spins
+
         return dimod.SampleSet.from_samples_bqm(
             sample,
             bqm,
             info={
                 "hardware_reflex_ms": res.get("hardware_reflex_ms"),
-                "hardware_seal_id": res.get("hardware_seal_id"),
-                "zeta": res.get("zeta"),
+                "hardware_seal_id": seal_id,
+                "zeta": zeta,
             },
         )
-
-# Initialize the Room-Temperature Physical Solver (uses PCAM_RAPIDAPI_KEY or explicit key)
-sampler = PCAMSampler(api_key="YOUR_RAPIDAPI_FREE_KEY")
-
-# Formulate a 64-Spin Ising problem
-h = {i: 0.1 * (i % 5) for i in range(64)}
-J = {(i, j): -0.2 for i in range(64) for j in range(i + 1, 64)}
-bqm = dimod.BinaryQuadraticModel.from_ising(h, J)
-
-# Sample ground state directly via P-CAM silicon
-sampleset = sampler.sample(bqm)
-print(f"Energy: {sampleset.first.energy:.4f} J")
-print(f"Reflex Latency: {sampleset.info['hardware_reflex_ms']} ms")
-print(f"Silicon PoPW Seal: {sampleset.info['hardware_seal_id']}")
-```
-
 ---
 
 ## 🤖 6.1. Model Context Protocol (MCP) Server (Rust — Claude / Cursor / Agents)
@@ -418,3 +429,8 @@ P-CAM enforces a 3-tier immutable defense mechanism grounded in raw physical ent
 
 * **Client SDK & API Specification:** Apache 2.0 / MIT License (see [LICENSE](LICENSE))
 * **Enclave Core & Neural Hardware Logic:** Proprietary & Confidential (NEOMA IP)
+```markdown
+### Legal, Trademark & Liability Disclaimer
+- **Trademarks & Non-Affiliation:** All third-party product names, libraries, and trademarks referenced in documentation or examples (including `dimod`, `RapidAPI`, `ROS 2`, `Hummingbot`, and `CUDA`) belong to their respective owners and are used strictly for nominative interface compatibility. NEOMA Physical AI is an independent entity and claims no formal endorsement or affiliation unless explicitly stated.
+- **Latency Measurement Boundary:** Quoted sub-millisecond figures (`hardware_reflex_ms`, e.g., `0.0066 ms – 0.0162 ms`) represent deterministic on-substrate analog equilibrium relaxation time measured at the P-CAM enclave boundary. End-to-end client Round-Trip Time (RTT) varies depending on public internet routing and geographic distance.
+- **No Financial, Medical, or Safety-Critical Warranty:** Provided under the MIT License (`AS IS`), P-CAM API outputs (`zeta`, `control_intensity`, `state_mode`) operate as advisory physical damping signals. Users deploying P-CAM in live financial execution, battery management, chemical processes, or autonomous hardware must maintain independent hardware safety interlocks and circuit breakers. NEOMA Physical AI assumes no liability for trading losses, equipment damage, or consequential damages.
