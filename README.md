@@ -144,7 +144,6 @@ All P-CAM 003 analog silicon nodes remain **permanently inside NEOMA's central c
 | **Enterprise High-Throughput Tier**<br>*(Shared Enclave · $499+ Priority SLA)* | **10 Hz – 250 Hz**<br>*(Priority Rate & Throughput)* | • High-volume production AI clusters & quant desks requiring elevated rate limits and priority SLA on the shared cloud cluster | Safety-critical actuator cutoff without local client hardware interlocks |
 
 - 🌐 **Shared Platform for Everyone (Zero Node Lock-In & Zero Physical Shipment):** P-CAM nodes are never monopolized by a single tenant or shipped outside NEOMA's cloud facility. Because every transaction enters as 4 anonymized scalars (`106 bytes`) and physically dissipates in under `0.02 ms` with zero disk persistence, everyone shares the same high-efficiency silicon platform with complete data privacy.
-- ⚖️ **Run 1:1 Software PID vs. P-CAM Benchmark:** Install [`requirements.txt`](requirements.txt) and run [`examples/pid_vs_pcam_benchmark.py`](examples/pid_vs_pcam_benchmark.py) to compare conventional PID ringing against live P-CAM overdamped equilibrium under an identical 200% shock.
 
 ---
 <!-- PCAM-BOUNDARY-END -->
