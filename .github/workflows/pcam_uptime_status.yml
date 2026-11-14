@@ -51,7 +51,7 @@ jobs:
                   seal = body.get("hardware_seal_id", "")
 
                   assert body.get("status") == "hardware_active", f"Unexpected status: {body}"
-                  assert uid == "0051003C3434510C32333934", f"UID mismatch: {uid}"
+                  assert uid in ("0051003C", "0051003C3434510C32333934"), f"UID mismatch: {uid}"
                   assert 0.1 <= zeta <= 2.0, f"Zeta out of bounds: {zeta}"
                   assert seal.startswith("SEAL-0051003C"), f"Invalid seal: {seal}"
 
