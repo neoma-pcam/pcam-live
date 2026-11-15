@@ -1,4 +1,6 @@
-# NEOMA P-CAM: Room-Temperature Physical Ising Solver & Silicon Root-of-Trust (v5.3.0)
+> **New in v5.4.0:** Install the official Python SDK via `pip install neoma-pcam` ([PyPI](https://pypi.org/project/neoma-pcam/)) and call `POST /v1/ising/solve` for direct 64-spin Ising Hamiltonian optimization.
+
+# NEOMA P-CAM: Room-Temperature Physical Ising Solver & Silicon Root-of-Trust (v5.4.0)
 
 [![Live Console](https://img.shields.io/badge/Live_Console-10b981?style=for-the-badge)](https://neoma-pcam.github.io/pcam-live/)
 [![Swagger API Docs](https://img.shields.io/badge/Swagger_API_Docs-3b82f6?style=for-the-badge)](https://api.neoma-pcam.com/docs)
@@ -259,7 +261,7 @@ for sc in scenarios:
 
 ```python
 """
-NEOMA P-CAM Objective Hardware Attestation Protocol (v5.3.0)
+NEOMA P-CAM Objective Hardware Attestation Protocol (v5.4.0)
 ============================================================
 An open client-side verification script connecting directly to the P-CAM silicon
 enclave to audit Round-Trip Time (RTT), damping convergence ratio (zeta), and
@@ -491,7 +493,7 @@ Across a **64-spin fully connected graph (2,016 coupled interaction edges)**, P-
 
 ---
 
-## 📦 9. Unified API Response Specification (v5.3.0)
+## 📦 9. Unified API Response Specification (v5.4.0)
 
 ```json
 {
