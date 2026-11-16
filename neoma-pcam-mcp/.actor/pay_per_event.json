@@ -1,0 +1,12 @@
+{
+  "pcam-equilibrium-solve": {
+    "eventTitle": "P-CAM 7-Domain Physical Equilibrium Solve",
+    "eventDescription": "Sub-0.02ms deterministic analog silicon equilibrium solve with SEAL-PoPW cryptographic receipt.",
+    "eventPriceUsd": 0.02
+  },
+  "pcam-ising-solve": {
+    "eventTitle": "P-CAM 64-Spin Ising Optimization Solve",
+    "eventDescription": "Room-temperature 64-spin Ising Hamiltonian ground-state convergence via silicon substrate relaxation.",
+    "eventPriceUsd": 0.05
+  }
+}

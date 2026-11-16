@@ -1,0 +1,32 @@
+﻿{
+    "$schema":  "https://apify.com/schemas/v1/actor.ide.json",
+    "actorSpecification":  1,
+    "name":  "neoma-pcam-mcp",
+    "title":  "NEOMA P-CAM Physical Ising \u0026 Nonlinear Equilibrium MCP",
+    "description":  "Sub-millisecond (0.02ms) physical Ising QUBO optimizer, quant microstructure predictor, and hardware PUF-attested equilibrium engine.",
+    "version":  "0.0",
+    "buildTag":  "latest",
+    "usesStandbyMode":  true,
+    "meta":  {
+                 "templateId":  "python-mcp-empty",
+                 "generatedBy":  "\u003cFILL-IN-MODEL\u003e"
+             },
+    "inputSchema":  {
+                        "title":  "Actor input schema",
+                        "description":  "This is Actor input schema",
+                        "type":  "object",
+                        "schemaVersion":  1,
+                        "properties":  {
+
+                                       },
+                        "required":  [
+
+                                     ]
+                    },
+    "outputSchema":  "./output_schema.json",
+    "storages":  {
+                     "dataset":  "./dataset_schema.json"
+                 },
+    "dockerfile":  "../Dockerfile",
+    "webServerMcpPath":  "/mcp"
+}
