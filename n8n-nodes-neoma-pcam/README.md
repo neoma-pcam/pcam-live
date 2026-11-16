@@ -13,3 +13,6 @@ Official **n8n** community node for **NEOMA P-CAM** — connect spreadsheets, da
 
 - **Industrial Risk & Equilibrium Diagnosis:** Map spreadsheet or database columns (`flux_potential_v`, `gradient_velocity`, `gradient_acceleration`, `active_strain`) across 7 operational domains (Universal Supply Chain, Quant Execution, Battery Thermal Safety, Chemical Process, Biopharma, Mobility, Robotics) and receive `zeta`, `control_intensity`, `action_recommendation`, and cryptographic `SEAL-PoPW` receipts.
 - **64-Spin Combinatorial Optimization:** Offload routing, scheduling, and resource allocation matrices (`fields`, `couplings`) to `/v1/ising/solve` in sub-millisecond hardware time.
+## One-Click Workflow Template
+
+Copy the contents of [examples/pcam_operations_workflow.json](examples/pcam_operations_workflow.json) and paste directly onto any n8n workflow canvas (`Ctrl+V` / `Cmd+V`) to run an end-to-end physical risk diagnosis and alert pipeline.
