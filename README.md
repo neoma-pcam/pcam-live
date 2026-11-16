@@ -71,7 +71,10 @@ print(res["zeta"], res["control_intensity"], res["hardware_seal_id"])
 
 * 🌐 **All-Industry 8-Domain Starter & Mapping Guide:** [`examples/all_industry_starter.py`](./examples/all_industry_starter.py) | [`examples/README.md`](./examples/README.md)
 * 📉 **Slippage Mitigation & TWAP/VWAP Slicer:** [`examples/slippage_execution_optimizer.py`](./examples/slippage_execution_optimizer.py)
-* 🤖 **Hummingbot Spread & Inventory Guard:** [`examples/hummingbot_lob_guard.py`](./examples/hummingbot_lob_guard.py)
+* 🤖 **Hummingbot Spread & Inventory Guard:** [`examples/hummingbot_lob_guard.py`](./examples/hummingbot_lob_guard.py)
+
+### 🤖 Physical AI & Robotics Simulators (MuJoCo / NVIDIA Isaac Sim)
+- **Real-Time Joint Compliance & Impact Damping Bridge:** [examples/robotics_sim_bridge.py](examples/robotics_sim_bridge.py) (mujoco.set_mjcb_control & Isaac Sim Articulation drop-in hook calling /v1/robotics/predict)
 - 📈 **Freqtrade Dual-Engine Quant Strategy (Quant Reflex + 64-Spin Ising):** [scripts/freqtrade_pcam_strategy.py](scripts/freqtrade_pcam_strategy.py)
 * 📂 **30-Second Quant Latency & Seal Test:** [`examples/quant_hft_quickstart.py`](./examples/quant_hft_quickstart.py)
 
