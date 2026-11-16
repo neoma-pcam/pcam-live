@@ -1,0 +1,3 @@
+node_modules/
+*.log
+.root_README_backup_*.bak

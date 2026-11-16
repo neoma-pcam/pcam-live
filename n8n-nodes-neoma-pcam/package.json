@@ -1,0 +1,50 @@
+{
+  "name": "n8n-nodes-neoma-pcam",
+  "version": "1.0.0",
+  "description": "Official n8n community node for NEOMA P-CAM Room-Temperature Physical AI & 64-Spin Ising Solver (RapidAPI & Direct Enclave)",
+  "keywords": [
+    "n8n-community-node-package",
+    "neoma",
+    "pcam",
+    "physical-ai",
+    "ising-solver",
+    "predictive-maintenance",
+    "quant",
+    "battery",
+    "supply-chain"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/neoma-pcam/pcam-live",
+  "author": {
+    "name": "NEOMA Physical AI Team",
+    "email": "contact@neoma-pcam.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/neoma-pcam/pcam-live.git"
+  },
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc && node copy-assets.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "n8n": {
+    "n8nNodesApiVersion": 1,
+    "credentials": [
+      "dist/credentials/NeomaPcamApi.credentials.js"
+    ],
+    "nodes": [
+      "dist/nodes/NeomaPcam/NeomaPcam.node.js"
+    ]
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "n8n-workflow": "^1.82.0",
+    "typescript": "^5.7.2"
+  },
+  "peerDependencies": {
+    "n8n-workflow": "*"
+  }
+}
