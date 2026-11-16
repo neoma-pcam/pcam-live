@@ -71,7 +71,8 @@ print(res["zeta"], res["control_intensity"], res["hardware_seal_id"])
 
 * 🌐 **All-Industry 8-Domain Starter & Mapping Guide:** [`examples/all_industry_starter.py`](./examples/all_industry_starter.py) | [`examples/README.md`](./examples/README.md)
 * 📉 **Slippage Mitigation & TWAP/VWAP Slicer:** [`examples/slippage_execution_optimizer.py`](./examples/slippage_execution_optimizer.py)
-* 🤖 **Hummingbot Spread & Inventory Guard:** [`examples/hummingbot_lob_guard.py`](./examples/hummingbot_lob_guard.py)
+* 🤖 **Hummingbot Spread & Inventory Guard:** [`examples/hummingbot_lob_guard.py`](./examples/hummingbot_lob_guard.py)
+- 📈 **Freqtrade Dual-Engine Quant Strategy (Quant Reflex + 64-Spin Ising):** [scripts/freqtrade_pcam_strategy.py](scripts/freqtrade_pcam_strategy.py)
 * 📂 **30-Second Quant Latency & Seal Test:** [`examples/quant_hft_quickstart.py`](./examples/quant_hft_quickstart.py)
 
 ---
