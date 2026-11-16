@@ -1,4 +1,4 @@
-﻿[![Listed on mcpservers.org](https://mcpservers.org/badge.svg)](https://mcpservers.org/servers/neoma-pcam/pcam-live)
+[![Listed on mcpservers.org](https://mcpservers.org/badge.svg)](https://mcpservers.org/servers/neoma-pcam/pcam-live)
 
 > **New in v5.4.0:** Install the official Python SDK via `pip install neoma-pcam` ([PyPI](https://pypi.org/project/neoma-pcam/)) and call `POST /v1/ising/solve` for direct 64-spin Ising Hamiltonian optimization.
 
@@ -33,7 +33,7 @@
 Institutional clients, HFT quant desks, and autonomous systems can interface directly with the P-CAM production cluster through the following verified access points:
 
 * **Interactive Web Telemetry Console:** 👉 [NEOMA P-CAM Live Web Portal (Real-time 50Hz)](https://neoma-pcam.github.io/pcam-live/)
-* **Interactive Swagger UI (OpenAPI Docs):** 👉 [P-CAM OpenAPI Specification (7-Domain)](https://api.neoma-pcam.com/docs)
+* **Interactive Swagger UI (OpenAPI Docs):** 👉 [P-CAM OpenAPI Specification (8-Domain)](https://api.neoma-pcam.com/docs)
 * **Quant Reflex HFT Enclave (RapidAPI):** 👉 [NEOMA P-CAM Quant Reflex HFT ($499+)](https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control)
 * **Universal Physical Solver (RapidAPI):** 👉 [GP-PCAM Universal Physical Solver (2,000 Free/mo)](https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control)
 * **Enterprise Hyper Physical Hub (RapidAPI):** 👉 [NEOMA P-CAM Enterprise Hub](https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control)
@@ -69,7 +69,7 @@ res = requests.post(url, json=payload, headers=headers).json()
 print(res["zeta"], res["control_intensity"], res["hardware_seal_id"])
 ```
 
-* 🌐 **All-Industry 7-Domain Starter & Mapping Guide:** [`examples/all_industry_starter.py`](./examples/all_industry_starter.py) | [`examples/README.md`](./examples/README.md)
+* 🌐 **All-Industry 8-Domain Starter & Mapping Guide:** [`examples/all_industry_starter.py`](./examples/all_industry_starter.py) | [`examples/README.md`](./examples/README.md)
 * 📉 **Slippage Mitigation & TWAP/VWAP Slicer:** [`examples/slippage_execution_optimizer.py`](./examples/slippage_execution_optimizer.py)
 * 🤖 **Hummingbot Spread & Inventory Guard:** [`examples/hummingbot_lob_guard.py`](./examples/hummingbot_lob_guard.py)
 * 📂 **30-Second Quant Latency & Seal Test:** [`examples/quant_hft_quickstart.py`](./examples/quant_hft_quickstart.py)
@@ -211,7 +211,7 @@ Unlike conventional AI architectures that decouple slow cloud-based language mod
 
 ## 🔮 2.2. 3-Year Prognostic Trajectory, Remediation Control & Fault-Simulation Data Engine
 
-Beyond instantaneous reflex damping, P-CAM serves as a **physical ground-truth data synthesis engine** for AI models, digital twins, and engineering teams facing severe shortages of real-world physical and failure-mode datasets. Using the **exact same 7-domain API schema** (with zero Swagger or infrastructure changes), P-CAM generates four unified layers of actionable physical data:
+Beyond instantaneous reflex damping, P-CAM serves as a **physical ground-truth data synthesis engine** for AI models, digital twins, and engineering teams facing severe shortages of real-world physical and failure-mode datasets. Using the **exact same 8-domain API schema** (with zero Swagger or infrastructure changes), P-CAM generates four unified layers of actionable physical data:
 
 1. **Real-Time Physical State Diagnosis (Current Baseline):** Captures live analog substrate conditions (`v_out_measured_v`, `entropy_ent`, `zeta`, `state_mode`) to diagnose current material stress, thermal drift, or structural instability rather than relying on ungrounded software assumptions.
 2. **3-Year Long-Horizon Physical Trajectory Prediction:** Extrapolates current physical state derivatives across a **3-year operational horizon** (1,095-day degradation, fatigue, and non-linear aging curves) to quantify future failure probabilities before critical thresholds are breached.
@@ -353,10 +353,11 @@ Rather than cycling through trillions of software iterations, P-CAM leverages su
 
 ---
 
-## 🏭 5. 7-Domain Production Endpoints
+## 🏭 5. 8-Domain Production Endpoints
 
 | Domain | Production Endpoint | Target Physics & Industrial Use Case | Measured Latency | Dedicated Access |
 | :--- | :--- | :--- | :--- | :--- |
+| **Ising 64-Spin** | `/v1/ising/solve` | Room-Temperature 64-Spin Ising Hamiltonian Ground-State Solver | 0.0066 ms | [RapidAPI Hub (Free / $499+)](https://rapidapi.com/neoma-pcam/api/neoma-p-cam-hyper-physical-control) |
 | **Universal Core** | `/v1/solve-universal-equilibrium` | Thermodynamic & Physical Equilibrium Solver | `0.0066 ms` | [RapidAPI Hub (2,000 Free / $499+)](https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control) |
 | **Quant HFT** | `/v1/quant/predict` | LOB Microstructure Shock Damping & Slippage Arrest | `0.0066 ms` | [Quant HFT ($499+)](https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control) |
 | **Battery** | `/v1/battery/predict` | Solid-State Energetics & Thermal Runaway Suppression | `0.0072 ms` | [Enterprise Hub](https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control) |
@@ -490,7 +491,7 @@ Across a **64-spin fully connected graph (2,016 coupled interaction edges)**, P-
 ## 🚦 8. Smart Access Quota Policy
 
 1. **Official Web Portal (Unlimited):** Access via [neoma-pcam.github.io/pcam-live](https://neoma-pcam.github.io/pcam-live/). Unlimited 365-day real-time monitoring and interactive UI evaluation with zero deductions.
-2. **RapidAPI Metered & Institutional Gateways (2,000 Free/mo + SLA):** All production workloads, SDK solvers (`PCAMSampler`), and 7-domain API integrations authenticate via RapidAPI (`2,000 free requests/month` on the Universal Solver plan, scaling to dedicated sub-millisecond Enterprise SLA gateways).
+2. **RapidAPI Metered & Institutional Gateways (2,000 Free/mo + SLA):** All production workloads, SDK solvers (`PCAMSampler`), and 8-domain API integrations authenticate via RapidAPI (`2,000 free requests/month` on the Universal Solver plan, scaling to dedicated sub-millisecond Enterprise SLA gateways).
 3. **Unauthenticated Attestation Gate (2,000-Tick Circuit Breaker):** Direct keyless enclave access is reserved strictly for lightweight client-side hardware verification (`pcam_objective_audit.py`) and is enforced by a **2,000-Tick Circuit Breaker**. Exceeding 2,000 calls triggers a `402 Payment Required` cutoff to prevent commercial free-riding.
 
 ---
