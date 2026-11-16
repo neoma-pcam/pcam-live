@@ -1,3 +1,5 @@
+﻿[![Listed on mcpservers.org](https://mcpservers.org/badge.svg)](https://mcpservers.org/servers/neoma-pcam/pcam-live)
+
 > **New in v5.4.0:** Install the official Python SDK via `pip install neoma-pcam` ([PyPI](https://pypi.org/project/neoma-pcam/)) and call `POST /v1/ising/solve` for direct 64-spin Ising Hamiltonian optimization.
 
 # NEOMA P-CAM: Room-Temperature Physical Ising Solver & Silicon Root-of-Trust (v5.4.0)
