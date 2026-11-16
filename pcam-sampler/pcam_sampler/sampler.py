@@ -1,33 +1,32 @@
 """
-PCAMSampler: dimod BQM Compatible In-Material Physical Solver
+PCAMSampler: dimod BQM Compatible In-Material Physical Ising Solver
 """
 import os
-import time
+from typing import Optional
 from urllib.parse import urlparse
 import requests
 import dimod
-from typing import Dict, Any, Optional
 
 
 class PCAMSampler(dimod.Sampler):
     """
-    Standard dimod.Sampler interface connected to the NEOMA P-CAM
-    Deterministic Physical Reflex & Ising Solver Gateway.
+    Standard dimod.Sampler interface connected directly to the
+    NEOMA P-CAM 64-Spin Room-Temperature Physical Ising Solver (/v1/ising/solve).
     """
+
     properties = {
-        "description": "NEOMA P-CAM In-Material Physical Relaxation Solver",
-        "version": "1.0.2",
-        "max_variables": 1024,
-        "category": "physical_in_material_annealer",
+        "description": "NEOMA P-CAM 64-Spin Room-Temperature Physical Ising Solver",
+        "version": "1.0.3",
+        "max_variables": 64,
+        "category": "physical_in_material_ising_solver",
     }
     parameters = {
-        "flux_bias": [],
-        "damping_target": [],
         "api_key": [],
         "rapidapi_key": [],
+        "timeout": [],
     }
 
-    DEFAULT_ENDPOINT = "https://neoma-p-cam-hyper-physical-control.p.rapidapi.com/v1/solve-universal-equilibrium"
+    DEFAULT_ENDPOINT = "https://neoma-p-cam-hyper-physical-control.p.rapidapi.com/v1/ising/solve"
     DEFAULT_RAPIDAPI_HOST = "neoma-p-cam-hyper-physical-control.p.rapidapi.com"
 
     def __init__(
@@ -35,102 +34,81 @@ class PCAMSampler(dimod.Sampler):
         api_key: Optional[str] = None,
         endpoint: str = DEFAULT_ENDPOINT,
         rapidapi_key: Optional[str] = None,
+        timeout: float = 10.0,
     ):
-        """
-        Args:
-            api_key: RapidAPI 인증 키 (미입력 시 PCAM_RAPIDAPI_KEY 환경변수 자동 참조)
-            endpoint: P-CAM 게이트웨이 엔드포인트 URL (기본값: RapidAPI 프로덕션 게이트웨이)
-            rapidapi_key: 하위 호환용 RapidAPI 인증 키 인자
-        """
-        # 기존 코드에서 첫 번째 인자로 endpoint URL을 넘긴 경우 하위 호환 처리
         if api_key and api_key.startswith(("http://", "https://")):
             endpoint = api_key
             api_key = None
 
         self.endpoint = endpoint
         self.rapidapi_key = api_key or rapidapi_key or os.getenv("PCAM_RAPIDAPI_KEY")
+        self.timeout = timeout
 
     def sample(self, bqm: dimod.BinaryQuadraticModel, **parameters) -> dimod.SampleSet:
         """
-        표준 dimod BQM을 수신하여 P-CAM 물리 완화 루프를 통해 기저 상태를 도출합니다.
+        Submits a dimod BinaryQuadraticModel directly to the P-CAM physical Ising solver
+        and returns the converged ground-state SampleSet with hardware attestation.
         """
-        # 1. BQM을 표준 이징 모델 (h, J)로 추출
-        linear, quadratic, offset = bqm.to_ising()
-        n_variables = len(bqm.variables)
-        if n_variables == 0:
+        variables = list(bqm.variables)
+        n_vars = len(variables)
+        if n_vars == 0:
             return dimod.SampleSet.from_samples_bqm([{}], bqm)
+        if n_vars > 64:
+            raise ValueError(
+                f"NEOMA P-CAM 64-spin physical core supports up to 64 variables (got {n_vars})."
+            )
 
-        # 2. 이징 결합 행렬의 복잡도 및 결합 밀도 계산
-        total_couplings = len(quadratic)
-        coupling_energy = sum(abs(v) for v in quadratic.values()) if total_couplings > 0 else 0.0
-        avg_coupling = (coupling_energy / total_couplings) if total_couplings > 0 else 0.0
+        linear, quadratic, _ = bqm.to_ising()
+        var_to_idx = {v: idx for idx, v in enumerate(variables)}
 
-        # 3. 이징 그래프 위상을 P-CAM 비평형 외란 텐서로 매핑
-        flux_potential_v = round(0.082 + min(0.015, avg_coupling * 0.01), 4)
-        gradient_velocity = round(500.0 + (n_variables * 1.5), 2)
-        gradient_acceleration = round(15000.0 + min(4000.0, coupling_energy * 20.0), 1)
-        active_strain = round(1.2 + min(0.6, (total_couplings / max(1, n_variables * 2)) * 0.1), 2)
+        fields = [round(-float(linear.get(v, 0.0)), 6) for v in variables]
+        couplings = [
+            [var_to_idx[u], var_to_idx[v], round(-float(w), 6)]
+            for (u, v), w in quadratic.items()
+            if u != v and abs(w) > 0.0
+        ]
 
         payload = {
-            "flux_potential_v": flux_potential_v,
-            "gradient_velocity": gradient_velocity,
-            "gradient_acceleration": gradient_acceleration,
-            "active_strain": active_strain,
+            "num_spins": n_vars,
+            "fields": fields,
+            "couplings": couplings,
         }
 
-        # 4. P-CAM 게이트웨이 호출
         headers = {"Content-Type": "application/json"}
-        if self.rapidapi_key:
-            parsed_host = urlparse(self.endpoint).netloc
-            headers["x-rapidapi-host"] = (
-                parsed_host if "rapidapi.com" in parsed_host else self.DEFAULT_RAPIDAPI_HOST
-            )
+        parsed_host = urlparse(self.endpoint).netloc.lower()
+        if self.rapidapi_key and "rapidapi.com" in parsed_host:
+            headers["x-rapidapi-host"] = parsed_host or self.DEFAULT_RAPIDAPI_HOST
             headers["x-rapidapi-key"] = self.rapidapi_key
 
-        t0 = time.perf_counter()
+        req_timeout = float(parameters.get("timeout", self.timeout))
         try:
-            resp = requests.post(self.endpoint, json=payload, headers=headers, timeout=10.0)
+            resp = requests.post(self.endpoint, json=payload, headers=headers, timeout=req_timeout)
             resp.raise_for_status()
             data = resp.json()
-        except Exception as e:
-            raise RuntimeError(f"P-CAM Gateway Communication Failure: {e}")
+        except Exception as exc:
+            raise RuntimeError(f"NEOMA P-CAM Enclave Request Failed: {exc}") from exc
 
-        # 5. 물리 반사 결과(Zeta) 기반 기저 상태 스핀 완화
-        zeta = data.get("zeta", 1.0)
-        control_intensity = data.get("control_intensity", 0.5)
+        raw_spins = data.get("spins")
+        if not isinstance(raw_spins, list) or len(raw_spins) < n_vars:
+            raise RuntimeError(f"Unexpected response from P-CAM enclave: {data}")
 
-        # 국소 유효장(Effective Local Field)에 물리 감쇠(Zeta)를 합성하여 스핀 결정
-        sample_spin = {}
-        for var in bqm.variables:
-            h_i = linear.get(var, 0.0)
-            coupling_sum = sum(
-                quadratic.get((var, other), quadratic.get((other, var), 0.0))
-                for other in bqm.variables
-                if other != var
-            )
-            # 유효 국소장 계산
-            eff_field = h_i + (coupling_sum * (control_intensity * zeta))
-            # 음수 에너지 최소화 방향으로 스핀 정렬 (-1 or +1)
-            sample_spin[var] = -1 if eff_field >= 0 else 1
-
-        # 6. BQM 변수 타입(SPIN / BINARY)에 맞추어 변환
         if bqm.vartype == dimod.BINARY:
-            sample_result = {v: 1 if s == 1 else 0 for v, s in sample_spin.items()}
+            sample_result = {
+                var: (1 if int(raw_spins[idx]) >= 0 else 0)
+                for idx, var in enumerate(variables)
+            }
         else:
-            sample_result = sample_spin
+            sample_result = {
+                var: (1 if int(raw_spins[idx]) >= 0 else -1)
+                for idx, var in enumerate(variables)
+            }
 
-        # 7. 해밀토니안 에너지 산출 및 표준 dimod SampleSet 생성
-        energy = bqm.energy(sample_result)
         info = {
-            "zeta": zeta,
-            "state_mode": data.get("state_mode"),
+            "domain": data.get("domain", "Ising-64Spin-Hamiltonian"),
+            "zeta": data.get("zeta"),
             "hardware_reflex_ms": data.get("hardware_reflex_ms"),
             "hardware_seal_id": data.get("hardware_seal_id"),
             "telemetry": data.get("telemetry", {}),
         }
 
-        return dimod.SampleSet.from_samples_bqm(
-            [sample_result],
-            bqm,
-            info=info,
-        )
+        return dimod.SampleSet.from_samples_bqm([sample_result], bqm, info=info)

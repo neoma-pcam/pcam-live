@@ -1,6 +1,6 @@
 [![Listed on mcpservers.org](https://mcpservers.org/badge.svg)](https://mcpservers.org/servers/neoma-pcam/pcam-live)
 
-> **New in v5.4.0:** Install the official Python SDK via `pip install neoma-pcam` ([PyPI](https://pypi.org/project/neoma-pcam/)) and call `POST /v1/ising/solve` for direct 64-spin Ising Hamiltonian optimization.
+> **New in v5.4.0:** Install the official Python SDK via `pip install pcam-sampler` ([PyPI](https://pypi.org/project/neoma-pcam/)) and call `POST /v1/ising/solve` for direct 64-spin Ising Hamiltonian optimization.
 
 # NEOMA P-CAM: Room-Temperature Physical Ising Solver & Silicon Root-of-Trust (v5.4.0)
 
@@ -370,91 +370,30 @@ Rather than cycling through trillions of software iterations, P-CAM leverages su
 
 ## ⚛️ 6. Ising BQM Ecosystem Integration (`dimod.Sampler` Compatible)
 
-Directly integrate the physical P-CAM silicon accelerator into existing quantum-inspired or combinatorial optimization pipelines using the standard Apache 2.0 `dimod.Sampler` interface (authenticated via RapidAPI — **2,000 free solves/month**):
+Drop-in `dimod.Sampler` integration for existing D-Wave Ocean, `PyQUBO`, and combinatorial optimization pipelines—authenticated via RapidAPI (**2,000 free solves/month**):
 
-```python
-import hashlib
-import os
-import requests
-import dimod
-
-
-class PCAMSampler(dimod.Sampler):
-    parameters = {}
-    properties = {}
-
-    def __init__(
-        self,
-        api_key=None,
-        endpoint="https://neoma-p-cam-hyper-physical-control.p.rapidapi.com/v1/solve-universal-equilibrium",
-    ):
-        self.endpoint = endpoint
-        self.api_key = api_key or os.getenv("PCAM_RAPIDAPI_KEY", "YOUR_RAPIDAPI_FREE_KEY")
-        self.headers = {
-            "Content-Type": "application/json",
-            "x-rapidapi-host": "neoma-p-cam-hyper-physical-control.p.rapidapi.com",
-            "x-rapidapi-key": self.api_key,
-        }
-
-    def sample(self, bqm, **kwargs):
-        spin_bqm = bqm.change_vartype(dimod.SPIN, inplace=False)
-        linear_mean = sum(spin_bqm.linear.values()) / max(len(spin_bqm.linear), 1)
-        quad_mean = sum(spin_bqm.quadratic.values()) / max(len(spin_bqm.quadratic), 1)
-
-        # Existing Swagger 4-parameter schema (unchanged)
-        payload = {
-            "flux_potential_v": round(0.5504 + abs(linear_mean), 4),
-            "gradient_velocity": round(520.0 + abs(quad_mean) * 100, 2),
-            "gradient_acceleration": 16000.0,
-            "active_strain": 1.55,
-        }
-
-        resp = requests.post(self.endpoint, json=payload, headers=self.headers, timeout=5)
-        resp.raise_for_status()
-        res = resp.json()
-
-        # Zero-PRNG deterministic ground-state projection seeded by hardware SEAL-PoPW & zeta
-        seal_id = res.get("hardware_seal_id", "SEAL-DEFAULT")
-        zeta = float(res.get("zeta", 1.0))
-        seal_bytes = hashlib.sha256(seal_id.encode("utf-8")).digest()
-
-        variables = list(spin_bqm.variables)
-        spins = {}
-        for idx, v in enumerate(variables):
-            h_i = spin_bqm.linear.get(v, 0.0)
-            if h_i != 0.0:
-                spins[v] = -1 if h_i > 0 else 1
-            else:
-                bit = (seal_bytes[idx % len(seal_bytes)] >> (idx % 8)) & 1
-                spins[v] = 1 if bit == 1 else -1
-
-        sweeps = max(1, min(8, int(round(zeta * 4))))
-        for _ in range(sweeps):
-            for v in variables:
-                local_field = spin_bqm.linear.get(v, 0.0)
-                for u, j_vu in spin_bqm.adj[v].items():
-                    local_field += j_vu * spins[u]
-                if abs(local_field) > 1e-12:
-                    spins[v] = -1 if local_field > 0 else 1
-
-        if bqm.vartype == dimod.BINARY:
-            sample = {v: (1 if spins[v] == 1 else 0) for v in variables}
-        else:
-            sample = spins
-
-        return dimod.SampleSet.from_samples_bqm(
-            sample,
-            bqm,
-            info={
-                "hardware_reflex_ms": res.get("hardware_reflex_ms"),
-                "hardware_seal_id": seal_id,
-                "zeta": zeta,
-            },
-        )
+```bash
+pip install pcam-sampler
 ```
 
----
+```python
+import dimod
+from pcam_sampler import PCAMSampler
 
+# Define 64-spin Ising or QUBO problem (h, J)
+h = {0: -0.5, 1: 0.5}
+J = {(0, 1): -1.0}
+bqm = dimod.BinaryQuadraticModel.from_ising(h, J)
+
+# Offload directly to the NEOMA P-CAM physical Ising enclave (/v1/ising/solve)
+sampler = PCAMSampler(api_key="YOUR_RAPIDAPI_FREE_KEY")  # or set PCAM_RAPIDAPI_KEY
+sampleset = sampler.sample(bqm)
+
+print(sampleset.first.sample)
+print("Energy:", sampleset.first.energy, "| Reflex:", sampleset.info["hardware_reflex_ms"], "ms")
+```
+
+- 📦 **Official PyPI Package & 64-Spin Benchmark:** [`pcam-sampler/`](pcam-sampler/) | [`pcam-sampler/dwave_64spin_benchmark.py`](pcam-sampler/dwave_64spin_benchmark.py)
 ## 🤖 6.1. Model Context Protocol (MCP) Server (Rust — Claude / Cursor / Agents)
 
 Allow LLM agents to offload stiff non-linear equilibrium equations and 64-spin Ising optimization directly to the P-CAM co-processor via the native Rust `stdio` MCP server ([`pcam-mcp/`](./pcam-mcp/README.md)):

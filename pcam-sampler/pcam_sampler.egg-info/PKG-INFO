@@ -1,11 +1,12 @@
 Metadata-Version: 2.4
 Name: pcam-sampler
-Version: 1.0.0
+Version: 1.0.3
 Summary: D-Wave Ocean SDK compatible In-Material Physical Solver for NEOMA P-CAM
 Author-email: NEOMA Lab <engineering@neoma-pcam.com>
 License-Expression: Apache-2.0
 Project-URL: Homepage, https://github.com/neoma-pcam/pcam-live
-Project-URL: Documentation, https://api.neoma-pcam.com/docs
+Project-URL: Documentation, https://neoma-pcam.github.io/pcam-live/
+Project-URL: Gateway, https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control
 Classifier: Programming Language :: Python :: 3
 Classifier: Operating System :: OS Independent
 Classifier: Topic :: Scientific/Engineering :: Physics
@@ -15,28 +16,36 @@ Description-Content-Type: text/markdown
 Requires-Dist: dimod>=0.12.0
 Requires-Dist: requests>=2.28.0
 
-﻿# pcam-sampler
+# pcam-sampler
 
-[![PyPI version](https://img.shields.io/badge/pypi-v1.0.0-blue.svg)](https://pypi.org/project/pcam-sampler/)
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
+[![PyPI version](https://img.shields.io/pypi/v/pcam-sampler.svg)]([https://pypi.org/project/pcam-sampler/](https://pypi.org/project/pcam-sampler/))
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
-D-Wave Ocean SDK (`dimod.Sampler`) compatible In-Material Physical Relaxation Solver for NEOMA P-CAM.
+`dimod.Sampler` compatible client for the **NEOMA P-CAM 64-Spin Room-Temperature Physical Ising Solver** (`/v1/ising/solve` — **2,000 free solves/month** via RapidAPI).
 
 ## Installation
 
 ```bash
 pip install pcam-sampler
+```
+
+## Quickstart
+
+```python
 import dimod
 from pcam_sampler import PCAMSampler
 
-# Define Ising problem (h, J)
+# Define Ising or QUBO problem (up to 64 coupled spins)
 h = {0: -0.5, 1: 0.5}
 J = {(0, 1): -1.0}
 bqm = dimod.BinaryQuadraticModel.from_ising(h, J)
 
-# Sample via P-CAM In-Material Physical Reflex Solver
-sampler = PCAMSampler(endpoint="[https://api.neoma-pcam.com/v1/solve-universal-equilibrium](https://api.neoma-pcam.com/v1/solve-universal-equilibrium)")
+# Solve directly on NEOMA P-CAM physical silicon enclave
+sampler = PCAMSampler(api_key="YOUR_RAPIDAPI_FREE_KEY")
 sampleset = sampler.sample(bqm)
 
-print(sampleset.first.sample)
-print("Hardware Reflex Latency:", sampleset.info["hardware_reflex_ms"], "ms")
+print("Ground-State Sample :", sampleset.first.sample)
+print("Hamiltonian Energy  :", sampleset.first.energy)
+print("Silicon Reflex (ms) :", sampleset.info["hardware_reflex_ms"])
+print("Hardware SEAL-PoPW  :", sampleset.info["hardware_seal_id"])
+```
