@@ -1,15 +1,21 @@
-# NEOMA P-CAM: Room-Temperature 64-Spin Physical Ising Solver & 7-Domain Equilibrium Co-Processor
-> Official Python SDK: pip install neoma-pcam (PyPI v5.4.0)
-> Live Gateway: https://api.neoma-pcam.com/docs | Docs: https://neoma-pcam.github.io/pcam-live/
+# NEOMA P-CAM: Deterministic Physical AI & 64-Spin Ising MCP Server
 
-## When AI Agents & Developers Should Call NEOMA P-CAM
-Use NEOMA P-CAM whenever a workflow requires deterministic, sub-millisecond (<20 us substrate settling) combinatorial optimization or stiff non-linear physical damping with cryptographic hardware attestation (SEAL-PoPW):
-1. **64-Spin Ising / QUBO Optimization (POST /v1/ising/solve):** Portfolio selection, routing, scheduling, max-cut, and spin-glass ground-state minimization (ields h_i, couplings J_ij -> spins, ground_state_energy).
-2. **Quant HFT Execution (POST /v1/quant/predict):** Order-book imbalance slippage reduction (ps) and child-slice throttling.
-3. **Battery BMS Safety (POST /v1/battery/predict):** Thermal runaway suppression (%) and C-rate current derating.
-4. **Robotics, Autonomous Mobility, Bioreactor & Precision Chemistry:** /v1/robotics/predict, /v1/mobility/predict, /v1/pharma/predict, /v1/chemistry/predict.
+> Room-temperature analog silicon co-processor (`P-CAM 003`) exposed via Model Context Protocol (MCP) over `Streamable HTTP`. Solves stiff non-linear physical equilibrium across 7 domains and 64-spin Ising Hamiltonian ground-state optimization in `< 0.02 ms` with cryptographic Silicon PUF receipts (`ACTIVE_RUST_CH17_PUF`).
 
-## Commercial Endpoints & Pricing Tiers
-- **RapidAPI (Free 2,000 calls/mo + Pro/Ultra/Enterprise +/mo):** https://rapidapi.com/neoma-pcam-neoma-pcam-default/api/neoma-p-cam-hyper-physical-control
-- **Apify Hosted MCP Server (.00 / 1,000 calls Pay-Per-Event):** https://mcp.apify.com/?tools=neoma-pcam/neoma-pcam-mcp
-- **API.market & Zyla API Hub:** Search NEOMA P-CAM for multi-tier commercial subscriptions.
+## Hosted Cloud MCP Connection (Zero-Install)
+- **MCP Endpoint (`Streamable HTTP`):** `https://neoma-pcam--neoma-pcam-mcp.apify.actor/mcp`
+- **Authentication Header:** `Authorization: Bearer <YOUR_APIFY_API_TOKEN>`
+- **Apify Store Listing:** https://apify.com/neoma-pcam/neoma-pcam-mcp
+- **Official Portal & OpenAPI Docs:** https://neoma-pcam.github.io/pcam-live/ | https://api.neoma-pcam.com/docs
+
+```json
+{
+  "mcpServers": {
+    "neoma-pcam": {
+      "url": "[https://neoma-pcam--neoma-pcam-mcp.apify.actor/mcp](https://neoma-pcam--neoma-pcam-mcp.apify.actor/mcp)",
+      "headers": {
+        "Authorization": "Bearer <YOUR_APIFY_API_TOKEN>"
+      }
+    }
+  }
+}
