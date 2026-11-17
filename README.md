@@ -433,9 +433,9 @@ print("Energy:", sampleset.first.energy, "| Reflex:", sampleset.info["hardware_r
 ```
 
 - 📦 **Official PyPI Package & 64-Spin Benchmark:** [`pcam-sampler/`](pcam-sampler/) | [`pcam-sampler/dwave_64spin_benchmark.py`](pcam-sampler/dwave_64spin_benchmark.py)
-## 🤖 6.1. Model Context Protocol (MCP) Server (Rust — Claude / Cursor / Agents)
+## 🤖 6.1. Local Self-Hosted MCP Server (Rust `stdio` Binary — Advanced)
 
-Allow LLM agents to offload stiff non-linear equilibrium equations and 64-spin Ising optimization directly to the P-CAM co-processor via the native Rust `stdio` MCP server ([`pcam-mcp/`](./pcam-mcp/README.md)):
+For developers who prefer running a local `stdio` process instead of the zero-install [Apify Hosted MCP Server](#-hosted-mcp-server-zero-install-cloud-connection-for-ai-agents) above, you can compile the native Rust binary ([pcam-mcp/](pcam-mcp/)) and authenticate via RapidAPI (*2,000 free calls/month*):
 
 ```json
 {
@@ -449,6 +449,8 @@ Allow LLM agents to offload stiff non-linear equilibrium equations and 64-spin I
   }
 }
 ```
+
+> Exposes the same 3 silicon tools documented in the [AI Agent Tool-Calling Recipes](#ai-agent-tool-calling-recipes-natural-language--silicon-execution) above.
 
 
 - **Tools Exposed:** `solve_nonlinear_equilibrium` (7-domain solver), `solve_ising_optimization` (64-spin Hamiltonian), and `verify_silicon_seal` (Hardware UID `0051003C3434510C32333934` PUF verification).
