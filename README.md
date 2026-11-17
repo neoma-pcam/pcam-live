@@ -453,7 +453,7 @@ For developers who prefer running a local `stdio` process instead of the zero-in
 > Exposes the same 3 silicon tools documented in the [AI Agent Tool-Calling Recipes](#ai-agent-tool-calling-recipes-natural-language--silicon-execution) above.
 
 
-- **Tools Exposed:** `solve_nonlinear_equilibrium` (7-domain solver), `solve_ising_optimization` (64-spin Hamiltonian), and `verify_silicon_seal` (Hardware UID `0051003C3434510C32333934` PUF verification).
+- **Tools Exposed:** `solve_nonlinear_equilibrium` (8-domain solver), `solve_ising_optimization` (64-spin Hamiltonian), and `verify_silicon_seal` (Hardware UID `0051003C3434510C32333934` PUF verification).
 
 ## 🔄 6.2. No-Code Enterprise & Operations Workflow (n8n Community Node)
 
@@ -461,7 +461,7 @@ Enable supply-chain, battery, chemical, and finance operations teams to connect 
 
 - **Community Node Package:** `n8n-nodes-neoma-pcam` ([n8n-nodes-neoma-pcam/](n8n-nodes-neoma-pcam/))
 - **Included Nodes:**
-  1. **Industrial Risk & Equilibrium Diagnosis:** Maps spreadsheet/DB rows across 7 operational domains (Universal Supply Chain, Quant Execution, Battery Thermal Safety, Chemical Process, Biopharma, Mobility, Robotics) to return `zeta`, `control_intensity`, `action_recommendation`, and cryptographic `SEAL-PoPW` receipts.
+  1. **Industrial Risk & Equilibrium Diagnosis:** Maps spreadsheet/DB rows across 8 operational domains (Universal Supply Chain, Quant Execution, Battery Thermal Safety, Chemical Process, Biopharma, Mobility, Robotics) to return `zeta`, `control_intensity`, `action_recommendation`, and cryptographic `SEAL-PoPW` receipts.
   2. **64-Spin Combinatorial Optimization:** Offloads scheduling, routing, and allocation matrices directly to `/v1/ising/solve`.
 ## ⚡ 7. Empirical Benchmark: Stiff 64-Spin Ising Matrix
 
