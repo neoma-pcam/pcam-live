@@ -10,7 +10,7 @@ Connect **Claude Desktop, Cursor, Windsurf, n8n, or any MCP-compatible AI agent*
 {
   "mcpServers": {
     "neoma-pcam": {
-      "url": "[https://neoma-pcam--neoma-pcam-mcp.apify.actor/mcp](https://neoma-pcam--neoma-pcam-mcp.apify.actor/mcp)",
+      "url": "https://neoma-pcam--neoma-pcam-mcp.apify.actor/mcp",
       "headers": {
         "Authorization": "Bearer <YOUR_APIFY_API_TOKEN>"
       }
