@@ -1,3 +1,33 @@
+## ⚡ Hosted MCP Server (Zero-Install Cloud Connection for AI Agents)
+
+Connect **Claude Desktop, Cursor, Windsurf, n8n, or any MCP-compatible AI agent** directly to live room-temperature analog silicon hardware (`< 0.02 ms` deterministic reflex + cryptographic Silicon PUF seal) with **zero local compilation or hardware setup**:
+
+* **Hosted MCP Endpoint (`Streamable HTTP`):** `https://neoma-pcam--neoma-pcam-mcp.apify.actor/mcp`
+* **Apify Store Listing:** [NEOMA P-CAM Physical AI & Ising MCP Server](https://apify.com/neoma-pcam/neoma-pcam-mcp)
+* **Authentication Header:** `Authorization: Bearer <YOUR_APIFY_API_TOKEN>`
+
+```json
+{
+  "mcpServers": {
+    "neoma-pcam": {
+      "url": "[https://neoma-pcam--neoma-pcam-mcp.apify.actor/mcp](https://neoma-pcam--neoma-pcam-mcp.apify.actor/mcp)",
+      "headers": {
+        "Authorization": "Bearer <YOUR_APIFY_API_TOKEN>"
+      }
+    }
+  }
+}
+```
+
+### AI Agent Tool-Calling Recipes (Natural Language → Silicon Execution)
+
+| User / Agent Intent | MCP Tool to Call | Example JSON Arguments |
+| :--- | :--- | :--- |
+| **"Predict battery thermal runaway damping or robot joint stability"** | `solve_nonlinear_equilibrium` *(7 domains: `universal`, `quant`, `battery`, `pharma`, `robotics`, `mobility`, `chemistry`)* | `{"domain": "battery", "flux_potential_v": 0.68, "gradient_velocity": 740.0, "gradient_acceleration": 21500.0, "active_strain": 1.65}` |
+| **"Find the optimal ground-state schedule / portfolio across coupled nodes"** | `solve_ising_optimization` *(Native 64-spin analog Ising Hamiltonian solver)* | `{"fields": [1.0, -1.0, 0.5, -0.5], "couplings": [{"i": 0, "j": 1, "weight": -0.5}]}` |
+| **"Audit and verify that a result came from real P-CAM silicon hardware"** | `verify_silicon_seal` *(Free hardware provenance audit)* | `{"puf_dynamic_seal": "SEAL-PCAM003-COM3-02A25B2424B5A10E3D4EE84C2483A1E0"}` |
+
+---
 [![Listed on mcpservers.org](https://mcpservers.org/badge.svg)](https://mcpservers.org/servers/neoma-pcam/pcam-live)
 
 > **New in v5.4.0:** Install the official Python SDK via `pip install pcam-sampler` ([PyPI](https://pypi.org/project/neoma-pcam/)) and call `POST /v1/ising/solve` for direct 64-spin Ising Hamiltonian optimization.
@@ -71,7 +101,9 @@ print(res["zeta"], res["control_intensity"], res["hardware_seal_id"])
 
 * 🌐 **All-Industry 8-Domain Starter & Mapping Guide:** [`examples/all_industry_starter.py`](./examples/all_industry_starter.py) | [`examples/README.md`](./examples/README.md)
 * 📉 **Slippage Mitigation & TWAP/VWAP Slicer:** [`examples/slippage_execution_optimizer.py`](./examples/slippage_execution_optimizer.py)
-* 🤖 **Hummingbot Spread & Inventory Guard:** [`examples/hummingbot_lob_guard.py`](./examples/hummingbot_lob_guard.py)
+* 🤖 **Hummingbot Spread & Inventory Guard:** [`examples/hummingbot_lob_guard.py`](./examples/hummingbot_lob_guard.py)
+
+
 
 ### 🤖 Physical AI & Robotics Simulators (MuJoCo / NVIDIA Isaac Sim)
 - **Real-Time Joint Compliance & Impact Damping Bridge:** [examples/robotics_sim_bridge.py](examples/robotics_sim_bridge.py) (mujoco.set_mjcb_control & Isaac Sim Articulation drop-in hook calling /v1/robotics/predict)
