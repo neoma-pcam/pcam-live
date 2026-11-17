@@ -15,11 +15,11 @@
     "url": "https://github.com/neoma-pcam/pcam-live",
     "source": "github"
   },
-  "version": "1.0.1",
+  "version": "1.0.2",
   "remotes": [
     {
       "type": "streamable-http",
-      "url": "https://neoma-pcam--neoma-pcam-mcp.apify.actor/mcp"
+      "url": "https://api.neoma-pcam.com/mcp"
     }
   ]
 }
