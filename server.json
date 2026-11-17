@@ -3,11 +3,19 @@
   "name": "io.github.neoma-pcam/neoma-pcam-mcp",
   "title": "NEOMA P-CAM Physical AI & Ising MCP Server",
   "description": "Sub-ms analog silicon solver for 7-domain physical equilibrium and 64-spin Ising with PUF.",
+  "websiteUrl": "https://neoma-pcam.github.io/pcam-live/",
+  "icons": [
+    {
+      "src": "https://github.com/neoma-pcam.png",
+      "mimeType": "image/png",
+      "sizes": ["256x256"]
+    }
+  ],
   "repository": {
     "url": "https://github.com/neoma-pcam/pcam-live",
     "source": "github"
   },
-  "version": "1.0.0",
+  "version": "1.0.1",
   "remotes": [
     {
       "type": "streamable-http",
