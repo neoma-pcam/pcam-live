@@ -1,1 +1,10 @@
-﻿{"name":"neoma-pcam-physical-ising-mcp","displayName":"NEOMA P-CAM Physical Ising & Nonlinear Equilibrium MCP","version":"5.4.0","category":"Finance","homepage":"https://mcpservers.org/servers/neoma-pcam/pcam-live","mcpServers":{"neoma-pcam":{"command":"npx","args":["-y","mcp-remote","https://mcp.apify.com/?tools=neoma-pcam/neoma-pcam-mcp"]}}}
+{
+  "mcpServers": {
+    "neoma-pcam": {
+      "url": "https://neoma-pcam--neoma-pcam-mcp.apify.actor/mcp",
+      "headers": {
+        "Authorization": "Bearer <YOUR_APIFY_API_TOKEN>"
+      }
+    }
+  }
+}
