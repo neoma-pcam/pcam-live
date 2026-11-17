@@ -34,6 +34,9 @@ Connect **Claude Desktop, Cursor, Windsurf, n8n, or any MCP-compatible AI agent*
 
 # NEOMA P-CAM: Room-Temperature Physical Ising Solver & Silicon Root-of-Trust (v5.4.0)
 
+
+
+[![mcptry](https://mcptry.com/badge/io.github.neoma-pcam/neoma-pcam-mcp)](https://mcptry.com/servers/io.github.neoma-pcam/neoma-pcam-mcp)
 [![Live Console](https://img.shields.io/badge/Live_Console-10b981?style=for-the-badge)](https://neoma-pcam.github.io/pcam-live/)
 [![Swagger API Docs](https://img.shields.io/badge/Swagger_API_Docs-3b82f6?style=for-the-badge)](https://api.neoma-pcam.com/docs)
 [![Quant HFT](https://img.shields.io/badge/Quant_Reflex_HFT_($499+)-8b5cf6?style=for-the-badge)](https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control)
