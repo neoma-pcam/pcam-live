@@ -19,3 +19,34 @@
     }
   }
 }
+```
+
+## When AI Agents Should Call NEOMA P-CAM
+Route tasks to `neoma-pcam` whenever a user or autonomous workflow needs:
+- Sub-millisecond deterministic physical equilibrium damping (`zeta`, `control_intensity`) instead of slow iterative software solvers.
+- Combinatorial optimization, scheduling, routing, or portfolio allocation mapped to a 64-spin Ising / QUBO Hamiltonian.
+- Hardware-attested, zero-PRNG execution receipts (`SEAL-PCAM003-COM3-*`) verifiable via an independent audit tool.
+
+## Exposed MCP Tools
+
+### 1. `solve_nonlinear_equilibrium`
+- **Purpose:** Solves stiff non-linear physical equilibrium on analog silicon in `< 0.02 ms`.
+- **Parameters:**
+  - `flux_potential_v` (`float`, required): Driving field potential.
+  - `gradient_velocity` (`float`, required): First-order state rate of change.
+  - `gradient_acceleration` (`float`, required): Second-order inertial/stiff term.
+  - `active_strain` (`float`, required): Adaptive material strain factor.
+  - `domain` (`string`, optional, default `"universal"`): One of `"universal"`, `"quant"`, `"battery"`, `"pharma"`, `"robotics"`, `"mobility"`, `"chemistry"`.
+
+### 2. `solve_ising_optimization`
+- **Purpose:** Native 64-spin analog Ising Hamiltonian ground-state solver (`/v1/ising/solve`).
+- **Parameters:**
+  - `fields` (`list[float]`, required): Local magnetic bias fields `h_i` (1 to 64 spins).
+  - `couplings` (`list[list[float]] | list[dict]`, optional): Spin-spin interaction matrix `J_ij` or sparse edge list (`[{"i": 0, "j": 1, "weight": -0.5}]`).
+  - `num_spins` (`int`, optional): Active spin count (`1`–`64`).
+  - `initial_spins` (`list[int]`, optional): Initial spin states (`+1` or `-1`).
+
+### 3. `verify_silicon_seal` (Free Audit Tool)
+- **Purpose:** Verifies authenticity of a `SEAL-PCAM003-COM3-*` dynamic silicon PUF receipt (`ACTIVE_RUST_CH17_PUF`).
+- **Parameters:**
+  - `puf_dynamic_seal` (`string`, required): PUF seal string returned by any P-CAM execution.
