@@ -637,7 +637,7 @@
 
 <div class="container">
     <header>
-        <h1>NEOMA P-CAM (v5.3.0)</h1>
+        <h1>NEOMA P-CAM (v5.4.0)</h1>
         <div class="subtitle">Room-Temperature Physical Ising Solver & Silicon Root-of-Trust</div>
         <div class="badges">
             <a href="https://neoma-pcam.com" class="badge badge-emerald" target="_blank">Live Console</a>
@@ -695,7 +695,7 @@
             <div class="controller-bar">
                 <div class="input-group">
                     <label for="input-flux">Flux Potential (V):</label>
-                    <input type="number" id="input-flux" value="1.245" step="0.001">
+                    <input type="number" id="input-flux" value="0.85" step="0.001">
                 </div>
                 <button class="btn-trigger" id="btn-shock" onclick="sendPhysicalShock()">[⚡ Send Physical Shock to Enclave]</button>
             </div>
@@ -819,7 +819,7 @@
     async function sendPhysicalShock() {
         const btn = document.getElementById('btn-shock');
         const input = document.getElementById('input-flux');
-        const fluxVal = parseFloat(input.value) || 1.245;
+        const fluxVal = parseFloat(input.value) || 0.85;
 
         btn.innerText = "[⚡ Enclave Processing...]";
         btn.disabled = true;
@@ -864,7 +864,7 @@
             name: 'Universal Core',
             endpoint: '/v1/solve-universal-equilibrium',
             rapidapi: 'https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control',
-            payload: { "flux_potential_v": 1.245, "gradient_velocity": 0.05, "gradient_acceleration": 9.81, "active_strain": 0.002 },
+            payload: { "flux_potential_v": 0.85, "gradient_velocity": 0.05, "gradient_acceleration": 9.81, "active_strain": 0.002 },
             response: { "status": "hardware_active", "domain": "Universal-Equilibrium", "zeta": 0.9981, "hardware_reflex_ms": 0.0066, "telemetry": { "v_out_measured_v": 0.5504 } }
         },
         {
