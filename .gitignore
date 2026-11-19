@@ -46,3 +46,7 @@ pcam-gateway/target/
 
 pcam-gateway/
 benchmarks/.cache/
+
+# Environment and Secrets
+.env
+*.env

@@ -13,9 +13,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Probe NEOMA P-CAM 003 Live Enclave
+        env:
+          NEOMA_UPTIME_KEY: ${{ secrets.NEOMA_UPTIME_KEY }}
         run: |
           python3 - << 'EOF'
           import json
+          import os
           import sys
           import time
           import urllib.error
@@ -32,7 +35,8 @@ jobs:
           headers = {
               "Content-Type": "application/json",
               "Accept": "application/json",
-              "User-Agent": "NEOMA-PCAM-Enclave-Monitor/5.3"
+              "User-Agent": "NEOMA-PCAM-Enclave-Monitor/5.3",
+              "x-neoma-api-key": os.environ.get("NEOMA_UPTIME_KEY", "").strip()
           }
 
           last_err = None
