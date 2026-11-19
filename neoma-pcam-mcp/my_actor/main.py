@@ -5,6 +5,7 @@ from apify import Actor
 from fastmcp import FastMCP
 
 PCAM_BASE_URL = os.getenv("PCAM_BASE_URL", "https://api.neoma-pcam.com")
+PCAM_API_KEY = os.getenv("PCAM_API_KEY", "neoma_apify_actor_57087cb54637c7f01ef1089e11320c67")
 SEAL_PREFIX = "SEAL-PCAM003-COM3-"
 DOMAIN_ENDPOINTS = {
     "universal": "/v1/solve-universal-equilibrium",
@@ -19,9 +20,15 @@ server = FastMCP("neoma-pcam-mcp")
 
 
 async def _call_pcam_gateway(endpoint: str, payload: dict[str, Any]) -> dict[str, Any]:
+    api_key = os.getenv("PCAM_API_KEY", PCAM_API_KEY).strip()
+    headers = {
+        "x-neoma-api-key": api_key,
+        "Authorization": f"Bearer {api_key}",
+        "User-Agent": "NEOMA-PCAM-Apify-Actor/1.0"
+    }
     async with httpx.AsyncClient(timeout=10.0) as client:
-        resp = await client.post(f"{PCAM_BASE_URL}{endpoint}", json=payload)
-        if resp.status_code in (403, 429):
+        resp = await client.post(f"{PCAM_BASE_URL}{endpoint}", json=payload, headers=headers)
+        if resp.status_code in (401, 403, 429):
             return {"status": "firewall_blocked", "http_code": resp.status_code, "billed": False, "detail": resp.text}
         resp.raise_for_status()
         data = resp.json()
