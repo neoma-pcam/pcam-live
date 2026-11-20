@@ -1,0 +1,3 @@
+# NEOMA P-CAM QCentroid Solver Adapter
+# No external dependencies required.
+# Pure Python standard library implementation (urllib, json, os, logging).

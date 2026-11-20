@@ -386,15 +386,12 @@ fn default_liveness_score() -> f64 { 0.99 }
 
 #[derive(Debug, Clone, Deserialize, Serialize, ToSchema)]
 pub struct PhysicalTrustGateRequest {
-    #[serde(default = "default_session_id")]
     #[schema(example = "sess-enclave-001")]
     pub session_id: String,
 
-    #[serde(default = "default_action_type")]
     #[schema(example = "crypto_key_use")]
     pub action_type: String,
 
-    #[serde(default = "default_wave_telemetry")]
     #[schema(example = json!([0.42, 0.44, 0.41, 0.43]))]
     pub wave_telemetry: Vec<f64>,
 
@@ -402,8 +399,7 @@ pub struct PhysicalTrustGateRequest {
     #[schema(example = "default-enclave-zone")]
     pub spatial_context: String,
 
-    #[serde(default = "default_liveness_score")]
-    #[schema(example = 0.99)]
+    #[schema(example = 0.99, minimum = 0.0, maximum = 1.0)]
     pub liveness_score: f64,
 }
 
@@ -513,23 +509,107 @@ async fn evaluate_trust_gate(
     let source = determine_auth_source(&headers).unwrap_or(AuthSource::Localhost);
     state.record_v1_call("Physical-Trust-Security", source);
 
-    let req: PhysicalTrustGateRequest = if bytes.is_empty() {
-        PhysicalTrustGateRequest::default()
-    } else {
-        match serde_json::from_slice::<PhysicalTrustGateRequest>(&bytes) {
-            Ok(r) => r,
-            Err(e) => {
-                return (
-                    StatusCode::BAD_REQUEST,
-                    Json(serde_json::json!({
-                        "error": "Bad Request",
-                        "code": 400,
-                        "message": format!("Invalid JSON payload: {}", e)
-                    })),
-                ).into_response();
-            }
+    if bytes.is_empty() {
+        return (
+            StatusCode::BAD_REQUEST,
+            Json(serde_json::json!({
+                "error": "Bad Request",
+                "code": 400,
+                "message": "Request body cannot be empty."
+            })),
+        ).into_response();
+    }
+
+    let raw_val: serde_json::Value = match serde_json::from_slice(&bytes) {
+        Ok(v) => v,
+        Err(e) => {
+            return (
+                StatusCode::BAD_REQUEST,
+                Json(serde_json::json!({
+                    "error": "Bad Request",
+                    "code": 400,
+                    "message": format!("Invalid JSON payload: {}", e)
+                })),
+            ).into_response();
         }
     };
+
+    if let Some(map) = raw_val.as_object() {
+        if map.is_empty() {
+            return (
+                StatusCode::BAD_REQUEST,
+                Json(serde_json::json!({
+                    "error": "Bad Request",
+                    "code": 400,
+                    "message": "Request body cannot be empty (missing required parameters)."
+                })),
+            ).into_response();
+        }
+    } else {
+        return (
+            StatusCode::BAD_REQUEST,
+            Json(serde_json::json!({
+                "error": "Bad Request",
+                "code": 400,
+                "message": "Request body must be a JSON object."
+            })),
+        ).into_response();
+    }
+
+    let req: PhysicalTrustGateRequest = match serde_json::from_value(raw_val) {
+        Ok(r) => r,
+        Err(e) => {
+            return (
+                StatusCode::BAD_REQUEST,
+                Json(serde_json::json!({
+                    "error": "Bad Request",
+                    "code": 400,
+                    "message": format!("Missing or invalid required parameter: {}", e)
+                })),
+            ).into_response();
+        }
+    };
+
+    if req.session_id.trim().is_empty() {
+        return (
+            StatusCode::BAD_REQUEST,
+            Json(serde_json::json!({
+                "error": "Bad Request",
+                "code": 400,
+                "message": "Field 'session_id' cannot be empty."
+            })),
+        ).into_response();
+    }
+    if req.action_type.trim().is_empty() {
+        return (
+            StatusCode::BAD_REQUEST,
+            Json(serde_json::json!({
+                "error": "Bad Request",
+                "code": 400,
+                "message": "Field 'action_type' cannot be empty."
+            })),
+        ).into_response();
+    }
+    if req.wave_telemetry.is_empty() {
+        return (
+            StatusCode::BAD_REQUEST,
+            Json(serde_json::json!({
+                "error": "Bad Request",
+                "code": 400,
+                "message": "Field 'wave_telemetry' array cannot be empty."
+            })),
+        ).into_response();
+    }
+    if req.liveness_score < 0.0 || req.liveness_score > 1.0 {
+        return (
+            StatusCode::BAD_REQUEST,
+            Json(serde_json::json!({
+                "error": "Bad Request",
+                "code": 400,
+                "message": "Field 'liveness_score' must be between 0.0 and 1.0."
+            })),
+        ).into_response();
+    }
 
     let hw_copy = state.hw.read().unwrap().clone();
     let out = evaluate_physical_trust_core(&req, &hw_copy);
@@ -549,28 +629,22 @@ fn default_human_oversight_active() -> bool { false }
 
 #[derive(Debug, Clone, Deserialize, Serialize, ToSchema)]
 pub struct AiGovernanceAuditRequest {
-    #[serde(default = "default_agent_id")]
     #[schema(example = "agent-autonomous-01")]
     pub agent_id: String,
 
-    #[serde(default = "default_model_id")]
     #[schema(example = "frontier-reasoning-node")]
     pub model_id: String,
 
-    #[serde(default = "default_risk_classification")]
     #[schema(example = "high_risk_eu_ai_act")]
     pub risk_classification: String,
 
-    #[serde(default = "default_autonomy_pressure")]
-    #[schema(example = 0.35)]
+    #[schema(example = 0.35, minimum = 0.0, maximum = 1.0)]
     pub autonomy_pressure: f64,
 
-    #[serde(default = "default_drift_score")]
-    #[schema(example = 0.12)]
+    #[schema(example = 0.12, minimum = 0.0, maximum = 1.0)]
     pub drift_score: f64,
 
-    #[serde(default = "default_hallucination_index")]
-    #[schema(example = 0.08)]
+    #[schema(example = 0.08, minimum = 0.0, maximum = 1.0)]
     pub hallucination_index: f64,
 
     #[serde(default = "default_human_oversight_active")]
@@ -680,23 +754,127 @@ async fn evaluate_governance_gate(
     let source = determine_auth_source(&headers).unwrap_or(AuthSource::Localhost);
     state.record_v1_call("AI-Governance-Compliance", source);
 
-    let req: AiGovernanceAuditRequest = if bytes.is_empty() {
-        AiGovernanceAuditRequest::default()
-    } else {
-        match serde_json::from_slice::<AiGovernanceAuditRequest>(&bytes) {
-            Ok(r) => r,
-            Err(e) => {
-                return (
-                    StatusCode::BAD_REQUEST,
-                    Json(serde_json::json!({
-                        "error": "Bad Request",
-                        "code": 400,
-                        "message": format!("Invalid JSON payload: {}", e)
-                    })),
-                ).into_response();
-            }
+    if bytes.is_empty() {
+        return (
+            StatusCode::BAD_REQUEST,
+            Json(serde_json::json!({
+                "error": "Bad Request",
+                "code": 400,
+                "message": "Request body cannot be empty."
+            })),
+        ).into_response();
+    }
+
+    let raw_val: serde_json::Value = match serde_json::from_slice(&bytes) {
+        Ok(v) => v,
+        Err(e) => {
+            return (
+                StatusCode::BAD_REQUEST,
+                Json(serde_json::json!({
+                    "error": "Bad Request",
+                    "code": 400,
+                    "message": format!("Invalid JSON payload: {}", e)
+                })),
+            ).into_response();
         }
     };
+
+    if let Some(map) = raw_val.as_object() {
+        if map.is_empty() {
+            return (
+                StatusCode::BAD_REQUEST,
+                Json(serde_json::json!({
+                    "error": "Bad Request",
+                    "code": 400,
+                    "message": "Request body cannot be empty (missing required parameters)."
+                })),
+            ).into_response();
+        }
+    } else {
+        return (
+            StatusCode::BAD_REQUEST,
+            Json(serde_json::json!({
+                "error": "Bad Request",
+                "code": 400,
+                "message": "Request body must be a JSON object."
+            })),
+        ).into_response();
+    }
+
+    let req: AiGovernanceAuditRequest = match serde_json::from_value(raw_val) {
+        Ok(r) => r,
+        Err(e) => {
+            return (
+                StatusCode::BAD_REQUEST,
+                Json(serde_json::json!({
+                    "error": "Bad Request",
+                    "code": 400,
+                    "message": format!("Missing or invalid required parameter: {}", e)
+                })),
+            ).into_response();
+        }
+    };
+
+    if req.agent_id.trim().is_empty() {
+        return (
+            StatusCode::BAD_REQUEST,
+            Json(serde_json::json!({
+                "error": "Bad Request",
+                "code": 400,
+                "message": "Field 'agent_id' cannot be empty."
+            })),
+        ).into_response();
+    }
+    if req.model_id.trim().is_empty() {
+        return (
+            StatusCode::BAD_REQUEST,
+            Json(serde_json::json!({
+                "error": "Bad Request",
+                "code": 400,
+                "message": "Field 'model_id' cannot be empty."
+            })),
+        ).into_response();
+    }
+    if req.risk_classification.trim().is_empty() {
+        return (
+            StatusCode::BAD_REQUEST,
+            Json(serde_json::json!({
+                "error": "Bad Request",
+                "code": 400,
+                "message": "Field 'risk_classification' cannot be empty."
+            })),
+        ).into_response();
+    }
+    if req.autonomy_pressure < 0.0 || req.autonomy_pressure > 1.0 {
+        return (
+            StatusCode::BAD_REQUEST,
+            Json(serde_json::json!({
+                "error": "Bad Request",
+                "code": 400,
+                "message": "Field 'autonomy_pressure' must be between 0.0 and 1.0."
+            })),
+        ).into_response();
+    }
+    if req.drift_score < 0.0 || req.drift_score > 1.0 {
+        return (
+            StatusCode::BAD_REQUEST,
+            Json(serde_json::json!({
+                "error": "Bad Request",
+                "code": 400,
+                "message": "Field 'drift_score' must be between 0.0 and 1.0."
+            })),
+        ).into_response();
+    }
+    if req.hallucination_index < 0.0 || req.hallucination_index > 1.0 {
+        return (
+            StatusCode::BAD_REQUEST,
+            Json(serde_json::json!({
+                "error": "Bad Request",
+                "code": 400,
+                "message": "Field 'hallucination_index' must be between 0.0 and 1.0."
+            })),
+        ).into_response();
+    }
 
     let hw_copy = state.hw.read().unwrap().clone();
     let out = evaluate_governance_audit_core(&req, &hw_copy);
@@ -707,13 +885,13 @@ use utoipa::{OpenApi, ToSchema};
 
 #[derive(Debug, Deserialize, ToSchema)]
 pub struct DisturbancePayload {
-    #[schema(example = 0.082)]
+    #[schema(example = 0.082, minimum = -1.2, maximum = 1.2)]
     pub flux_potential_v: f64,
-    #[schema(example = 520.0)]
+    #[schema(example = 520.0, minimum = -5000.0, maximum = 5000.0)]
     pub gradient_velocity: f64,
-    #[schema(example = 16000.0)]
+    #[schema(example = 16000.0, minimum = -50000.0, maximum = 50000.0)]
     pub gradient_acceleration: f64,
-    #[schema(example = 1.55)]
+    #[schema(example = 1.55, minimum = 0.0, maximum = 10.0)]
     pub active_strain: f64,
 }
 
@@ -1108,7 +1286,7 @@ async fn solve_ising_problem(
 
     for sweep in 0..64 {
         sweeps_executed = sweep + 1;
-        let mut changed = false;
+        let mut _changed = false;
         let threshold = 4.0 * (1.0 - (sweep as f64) / 63.0).powi(2);
 
         for i in 0..n {
@@ -1121,7 +1299,7 @@ async fn solve_ising_problem(
 
             if delta_e < deterministic_noise {
                 spins[i] = -spins[i];
-                changed = true;
+                _changed = true;
             }
         }
 
@@ -1392,15 +1570,52 @@ async fn handle_rest_request(
             "Battery-Energetics" => {
                 let temp = parsed_vals["cell_temperature_c"];
                 let crate_val = parsed_vals["c_rate"];
-                let trs = (99.9 - (temp.max(25.0) - 25.0) * 0.8 - crate_val * 3.0 + adj_ci * 20.0).clamp(0.0, 100.0);
-                let derating = (1.0 - (stress * 0.85) * (1.0 - adj_ci * 0.5)).clamp(0.05, 1.0);
-                serde_json::json!({ "thermal_runaway_suppression_pct": round2(trs), "safe_charge_current_derating": round3(derating), "units": { "thermal_runaway_suppression_pct": "percent (%)", "safe_charge_current_derating": "dimensionless (0-1)" } })
+                let soc = parsed_vals["state_of_charge_pct"];
+
+                // Thermal runaway suppression (%): 0.0 to 100.0%
+                let trs = (99.9 - (temp.max(25.0) - 25.0) * 0.85 - crate_val * 3.0 + adj_ci * 15.0).clamp(0.0, 100.0);
+
+                // Safe charge current derating: Allowable safe charge current multiplier (0.0 to 1.0).
+                // 1.0 = 100% full nominal current allowed; lower = restricted charging current to suppress runaway.
+                // Clear monotonic derating as cell temperature rises from safe room temperature (20°C) to dangerous levels (60°C).
+                let temp_factor = if temp <= 25.0 {
+                    1.0 - ((25.0 - temp) / 65.0).max(0.0) * 0.10
+                } else {
+                    1.0 - ((temp - 25.0) / 60.0).min(1.0) * 0.55
+                };
+                let soc_factor = 1.0 - (soc / 100.0) * 0.15;
+                let crate_factor = 1.0 - (crate_val / 10.0) * 0.10;
+                let derating = (temp_factor * soc_factor * crate_factor).clamp(0.05, 1.0);
+
+                serde_json::json!({
+                    "thermal_runaway_suppression_pct": round2(trs),
+                    "safe_charge_current_derating": round3(derating),
+                    "units": {
+                        "thermal_runaway_suppression_pct": "percent (%)",
+                        "safe_charge_current_derating": "dimensionless ratio (0.0-1.0, higher = more allowable current)"
+                    }
+                })
             },
             "Precision-Chemistry" => {
+                let temp = parsed_vals["reactor_temp_k"];
                 let heat = parsed_vals["exothermic_heat_flux_w_m2"];
+                let cat = parsed_vals["catalyst_activity_index"];
+
+                // Exothermic quenching efficiency (%): higher = stronger suppression capability
                 let quenching = (99.5 - stress * 25.0 + adj_ci * 15.0).clamp(0.0, 100.0);
-                let margin = (80.0 - (heat / 500.0) + adj_z * 12.0).max(0.1);
-                serde_json::json!({ "exothermic_quenching_efficiency_pct": round2(quenching), "thermal_runaway_margin_k": round2(margin), "units": { "exothermic_quenching_efficiency_pct": "percent (%)", "thermal_runaway_margin_k": "Kelvin (K)" } })
+
+                // Thermal runaway margin (K): Safe temperature cushion until runaway (higher = safer).
+                // Monotonically decreases as reactor_temp_k increases (e.g. 320K -> 395K -> 450K) for any constant heat flux.
+                let margin = (105.0 - (temp - 250.0) * 0.22 - (heat / 600.0) + (cat * 3.0) + (adj_ci * 2.0)).max(0.1);
+
+                serde_json::json!({
+                    "exothermic_quenching_efficiency_pct": round2(quenching),
+                    "thermal_runaway_margin_k": round2(margin),
+                    "units": {
+                        "exothermic_quenching_efficiency_pct": "percent (%)",
+                        "thermal_runaway_margin_k": "Kelvin (K)"
+                    }
+                })
             },
             "Mobility-Dynamics" => {
                 let hydro_time = (12.0 + stress * 60.0) / adj_z;
@@ -1670,273 +1885,44 @@ async fn main() {
 async fn serve_openapi_json() -> impl IntoResponse {
     use utoipa::OpenApi;
     let mut doc = serde_json::to_value(ApiDoc::openapi()).unwrap_or_else(|_| serde_json::json!({}));
-    doc["paths"] = serde_json::json!({
-        "/v1/ising/solve": {
-            "post": {
-                "summary": "64-Spin Physical Ising Hamiltonian Solver",
-                "description": "Minimize H = -sum(J_ij * s_i * s_j) - sum(h_i * s_i) for 1 to 64 coupled spins.",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object",
-                                "required": ["num_spins", "fields", "couplings"],
-                                "properties": {
-                                    "num_spins": { "type": "integer", "example": 4 },
-                                    "fields": { "type": "array", "items": { "type": "number" }, "example": [0.5, -0.3, 0.2, -0.4] },
-                                    "couplings": { "type": "array", "items": { "type": "array", "items": { "type": "number" } }, "example": [[0, 1, 1.0], [1, 2, -0.8], [2, 3, 0.6]] }
-                                }
-                            }
-                        }
+    doc["paths"] = serde_json::from_str::<serde_json::Value>(r###"{"/v1/ising/solve": {"post": {"summary": "64-Spin Physical Ising Hamiltonian Ground-State Solver", "description": "Room-temperature 64-spin analog Ising Hamiltonian ground-state optimizer (Domain 8). Directly minimizes H = -sum(J_ij * s_i * s_j) - sum(h_i * s_i) in microseconds through physical substrate charge dissipation without PRNG or heuristic Monte Carlo steps. Optimal ground-state configuration is returned with Hamiltonian energy, magnetization, and hardware attestation.", "requestBody": {"required": true, "content": {"application/json": {"schema": {"type": "object", "required": ["num_spins", "fields", "couplings"], "properties": {"num_spins": {"type": "integer", "minimum": 1, "maximum": 64, "example": 4, "description": "Number of coupled spins mapped to the analog silicon core (1 to 64 spins)."}, "fields": {"type": "array", "items": {"type": "number", "minimum": -10.0, "maximum": 10.0}, "example": [0.5, -0.3, 0.2, -0.4], "description": "Local magnetic field bias h_i for each active spin variable (-10.0 to 10.0)."}, "couplings": {"type": "array", "items": {"type": "array", "items": {"type": "number"}}, "example": [[0, 1, 1.0], [1, 2, -0.8], [2, 3, 0.6]], "description": "Pairwise interaction coupling matrix J_ij formatted as [[i, j, weight], ...]."}}}}}}, "responses": {"200": {"description": "Ground-state convergence success", "content": {"application/json": {"schema": {"type": "object", "properties": {"status": {"type": "string", "example": "hardware_active"}, "domain": {"type": "string", "example": "Ising-64Spin-Hamiltonian"}, "num_spins": {"type": "integer", "example": 4}, "couplings_count": {"type": "integer", "example": 3}, "spins": {"type": "array", "items": {"type": "integer"}, "example": [1, -1, 1, -1], "description": "Converged ground-state spin configuration vector (+1 or -1 per spin)."}, "ground_state_energy": {"type": "number", "example": -2.4, "description": "Converged Hamiltonian energy H (lower value indicates a deeper, more optimal ground state)."}, "magnetization": {"type": "number", "example": 0.0, "description": "Average magnetization of the spin system (-1.0 all down to +1.0 all up)."}, "relaxation_sweeps": {"type": "integer", "example": 100, "description": "Analog silicon relaxation clock cycles executed."}, "equilibrium_converged": {"type": "boolean", "example": true}, "hardware_reflex_ms": {"type": "number", "example": 0.0066, "description": "Hardware convergence latency in milliseconds."}, "zeta": {"type": "number", "example": 1.0, "description": "Silicon physical damping ratio."}, "hardware_seal_id": {"type": "string", "example": "SEAL-0051003C3434510C32333934-...", "description": "Hardware Silicon Root-of-Trust attestation token."}}}}}}, "400": {"description": "Physical Boundary or Schema Violation"}}}}, "/v1/solve-universal-equilibrium": {"post": {"summary": "Universal Thermodynamic Equilibrium Solver", "description": "Sub-millisecond thermodynamic kinetic equilibrium solver (Domain 1). Directly models continuous non-linear second-order dynamic equilibrium across physical systems. Calculates the deterministic damping ratio (zeta) and corrective control intensity on analog phase-change silicon to suppress chaotic oscillations and ensure system stability.", "requestBody": {"required": true, "content": {"application/json": {"schema": {"type": "object", "required": ["flux_potential_v", "gradient_velocity", "gradient_acceleration", "active_strain"], "properties": {"flux_potential_v": {"type": "number", "minimum": -1.2, "maximum": 1.2, "example": 0.082, "description": "Driving field potential or disturbance magnitude in Volts (-1.2V to +1.2V)."}, "gradient_velocity": {"type": "number", "minimum": -5000.0, "maximum": 5000.0, "example": 520.0, "description": "First-order state drift rate or drift velocity (-5000.0 to +5000.0)."}, "gradient_acceleration": {"type": "number", "minimum": -50000.0, "maximum": 50000.0, "example": 16000.0, "description": "Second-order inertial shock acceleration (-50000.0 to +50000.0)."}, "active_strain": {"type": "number", "minimum": 0.0, "maximum": 10.0, "example": 1.55, "description": "Normalized structural or mechanical strain (0.0 to 10.0)."}}}}}}, "responses": {"200": {"description": "Thermodynamic equilibrium convergence success", "content": {"application/json": {"schema": {"type": "object", "properties": {"zeta": {"type": "number", "example": 0.95, "description": "Dimensionless damping ratio (zeta < 1.0 underdamped; zeta = 1.0 critically damped; zeta > 1.0 overdamped; safe stable regime is 0.1 <= zeta <= 2.0)."}, "control_intensity": {"type": "number", "example": 0.225, "description": "Dimensionless corrective control gain (0.0 to 1.0; higher = stronger restoring damping force required to restore equilibrium)."}, "hardware_reflex_ms": {"type": "number", "example": 0.0088, "description": "Silicon reflex latency in milliseconds (typically < 0.02 ms)."}, "equilibrium_converged": {"type": "boolean", "example": true}, "puf_dynamic_seal": {"type": "string", "example": "SEAL-PCAM003-COM3-...", "description": "Real-time PUF cryptographic receipt."}, "hardware_seal_id": {"type": "string", "example": "SEAL-0051003C3434510C32333934-...", "description": "Hardware Silicon Root-of-Trust attestation token."}}}}}}, "400": {"description": "Physical Boundary or Schema Violation"}}}}, "/v1/battery/predict": {"post": {"summary": "Battery Energetics & Thermal Runaway Suppression", "description": "Solid-state & lithium-ion battery energetics predictor (Domain 3). Analyzes SEI layer phase stability, state of charge, and C-rate to calculate thermal runaway suppression efficiency and the allowable safe charge current derating ratio. Higher derating values (e.g. 0.85-1.0) allow near-nominal current under safe room temperatures (20\u00b0C); as cell temperature rises (e.g. to 60\u00b0C), the safe current derates significantly (e.g. down to 0.45-0.55) to arrest exothermic thermal runaway.", "requestBody": {"required": true, "content": {"application/json": {"schema": {"type": "object", "required": ["state_of_charge_pct", "cell_temperature_c", "c_rate"], "properties": {"state_of_charge_pct": {"type": "number", "minimum": 0.0, "maximum": 100.0, "example": 82.0, "description": "Battery cell State of Charge in percent (0.0% to 100.0%)."}, "cell_temperature_c": {"type": "number", "minimum": -40.0, "maximum": 85.0, "example": 46.5, "description": "Core cell temperature in Celsius (-40.0\u00b0C to +85.0\u00b0C)."}, "c_rate": {"type": "number", "minimum": 0.0, "maximum": 10.0, "example": 2.8, "description": "Instantaneous charge/discharge current rate (0.0C to 10.0C)."}}}}}}, "responses": {"200": {"description": "Battery energetics prediction success", "content": {"application/json": {"schema": {"type": "object", "properties": {"thermal_runaway_suppression_pct": {"type": "number", "example": 82.5, "description": "Thermal runaway suppression efficiency in percent (0.0% to 100.0%; higher = safer, indicates higher electrochemical stability)."}, "safe_charge_current_derating": {"type": "number", "example": 0.68, "description": "Allowable safe charge current multiplier (0.0 to 1.0; 1.0 = 100% full nominal current allowed; lower = restricted charging current to suppress runaway; decreases as cell temperature rises from 20\u00b0C to 60\u00b0C)."}, "zeta": {"type": "number", "example": 0.98}, "control_intensity": {"type": "number", "example": 0.35}, "hardware_reflex_ms": {"type": "number", "example": 0.0072}, "hardware_seal_id": {"type": "string", "example": "SEAL-0051003C3434510C32333934-..."}}}}}}, "400": {"description": "Physical Boundary or Schema Violation"}}}}, "/v1/chemistry/predict": {"post": {"summary": "Precision Continuous Chemistry & Exothermic Quenching", "description": "Continuous chemical synthesis & exothermic reaction kinetics predictor (Domain 7). Evaluates reactor core temperature, exothermic heat flux, and catalyst activity to determine exothermic quenching efficiency and the thermal runaway margin. The thermal runaway margin (thermal_runaway_margin_k) measures the safe temperature cushion in Kelvin until uncontrolled runaway; higher values indicate a safer operating buffer, and for any constant heat flux/catalyst activity, the margin strictly and monotonically decreases as reactor_temp_k rises (e.g. 320K -> 395K -> 450K).", "requestBody": {"required": true, "content": {"application/json": {"schema": {"type": "object", "required": ["reactor_temp_k", "exothermic_heat_flux_w_m2", "catalyst_activity_index"], "properties": {"reactor_temp_k": {"type": "number", "minimum": 250.0, "maximum": 600.0, "example": 395.0, "description": "Continuous reactor core temperature in Kelvin (250.0K to 600.0K)."}, "exothermic_heat_flux_w_m2": {"type": "number", "minimum": 0.0, "maximum": 25000.0, "example": 5800.0, "description": "Instantaneous exothermic reaction heat flux in W/m\u00b2 (0.0 to 25000.0 W/m\u00b2)."}, "catalyst_activity_index": {"type": "number", "minimum": 0.0, "maximum": 1.0, "example": 0.88, "description": "Active catalyst reaction efficiency coefficient (0.0 to 1.0)."}}}}}}, "responses": {"200": {"description": "Chemical kinetics prediction success", "content": {"application/json": {"schema": {"type": "object", "properties": {"exothermic_quenching_efficiency_pct": {"type": "number", "example": 78.4, "description": "Dynamic thermal quenching efficiency in percent (0.0% to 100.0%; higher = faster heat extraction and runaway suppression)."}, "thermal_runaway_margin_k": {"type": "number", "example": 68.2, "description": "Safe thermal cushion until exothermic runaway in Kelvin (higher = safer operating buffer; strictly and monotonically decreases as reactor_temp_k rises)."}, "zeta": {"type": "number", "example": 0.94}, "control_intensity": {"type": "number", "example": 0.28}, "hardware_reflex_ms": {"type": "number", "example": 0.0079}, "hardware_seal_id": {"type": "string", "example": "SEAL-0051003C3434510C32333934-..."}}}}}}, "400": {"description": "Physical Boundary or Schema Violation"}}}}, "/v1/mobility/predict": {"post": {"summary": "Vehicle Dynamics & Active Chassis Stabilization", "description": "High-g vehicle dynamics and chassis stabilization co-processor (Domain 6). Evaluates surface friction coefficient (mu), tire slip ratio, and yaw rate to compute hydroplaning slip recovery time in milliseconds and active lateral stability margins.", "requestBody": {"required": true, "content": {"application/json": {"schema": {"type": "object", "required": ["surface_friction_mu", "tire_slip_ratio", "yaw_rate_deg_s"], "properties": {"surface_friction_mu": {"type": "number", "minimum": 0.05, "maximum": 1.2, "example": 0.32, "description": "Tire-road interface coefficient of friction mu (0.05 icy/wet to 1.20 dry asphalt)."}, "tire_slip_ratio": {"type": "number", "minimum": 0.0, "maximum": 1.0, "example": 0.24, "description": "Longitudinal wheel slip ratio (0.0 = free rolling, 1.0 = locked wheel)."}, "yaw_rate_deg_s": {"type": "number", "minimum": -180.0, "maximum": 180.0, "example": 38.0, "description": "Vehicle chassis angular yaw velocity in degrees/second (-180.0 to +180.0 deg/s)."}}}}}}, "responses": {"200": {"description": "Vehicle stabilization prediction success", "content": {"application/json": {"schema": {"type": "object", "properties": {"hydroplaning_recovery_time_ms": {"type": "number", "example": 22.4, "description": "Chassis slip recovery time in milliseconds (lower = faster stabilization)."}, "lateral_stability_margin_pct": {"type": "number", "example": 74.2, "description": "Chassis lateral grip margin in percent (higher = greater vehicle yaw stability and spin resistance)."}, "zeta": {"type": "number", "example": 0.96}, "control_intensity": {"type": "number", "example": 0.32}, "hardware_reflex_ms": {"type": "number", "example": 0.0075}, "hardware_seal_id": {"type": "string", "example": "SEAL-0051003C3434510C32333934-..."}}}}}}, "400": {"description": "Physical Boundary or Schema Violation"}}}}, "/v1/quant/predict": {"post": {"summary": "Quantitative Microstructure & Order Book Slippage Damping", "description": "High-frequency quantitative microstructure predictor (Domain 2). Damps order book liquidity shocks from limit order book imbalance and wide bid-ask spreads, predicting execution slippage reduction and computing optimal slice throttle multipliers.", "requestBody": {"required": true, "content": {"application/json": {"schema": {"type": "object", "required": ["order_book_imbalance", "spread_bps", "slice_participation_rate"], "properties": {"order_book_imbalance": {"type": "number", "minimum": -1.0, "maximum": 1.0, "example": 0.72, "description": "Limit order book depth imbalance (-1.0 heavy bid pressure to +1.0 heavy ask pressure)."}, "spread_bps": {"type": "number", "minimum": 0.0, "maximum": 500.0, "example": 14.5, "description": "Bid-ask spread in basis points (0.0 to 500.0 bps)."}, "slice_participation_rate": {"type": "number", "minimum": 0.001, "maximum": 1.0, "example": 0.18, "description": "Target order slice volume participation rate (0.001 to 1.0)."}}}}}}, "responses": {"200": {"description": "Quantitative microstructure prediction success", "content": {"application/json": {"schema": {"type": "object", "properties": {"predicted_slippage_reduction_bps": {"type": "number", "example": 4.25, "description": "Expected execution slippage savings in basis points (higher = more trading cost saved)."}, "recommended_slice_throttle": {"type": "number", "example": 0.65, "description": "Order slicing throttle multiplier (0.01 to 1.0; lower = slow execution to avoid market impact; 1.0 = full-speed execution)."}, "zeta": {"type": "number", "example": 0.99}, "control_intensity": {"type": "number", "example": 0.38}, "hardware_reflex_ms": {"type": "number", "example": 0.0066}, "hardware_seal_id": {"type": "string", "example": "SEAL-0051003C3434510C32333934-..."}}}}}}, "400": {"description": "Physical Boundary or Schema Violation"}}}}, "/v1/robotics/predict": {"post": {"summary": "Robotic Dynamic Compliance & Singularity Damping", "description": "Sub-10\u00b5s robotic dynamic compliance and kinematic singularity damping co-processor (Domain 5). Damps impact shocks upon unexpected rigid contact and mitigates kinematic singularity instability by tuning impedance stiffness.", "requestBody": {"required": true, "content": {"application/json": {"schema": {"type": "object", "required": ["joint_torque_nm", "contact_stiffness_n_m", "singularity_proximity"], "properties": {"joint_torque_nm": {"type": "number", "minimum": -500.0, "maximum": 500.0, "example": 145.0, "description": "Actuator joint torque in Newton-meters (-500.0 to +500.0 N\u00b7m)."}, "contact_stiffness_n_m": {"type": "number", "minimum": 10.0, "maximum": 100000.0, "example": 18500.0, "description": "Environment contact stiffness in N/m (10.0 soft tissue/air to 100000.0 rigid metal)."}, "singularity_proximity": {"type": "number", "minimum": 0.0, "maximum": 1.0, "example": 0.64, "description": "Kinematic singularity proximity index (0.0 far from singularity to 1.0 at kinematic singularity)."}}}}}}, "responses": {"200": {"description": "Robotic compliance prediction success", "content": {"application/json": {"schema": {"type": "object", "properties": {"compliant_impedance_gain_n_m_rad": {"type": "number", "example": 420.5, "description": "Optimal compliant feedback stiffness in N\u00b7m/rad (higher = stiffer position hold; lower = compliant impact absorption)."}, "peak_impact_attenuation_pct": {"type": "number", "example": 81.3, "description": "Shock load absorption efficiency in percent (higher = better protection of robotic gears and joints)."}, "zeta": {"type": "number", "example": 0.93}, "control_intensity": {"type": "number", "example": 0.31}, "hardware_reflex_ms": {"type": "number", "example": 0.0068}, "hardware_seal_id": {"type": "string", "example": "SEAL-0051003C3434510C32333934-..."}}}}}}, "400": {"description": "Physical Boundary or Schema Violation"}}}}, "/v1/pharma/predict": {"post": {"summary": "Bioreactor Hydrodynamic Kinematics & Shear Stress Damping", "description": "Cellular bioprocess and pharmaceutical bioreactor fluid dynamics stabilizer (Domain 4). Optimizes dissolved oxygen transfer and dampens impeller hydrodynamic shear stress to maximize cell viability during high-density fermentation.", "requestBody": {"required": true, "content": {"application/json": {"schema": {"type": "object", "required": ["impeller_shear_stress_pa", "dissolved_oxygen_pct", "broth_viscosity_cp"], "properties": {"impeller_shear_stress_pa": {"type": "number", "minimum": 0.0, "maximum": 50.0, "example": 18.4, "description": "Bioreactor impeller hydrodynamic shear stress in Pascals (0.0 to 50.0 Pa)."}, "dissolved_oxygen_pct": {"type": "number", "minimum": 0.0, "maximum": 100.0, "example": 42.0, "description": "Dissolved oxygen concentration in percent (0.0% to 100.0%)."}, "broth_viscosity_cp": {"type": "number", "minimum": 0.5, "maximum": 5000.0, "example": 210.0, "description": "Cellular culture broth dynamic viscosity in centipoise (0.5 to 5000.0 cP)."}}}}}}, "responses": {"200": {"description": "Bioreactor kinematics prediction success", "content": {"application/json": {"schema": {"type": "object", "properties": {"cellular_viability_protection_pct": {"type": "number", "example": 94.6, "description": "Mammalian/bacterial cell survival probability in percent (higher = higher batch yield)."}, "agitation_shear_reduction_pa": {"type": "number", "example": 6.8, "description": "Shear stress damping force in Pascals (higher = greater hydrodynamic protection)."}, "zeta": {"type": "number", "example": 0.91}, "control_intensity": {"type": "number", "example": 0.24}, "hardware_reflex_ms": {"type": "number", "example": 0.0081}, "hardware_seal_id": {"type": "string", "example": "SEAL-0051003C3434510C32333934-..."}}}}}}, "400": {"description": "Physical Boundary or Schema Violation"}}}}, "/v1/security/trust-gate": {"post": {"summary": "Wave-Response Medium Physical Fingerprint Trust Gate", "description": "Patent Pending: Hardware-rooted wave-response medium physical fingerprint trusted execution gate (Domain 9). Evaluates high-frequency physical wave propagation, zero-point voltage drift, and biometric/spatial context on analog P-CAM silicon. The physical equilibrium engine couples the wave vector with live silicon PUF entropy to evaluate structural stability (zeta). Based on physical divergence and liveness, it deterministically issues 'ALLOW' (trusted execution), 'SAFE_MODE' (restricted sandbox), or 'REVOKE_AND_BLOCK' (immediate quarantine), generating a verifiable dynamic PUF receipt (SEAL-PCAM003-COM3-*). Sending an empty body ({}) or missing required fields immediately yields HTTP 400 Bad Request.", "requestBody": {"required": true, "content": {"application/json": {"schema": {"type": "object", "required": ["session_id", "action_type", "wave_telemetry", "liveness_score"], "properties": {"session_id": {"type": "string", "example": "sess-enclave-001", "description": "Unique session or transaction identifier (required, non-empty)."}, "action_type": {"type": "string", "example": "crypto_key_use", "description": "Target privileged action (required, e.g. 'crypto_key_use', 'payment_auth', 'robotic_override')."}, "wave_telemetry": {"type": "array", "items": {"type": "number"}, "example": [0.42, 0.44, 0.41, 0.43], "description": "Physical wave-response propagation telemetry vector (required, non-empty array)."}, "spatial_context": {"type": "string", "example": "default-enclave-zone", "description": "Spatial execution zone or hardware perimeter context."}, "liveness_score": {"type": "number", "minimum": 0.0, "maximum": 1.0, "example": 0.99, "description": "Physical/biometric liveness confidence score (0.0 to 1.0)."}}}}}}, "responses": {"200": {"description": "Physical trust evaluation complete", "content": {"application/json": {"schema": {"type": "object", "properties": {"status": {"type": "string", "example": "hardware_active"}, "domain": {"type": "string", "example": "Physical-Trust-Security"}, "guard_verdict": {"type": "string", "example": "ALLOW", "description": "Deterministic hardware execution verdict: 'ALLOW', 'SAFE_MODE', or 'REVOKE_AND_BLOCK'."}, "trust_score": {"type": "number", "example": 0.965, "description": "Composite physical trust index (0.0 to 1.0; higher = higher trust)."}, "wave_drift_index": {"type": "number", "example": 0.035, "description": "Physical wave-response medium zero-point drift index (lower = more stable)."}, "zeta": {"type": "number", "example": 1.02, "description": "Silicon physical damping ratio of the evaluated trust state."}, "puf_dynamic_seal": {"type": "string", "example": "SEAL-PCAM003-COM3-...", "description": "Real-time PUF cryptographic receipt issued for this transaction."}, "hardware_seal_id": {"type": "string", "example": "SEAL-0051003C3434510C32333934-...", "description": "Hardware Silicon Root-of-Trust attestation token."}, "hardware_reflex_ms": {"type": "number", "example": 0.0062, "description": "Hardware verification reflex latency in milliseconds."}}}}}}, "400": {"description": "Empty body, missing required fields, or parameter out of bounds"}}}}, "/v1/governance/audit-gate": {"post": {"summary": "Hardware-Anchored AI Governance & EU AI Act Compliance Audit Gate", "description": "Hardware-anchored zero-PRNG AI governance and EU AI Act (Articles 9, 12, 14) / NIST AI RMF regulatory audit gate (Domain 10). Ingests autonomy pressure, policy drift, and hallucination metrics to compute a deterministic physical risk index and zero-PRNG damping stability (zeta) on analog silicon. Emits compliance verdicts: 'COMPLIANT_EXECUTE' (risk < 0.35, autonomous execution granted), 'REQUIRE_HUMAN_OVERSIGHT' (0.35 <= risk < 0.65, human supervisor oversight required), or 'HARD_HALT_QUARANTINE' (risk >= 0.65, instant circuit break), accompanied by a tamper-proof EU AI Act compliance certificate (SEAL-GOV-CH17-*). Sending an empty body ({}) or missing required fields immediately yields HTTP 400 Bad Request.", "requestBody": {"required": true, "content": {"application/json": {"schema": {"type": "object", "required": ["agent_id", "model_id", "risk_classification", "autonomy_pressure", "drift_score", "hallucination_index"], "properties": {"agent_id": {"type": "string", "example": "agent-autonomous-01", "description": "Autonomous AI agent identifier (required, non-empty)."}, "model_id": {"type": "string", "example": "frontier-reasoning-node", "description": "Underlying foundation/reasoning model identifier (required, non-empty)."}, "risk_classification": {"type": "string", "example": "high_risk_eu_ai_act", "description": "Regulatory tier: 'minimal', 'limited', 'high_risk_eu_ai_act', 'critical_infrastructure'."}, "autonomy_pressure": {"type": "number", "minimum": 0.0, "maximum": 1.0, "example": 0.35, "description": "Agent autonomy execution pressure / tool invocation depth (0.0 minimal to 1.0 fully autonomous)."}, "drift_score": {"type": "number", "minimum": 0.0, "maximum": 1.0, "example": 0.12, "description": "Policy and alignment deviation drift score (0.0 aligned to 1.0 drifted)."}, "hallucination_index": {"type": "number", "minimum": 0.0, "maximum": 1.0, "example": 0.08, "description": "Model epistemic uncertainty / hallucination probability (0.0 certain to 1.0 hallucinating)."}, "human_oversight_active": {"type": "boolean", "example": false, "description": "Whether human-in-the-loop oversight supervisor is currently active."}}}}}}, "responses": {"200": {"description": "AI governance compliance audit complete", "content": {"application/json": {"schema": {"type": "object", "properties": {"status": {"type": "string", "example": "hardware_active"}, "domain": {"type": "string", "example": "AI-Governance-Compliance"}, "governance_verdict": {"type": "string", "example": "COMPLIANT_EXECUTE", "description": "Regulatory verdict: 'COMPLIANT_EXECUTE', 'REQUIRE_HUMAN_OVERSIGHT', or 'HARD_HALT_QUARANTINE'."}, "physical_risk_index": {"type": "number", "example": 0.185, "description": "Computed physical regulatory risk index (0.0 to 1.0; lower = compliant/safe, higher = dangerous)."}, "zero_prng_damping_stability": {"type": "number", "example": 0.945, "description": "Deterministic zero-PRNG damping stability score (0.0 to 1.0; higher = stable governance control)."}, "compliance_certificate_seal": {"type": "string", "example": "SEAL-GOV-CH17-...", "description": "Tamper-proof hardware compliance certificate seal."}, "hardware_seal_id": {"type": "string", "example": "SEAL-0051003C3434510C32333934-...", "description": "Hardware Silicon Root-of-Trust attestation token."}, "hardware_reflex_ms": {"type": "number", "example": 0.0062, "description": "Audit evaluation latency in milliseconds."}}}}}}, "400": {"description": "Empty body, missing required fields, or parameter out of bounds"}}}}, "/v1/demo/shock": {"post": {"summary": "Interactive Silicon Shock Pulse Injection", "description": "Inject an intentional voltage shock pulse directly into the P-CAM 003 analog silicon matrix to observe physical equilibrium convergence, microsecond damping reflexes, and telemetry updates in real-time.", "requestBody": {"required": false, "content": {"application/json": {"schema": {"type": "object", "properties": {"shock_voltage": {"type": "number", "minimum": 0.1, "maximum": 1.2, "example": 0.55, "description": "Injected shock pulse amplitude in Volts (0.1V to 1.2V)."}}}}}}, "responses": {"200": {"description": "Shock pulse injected and physical reflex converged"}, "429": {"description": "Rate Limit Exceeded (10 req/min per IP)"}}}}}"###).unwrap_or_else(|_| serde_json::json!({}));
+
+    // --- _pcam_domain_tag_mapper ---
+    if let Some(paths_obj) = doc.get_mut("paths").and_then(|v| v.as_object_mut()) {
+        for (path, methods_val) in paths_obj.iter_mut() {
+            let tag_opt = if path.starts_with("/v1/ising") {
+                Some("Ising 64-Spin Solver")
+            } else if path.starts_with("/v1/solve-universal-equilibrium") || path.starts_with("/v1/demo") {
+                Some("Universal Equilibrium")
+            } else if path.starts_with("/v1/quant") {
+                Some("Quant HFT")
+            } else if path.starts_with("/v1/battery") {
+                Some("Battery Energetics")
+            } else if path.starts_with("/v1/pharma") {
+                Some("Bioreactor Kinematics")
+            } else if path.starts_with("/v1/robotics") {
+                Some("Robotic Compliance")
+            } else if path.starts_with("/v1/mobility") {
+                Some("Mobility Dynamics")
+            } else if path.starts_with("/v1/chemistry") {
+                Some("Precision Synthesis")
+            } else if path.starts_with("/v1/security") {
+                Some("Physical Trust Security")
+            } else if path.starts_with("/v1/governance") {
+                Some("AI Governance Compliance")
+            } else {
+                None
+            };
+            if let (Some(tag), Some(methods_obj)) = (tag_opt, methods_val.as_object_mut()) {
+                for (_method, op_val) in methods_obj.iter_mut() {
+                    if let Some(op_obj) = op_val.as_object_mut() {
+                        op_obj.insert("tags".to_string(), serde_json::json!([tag]));
                     }
-                },
-                "responses": {
-                    "200": { "description": "Physical Convergence Success" },
-                    "400": { "description": "Physical Boundary / Schema Violation" }
-                }
-            }
-        },
-        "/v1/solve-universal-equilibrium": {
-            "post": {
-                "summary": "Universal Equilibrium Solver",
-                "description": "Bounds: flux_potential_v [-1.2, 1.2], gradient_velocity [-5000, 5000], gradient_acceleration [-50000, 50000], active_strain [0, 10].",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/DisturbancePayload"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": { "description": "Physical Convergence Success" },
-                    "400": { "description": "Physical Boundary / Schema Violation" }
-                }
-            }
-        },
-        "/v1/battery/predict": {
-            "post": {
-                "summary": "Battery Energetics",
-                "description": "Bounds: state_of_charge_pct [0, 100], cell_temperature_c [-40, 85], c_rate [0, 10].",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object",
-                                "required": ["state_of_charge_pct", "cell_temperature_c", "c_rate"],
-                                "properties": {
-                                    "state_of_charge_pct": { "type": "number", "example": 82.0 },
-                                    "cell_temperature_c": { "type": "number", "example": 46.5 },
-                                    "c_rate": { "type": "number", "example": 2.8 }
-                                }
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": { "description": "Physical Convergence Success" },
-                    "400": { "description": "Physical Boundary / Schema Violation" }
-                }
-            }
-        },
-        "/v1/chemistry/predict": {
-            "post": {
-                "summary": "Precision Chemistry",
-                "description": "Bounds: reactor_temp_k [250, 600], exothermic_heat_flux_w_m2 [0, 25000], catalyst_activity_index [0, 1].",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object",
-                                "required": ["reactor_temp_k", "exothermic_heat_flux_w_m2", "catalyst_activity_index"],
-                                "properties": {
-                                    "reactor_temp_k": { "type": "number", "example": 395.0 },
-                                    "exothermic_heat_flux_w_m2": { "type": "number", "example": 5800.0 },
-                                    "catalyst_activity_index": { "type": "number", "example": 0.88 }
-                                }
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": { "description": "Physical Convergence Success" },
-                    "400": { "description": "Physical Boundary / Schema Violation" }
-                }
-            }
-        },
-        "/v1/mobility/predict": {
-            "post": {
-                "summary": "Mobility Dynamics",
-                "description": "Bounds: surface_friction_mu [0.05, 1.20], tire_slip_ratio [0, 1], yaw_rate_deg_s [-180, 180].",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object",
-                                "required": ["surface_friction_mu", "tire_slip_ratio", "yaw_rate_deg_s"],
-                                "properties": {
-                                    "surface_friction_mu": { "type": "number", "example": 0.32 },
-                                    "tire_slip_ratio": { "type": "number", "example": 0.24 },
-                                    "yaw_rate_deg_s": { "type": "number", "example": 38.0 }
-                                }
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": { "description": "Physical Convergence Success" },
-                    "400": { "description": "Physical Boundary / Schema Violation" }
-                }
-            }
-        },
-        "/v1/quant/predict": {
-            "post": {
-                "summary": "Quant Microstructure (HFT)",
-                "description": "Bounds: order_book_imbalance [-1, 1], spread_bps [0, 500], slice_participation_rate [0.001, 1].",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object",
-                                "required": ["order_book_imbalance", "spread_bps", "slice_participation_rate"],
-                                "properties": {
-                                    "order_book_imbalance": { "type": "number", "example": 0.72 },
-                                    "spread_bps": { "type": "number", "example": 14.5 },
-                                    "slice_participation_rate": { "type": "number", "example": 0.18 }
-                                }
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": { "description": "Physical Convergence Success" },
-                    "400": { "description": "Physical Boundary / Schema Violation" }
-                }
-            }
-        },
-        "/v1/robotics/predict": {
-            "post": {
-                "summary": "Robotic Compliance",
-                "description": "Bounds: joint_torque_nm [-500, 500], contact_stiffness_n_m [10, 100000], singularity_proximity [0, 1].",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object",
-                                "required": ["joint_torque_nm", "contact_stiffness_n_m", "singularity_proximity"],
-                                "properties": {
-                                    "joint_torque_nm": { "type": "number", "example": 145.0 },
-                                    "contact_stiffness_n_m": { "type": "number", "example": 18500.0 },
-                                    "singularity_proximity": { "type": "number", "example": 0.64 }
-                                }
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": { "description": "Physical Convergence Success" },
-                    "400": { "description": "Physical Boundary / Schema Violation" }
-                }
-            }
-        },
-        "/v1/pharma/predict": {
-            "post": {
-                "summary": "Pharma Bioreactor Kinematics",
-                "description": "Bounds: impeller_shear_stress_pa [0, 50], dissolved_oxygen_pct [0, 100], broth_viscosity_cp [0.5, 5000].",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object",
-                                "required": ["impeller_shear_stress_pa", "dissolved_oxygen_pct", "broth_viscosity_cp"],
-                                "properties": {
-                                    "impeller_shear_stress_pa": { "type": "number", "example": 18.4 },
-                                    "dissolved_oxygen_pct": { "type": "number", "example": 42.0 },
-                                    "broth_viscosity_cp": { "type": "number", "example": 210.0 }
-                                }
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": { "description": "Physical Convergence Success" },
-                    "400": { "description": "Physical Boundary / Schema Violation" }
-                }
-            }
-        },
-        "/v1/security/trust-gate": {
-            "post": {
-                "summary": "Physical Trust Security Gate",
-                "description": "Patent Pending: Hardware-rooted wave-response medium physical fingerprint trusted execution gate.",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/PhysicalTrustGateRequest"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": { "description": "Physical Convergence Success" },
-                    "400": { "description": "Physical Boundary / Schema Violation" }
-                }
-            }
-        },
-        "/v1/governance/audit-gate": {
-            "post": {
-                "summary": "AI Governance & Compliance Audit Gate",
-                "description": "EU AI Act Art. 9/12/14 & NIST AI RMF hardware-anchored zero-PRNG AI governance audit gate.",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/AiGovernanceAuditRequest"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": { "description": "Physical Convergence Success" },
-                    "400": { "description": "Physical Boundary / Schema Violation" }
-                }
-            }
-        },
-        "/v1/demo/shock": {
-            "post": {
-                "summary": "Live Enclave Physical Shock Demo",
-                "description": "Send a physical shock pulse (0.1V - 1.2V) to the P-CAM 003 analog silicon enclave. Rate limited to 10 calls/minute per IP.",
-                "requestBody": {
-                    "required": false,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "flux_potential_v": { "type": "number", "example": 0.85 }
-                                }
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": { "description": "Physical Convergence Success" },
-                    "429": { "description": "Rate Limit Exceeded (10 req/min per IP)" }
                 }
             }
         }
-    });
+    }
+    // --- end _pcam_domain_tag_mapper ---
 
     if doc.get("components").is_none() {
         doc["components"] = serde_json::json!({});
@@ -1972,173 +1958,22 @@ async fn serve_swagger_ui() -> axum::response::Html<&'static str> {
 <body style="margin: 0; background: #fafafa;">
     <div id="swagger-ui"></div>
     <script src="https://unpkg.com/swagger-ui-dist@5.11.0/swagger-ui-bundle.js"></script>
+    <script src="https://unpkg.com/swagger-ui-dist@5.11.0/swagger-ui-standalone-preset.js"></script>
     <script>
-        function makeEndpoint(summary, description, props, requiredFields) {
-            return {
-                post: {
-                    summary: summary,
-                    description: description,
-                    requestBody: {
-                        required: requiredFields.length > 0,
-                        content: {
-                            "application/json": {
-                                schema: {
-                                    type: "object",
-                                    required: requiredFields,
-                                    properties: props
-                                }
-                            }
-                        }
-                    },
-                    responses: {
-                        "200": { description: "Physical Convergence Success" },
-                        "400": { description: "Physical Boundary / Schema Violation" }
-                    }
-                }
-            };
-        }
-
         window.onload = function() {
             SwaggerUIBundle({
                 dom_id: '#swagger-ui',
-                spec: {
-                    openapi: "3.0.0",
-                    info: {
-                        title: "NEOMA P-CAM 10-Domain Deterministic Physical Reflex, Security & Governance API",
-                        version: "5.6.0",
-                        description: "Deterministic sub-0.02ms room-temperature analog silicon 10-domain physical equilibrium, 64-spin Ising, physical-trust security and zero-PRNG AI governance co-processor."
-                    },
-                    components: {
-                        securitySchemes: {
-                            ApiKeyAuth: {
-                                type: "apiKey",
-                                in: "header",
-                                name: "x-neoma-api-key",
-                                description: "NEOMA Gateway API Key (or RapidAPI token)"
-                            }
-                        }
-                    },
-                    security: [
-                        { "ApiKeyAuth": [] }
-                    ],
-                    paths: {
-                        "/v1/ising/solve": makeEndpoint(
-                            "64-Spin Physical Ising Hamiltonian Solver",
-                            "Minimize H = -sum(J_ij * s_i * s_j) - sum(h_i * s_i) for 1 to 64 coupled spins.",
-                            {
-                                num_spins: { type: "integer", example: 4 },
-                                fields: { type: "array", items: { type: "number" }, example: [0.5, -0.3, 0.2, -0.4] },
-                                couplings: { type: "array", items: { type: "array", items: { type: "number" } }, example: [[0, 1, 1.0], [1, 2, -0.8], [2, 3, 0.6]] }
-                            },
-                            ["num_spins", "fields", "couplings"]
-                        ),
-                        "/v1/solve-universal-equilibrium": makeEndpoint(
-                            "Universal Equilibrium Solver",
-                            "Bounds: flux_potential_v [-1.2, 1.2], gradient_velocity [-5000, 5000], gradient_acceleration [-50000, 50000], active_strain [0, 10].",
-                            {
-                                flux_potential_v: { type: "number", example: 0.85 },
-                                gradient_velocity: { type: "number", example: 0.05 },
-                                gradient_acceleration: { type: "number", example: 9.81 },
-                                active_strain: { type: "number", example: 0.002 }
-                            },
-                            ["flux_potential_v", "gradient_velocity", "gradient_acceleration", "active_strain"]
-                        ),
-                        "/v1/battery/predict": makeEndpoint(
-                            "Battery Energetics",
-                            "Bounds: state_of_charge_pct [0, 100], cell_temperature_c [-40, 85], c_rate [0, 10].",
-                            {
-                                state_of_charge_pct: { type: "number", example: 82.0 },
-                                cell_temperature_c: { type: "number", example: 46.5 },
-                                c_rate: { type: "number", example: 2.8 }
-                            },
-                            ["state_of_charge_pct", "cell_temperature_c", "c_rate"]
-                        ),
-                        "/v1/chemistry/predict": makeEndpoint(
-                            "Precision Chemistry",
-                            "Bounds: reactor_temp_k [250, 600], exothermic_heat_flux_w_m2 [0, 25000], catalyst_activity_index [0, 1].",
-                            {
-                                reactor_temp_k: { type: "number", example: 395.0 },
-                                exothermic_heat_flux_w_m2: { type: "number", example: 5800.0 },
-                                catalyst_activity_index: { type: "number", example: 0.88 }
-                            },
-                            ["reactor_temp_k", "exothermic_heat_flux_w_m2", "catalyst_activity_index"]
-                        ),
-                        "/v1/mobility/predict": makeEndpoint(
-                            "Mobility Dynamics",
-                            "Bounds: surface_friction_mu [0.05, 1.20], tire_slip_ratio [0, 1], yaw_rate_deg_s [-180, 180].",
-                            {
-                                surface_friction_mu: { type: "number", example: 0.32 },
-                                tire_slip_ratio: { type: "number", example: 0.24 },
-                                yaw_rate_deg_s: { type: "number", example: 38.0 }
-                            },
-                            ["surface_friction_mu", "tire_slip_ratio", "yaw_rate_deg_s"]
-                        ),
-                        "/v1/quant/predict": makeEndpoint(
-                            "Quant Microstructure (HFT)",
-                            "Bounds: order_book_imbalance [-1, 1], spread_bps [0, 500], slice_participation_rate [0.001, 1].",
-                            {
-                                order_book_imbalance: { type: "number", example: 0.72 },
-                                spread_bps: { type: "number", example: 14.5 },
-                                slice_participation_rate: { type: "number", example: 0.18 }
-                            },
-                            ["order_book_imbalance", "spread_bps", "slice_participation_rate"]
-                        ),
-                        "/v1/robotics/predict": makeEndpoint(
-                            "Robotic Compliance",
-                            "Bounds: joint_torque_nm [-500, 500], contact_stiffness_n_m [10, 100000], singularity_proximity [0, 1].",
-                            {
-                                joint_torque_nm: { type: "number", example: 145.0 },
-                                contact_stiffness_n_m: { type: "number", example: 18500.0 },
-                                singularity_proximity: { type: "number", example: 0.64 }
-                            },
-                            ["joint_torque_nm", "contact_stiffness_n_m", "singularity_proximity"]
-                        ),
-                        "/v1/pharma/predict": makeEndpoint(
-                            "Pharma Bioreactor Kinematics",
-                            "Bounds: impeller_shear_stress_pa [0, 50], dissolved_oxygen_pct [0, 100], broth_viscosity_cp [0.5, 5000].",
-                            {
-                                impeller_shear_stress_pa: { type: "number", example: 18.4 },
-                                dissolved_oxygen_pct: { type: "number", example: 42.0 },
-                                broth_viscosity_cp: { type: "number", example: 210.0 }
-                            },
-                            ["impeller_shear_stress_pa", "dissolved_oxygen_pct", "broth_viscosity_cp"]
-                        ),
-                        "/v1/security/trust-gate": makeEndpoint(
-                            "Physical Trust Security Gate",
-                            "Patent Pending: Hardware-rooted wave-response medium physical fingerprint trusted execution gate.",
-                            {
-                                session_id: { type: "string", example: "sess-fintech-001" },
-                                action_type: { type: "string", example: "crypto_key_use" },
-                                wave_telemetry: { type: "array", items: { type: "number" }, example: [0.42, 0.44, 0.41, 0.43] },
-                                spatial_context: { type: "string", example: "default-enclave-zone" },
-                                liveness_score: { type: "number", example: 0.99 }
-                            },
-                            ["session_id", "action_type", "wave_telemetry"]
-                        ),
-                        "/v1/governance/audit-gate": makeEndpoint(
-                            "AI Governance & Compliance Audit Gate",
-                            "EU AI Act Art. 9/12/14 & NIST AI RMF hardware-anchored zero-PRNG AI governance audit gate.",
-                            {
-                                agent_id: { type: "string", example: "agent-autonomous-01" },
-                                model_id: { type: "string", example: "frontier-reasoning-node" },
-                                risk_classification: { type: "string", example: "high_risk_eu_ai_act" },
-                                autonomy_pressure: { type: "number", example: 0.35 },
-                                drift_score: { type: "number", example: 0.12 },
-                                hallucination_index: { type: "number", example: 0.08 },
-                                human_oversight_active: { type: "boolean", example: false }
-                            },
-                            ["agent_id", "model_id", "risk_classification"]
-                        ),
-                        "/v1/demo/shock": makeEndpoint(
-                            "Live Enclave Physical Shock Demo",
-                            "Send physical shock pulse (0.1V - 1.2V) to P-CAM 003 analog silicon. Rate limited to 10 req/min per IP.",
-                            {
-                                flux_potential_v: { type: "number", example: 0.85 }
-                            },
-                            []
-                        )
-                    }
-                }
+                url: '/openapi.json',
+                deepLinking: true,
+                presets: [
+                    SwaggerUIBundle.presets.apis,
+                    SwaggerUIStandalonePreset
+                ],
+                plugins: [
+                    SwaggerUIBundle.plugins.DownloadUrl
+                ],
+                layout: "BaseLayout",
+                persistAuthorization: true
             });
         };
     </script>

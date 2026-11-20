@@ -14,348 +14,1013 @@
     "paths": {
         "/v1/ising/solve": {
             "post": {
-                "summary": "Solve 64-Spin Ising Hamiltonian Optimization Problem",
-                "description": "Minimizes H = -sum(J_ij * s_i * s_j) - sum(h_i * s_i) for up to 64 coupled spins and returns converged spin vector (+1/-1) and ground-state energy.",
-                "responses": {
-                    "200": {
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/IsingSolveResponse"
-                                }
-                            }
-                        },
-                        "description": "Solved spin states (+1/-1), Hamiltonian energy, and hardware seal."
-                    }
-                },
+                "summary": "64-Spin Physical Ising Hamiltonian Ground-State Solver",
+                "description": "Room-temperature 64-spin analog Ising Hamiltonian ground-state optimizer (Domain 8). Directly minimizes H = -sum(J_ij * s_i * s_j) - sum(h_i * s_i) in microseconds through physical substrate charge dissipation without PRNG or heuristic Monte Carlo steps. Optimal ground-state configuration is returned with Hamiltonian energy, magnetization, and hardware attestation.",
                 "requestBody": {
+                    "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/IsingSolveRequest"
-                            },
-                            "example": {
-                                "num_spins": 4,
-                                "fields": [
-                                    1.5,
-                                    -1.2,
-                                    0.8,
-                                    2
+                                "type": "object",
+                                "required": [
+                                    "num_spins",
+                                    "fields",
+                                    "couplings"
                                 ],
-                                "couplings": [
-                                    {
-                                        "j": 1,
-                                        "j_ij": -1,
-                                        "i": 0
+                                "properties": {
+                                    "num_spins": {
+                                        "type": "integer",
+                                        "minimum": 1,
+                                        "maximum": 64,
+                                        "example": 4,
+                                        "description": "Number of coupled spins mapped to the analog silicon core (1 to 64 spins)."
                                     },
-                                    {
-                                        "j": 2,
-                                        "j_ij": 1.5,
-                                        "i": 1
+                                    "fields": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "number",
+                                            "minimum": -10.0,
+                                            "maximum": 10.0
+                                        },
+                                        "example": [
+                                            0.5,
+                                            -0.3,
+                                            0.2,
+                                            -0.4
+                                        ],
+                                        "description": "Local magnetic field bias h_i for each active spin variable (-10.0 to 10.0)."
                                     },
-                                    {
-                                        "j": 3,
-                                        "j_ij": 1.2,
-                                        "i": 2
+                                    "couplings": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "number"
+                                            }
+                                        },
+                                        "example": [
+                                            [
+                                                0,
+                                                1,
+                                                1.0
+                                            ],
+                                            [
+                                                1,
+                                                2,
+                                                -0.8
+                                            ],
+                                            [
+                                                2,
+                                                3,
+                                                0.6
+                                            ]
+                                        ],
+                                        "description": "Pairwise interaction coupling matrix J_ij formatted as [[i, j, weight], ...]."
                                     }
-                                ]
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Ground-state convergence success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "hardware_active"
+                                        },
+                                        "domain": {
+                                            "type": "string",
+                                            "example": "Ising-64Spin-Hamiltonian"
+                                        },
+                                        "num_spins": {
+                                            "type": "integer",
+                                            "example": 4
+                                        },
+                                        "couplings_count": {
+                                            "type": "integer",
+                                            "example": 3
+                                        },
+                                        "spins": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "integer"
+                                            },
+                                            "example": [
+                                                1,
+                                                -1,
+                                                1,
+                                                -1
+                                            ],
+                                            "description": "Converged ground-state spin configuration vector (+1 or -1 per spin)."
+                                        },
+                                        "ground_state_energy": {
+                                            "type": "number",
+                                            "example": -2.4,
+                                            "description": "Converged Hamiltonian energy H (lower value indicates a deeper, more optimal ground state)."
+                                        },
+                                        "magnetization": {
+                                            "type": "number",
+                                            "example": 0.0,
+                                            "description": "Average magnetization of the spin system (-1.0 all down to +1.0 all up)."
+                                        },
+                                        "relaxation_sweeps": {
+                                            "type": "integer",
+                                            "example": 100,
+                                            "description": "Analog silicon relaxation clock cycles executed."
+                                        },
+                                        "equilibrium_converged": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "hardware_reflex_ms": {
+                                            "type": "number",
+                                            "example": 0.0066,
+                                            "description": "Hardware convergence latency in milliseconds."
+                                        },
+                                        "zeta": {
+                                            "type": "number",
+                                            "example": 1.0,
+                                            "description": "Silicon physical damping ratio."
+                                        },
+                                        "hardware_seal_id": {
+                                            "type": "string",
+                                            "example": "SEAL-0051003C3434510C32333934-...",
+                                            "description": "Hardware Silicon Root-of-Trust attestation token."
+                                        }
+                                    }
+                                }
                             }
                         }
                     },
-                    "required": true
+                    "400": {
+                        "description": "Physical Boundary or Schema Violation"
+                    }
                 }
             }
         },
         "/v1/solve-universal-equilibrium": {
             "post": {
-                "summary": "Universal Non-Linear Physical Equilibrium Solver",
-                "description": "Converges stiff non-linear boundary dynamics into overdamped stability.",
-                "responses": {
-                    "200": {
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/EquilibriumResponse"
-                                }
-                            }
-                        },
-                        "description": "Equilibrium damping and residual voltage metrics."
-                    }
-                },
+                "summary": "Universal Thermodynamic Equilibrium Solver",
+                "description": "Sub-millisecond thermodynamic kinetic equilibrium solver (Domain 1). Directly models continuous non-linear second-order dynamic equilibrium across physical systems. Calculates the deterministic damping ratio (zeta) and corrective control intensity on analog phase-change silicon to suppress chaotic oscillations and ensure system stability.",
                 "requestBody": {
+                    "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/UniversalRequest"
-                            },
-                            "example": {
-                                "flux_potential_v": 0.5504,
-                                "gradient_velocity": 520,
-                                "active_strain": 1.55,
-                                "damping_target": 1.05,
-                                "gradient_acceleration": 16000
+                                "type": "object",
+                                "required": [
+                                    "flux_potential_v",
+                                    "gradient_velocity",
+                                    "gradient_acceleration",
+                                    "active_strain"
+                                ],
+                                "properties": {
+                                    "flux_potential_v": {
+                                        "type": "number",
+                                        "minimum": -1.2,
+                                        "maximum": 1.2,
+                                        "example": 0.082,
+                                        "description": "Driving field potential or disturbance magnitude in Volts (-1.2V to +1.2V)."
+                                    },
+                                    "gradient_velocity": {
+                                        "type": "number",
+                                        "minimum": -5000.0,
+                                        "maximum": 5000.0,
+                                        "example": 520.0,
+                                        "description": "First-order state drift rate or drift velocity (-5000.0 to +5000.0)."
+                                    },
+                                    "gradient_acceleration": {
+                                        "type": "number",
+                                        "minimum": -50000.0,
+                                        "maximum": 50000.0,
+                                        "example": 16000.0,
+                                        "description": "Second-order inertial shock acceleration (-50000.0 to +50000.0)."
+                                    },
+                                    "active_strain": {
+                                        "type": "number",
+                                        "minimum": 0.0,
+                                        "maximum": 10.0,
+                                        "example": 1.55,
+                                        "description": "Normalized structural or mechanical strain (0.0 to 10.0)."
+                                    }
+                                }
                             }
                         }
-                    },
-                    "required": true
-                }
-            }
-        },
-        "/v1/quant/predict": {
-            "post": {
-                "summary": "Quant HFT Order-Book Slippage & Microstructure Damping",
-                "description": "Computes execution slippage reduction (bps) and child-order slice throttling from order book imbalance.",
+                    }
+                },
                 "responses": {
                     "200": {
+                        "description": "Thermodynamic equilibrium convergence success",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/EquilibriumResponse"
+                                    "type": "object",
+                                    "properties": {
+                                        "zeta": {
+                                            "type": "number",
+                                            "example": 0.95,
+                                            "description": "Dimensionless damping ratio (zeta < 1.0 underdamped; zeta = 1.0 critically damped; zeta > 1.0 overdamped; safe stable regime is 0.1 <= zeta <= 2.0)."
+                                        },
+                                        "control_intensity": {
+                                            "type": "number",
+                                            "example": 0.225,
+                                            "description": "Dimensionless corrective control gain (0.0 to 1.0; higher = stronger restoring damping force required to restore equilibrium)."
+                                        },
+                                        "hardware_reflex_ms": {
+                                            "type": "number",
+                                            "example": 0.0088,
+                                            "description": "Silicon reflex latency in milliseconds (typically < 0.02 ms)."
+                                        },
+                                        "equilibrium_converged": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "puf_dynamic_seal": {
+                                            "type": "string",
+                                            "example": "SEAL-PCAM003-COM3-...",
+                                            "description": "Real-time PUF cryptographic receipt."
+                                        },
+                                        "hardware_seal_id": {
+                                            "type": "string",
+                                            "example": "SEAL-0051003C3434510C32333934-...",
+                                            "description": "Hardware Silicon Root-of-Trust attestation token."
+                                        }
+                                    }
                                 }
-                            }
-                        },
-                        "description": "Quant slippage mitigation metrics."
-                    }
-                },
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/QuantRequest"
-                            },
-                            "example": {
-                                "order_book_imbalance": 0.42,
-                                "spread_bps": 3.5,
-                                "slice_participation_rate": 0.18
                             }
                         }
                     },
-                    "required": true
+                    "400": {
+                        "description": "Physical Boundary or Schema Violation"
+                    }
                 }
             }
         },
         "/v1/battery/predict": {
             "post": {
-                "summary": "Battery Thermal Runaway Suppression & SOH Regulation",
-                "description": "Predicts thermal runaway suppression (%) and safe C-rate current derating.",
-                "responses": {
-                    "200": {
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/EquilibriumResponse"
-                                }
-                            }
-                        },
-                        "description": "Battery thermal stability metrics."
-                    }
-                },
+                "summary": "Battery Energetics & Thermal Runaway Suppression",
+                "description": "Solid-state & lithium-ion battery energetics predictor (Domain 3). Analyzes SEI layer phase stability, state of charge, and C-rate to calculate thermal runaway suppression efficiency and the allowable safe charge current derating ratio. Higher derating values (e.g. 0.85-1.0) allow near-nominal current under safe room temperatures (20\u00b0C); as cell temperature rises (e.g. to 60\u00b0C), the safe current derates significantly (e.g. down to 0.45-0.55) to arrest exothermic thermal runaway.",
                 "requestBody": {
+                    "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/BatteryRequest"
-                            },
-                            "example": {
-                                "state_of_charge_pct": 82,
-                                "cell_temperature_c": 46.5,
-                                "c_rate": 2.8
+                                "type": "object",
+                                "required": [
+                                    "state_of_charge_pct",
+                                    "cell_temperature_c",
+                                    "c_rate"
+                                ],
+                                "properties": {
+                                    "state_of_charge_pct": {
+                                        "type": "number",
+                                        "minimum": 0.0,
+                                        "maximum": 100.0,
+                                        "example": 82.0,
+                                        "description": "Battery cell State of Charge in percent (0.0% to 100.0%)."
+                                    },
+                                    "cell_temperature_c": {
+                                        "type": "number",
+                                        "minimum": -40.0,
+                                        "maximum": 85.0,
+                                        "example": 46.5,
+                                        "description": "Core cell temperature in Celsius (-40.0\u00b0C to +85.0\u00b0C)."
+                                    },
+                                    "c_rate": {
+                                        "type": "number",
+                                        "minimum": 0.0,
+                                        "maximum": 10.0,
+                                        "example": 2.8,
+                                        "description": "Instantaneous charge/discharge current rate (0.0C to 10.0C)."
+                                    }
+                                }
                             }
                         }
-                    },
-                    "required": true
-                }
-            }
-        },
-        "/v1/robotics/predict": {
-            "post": {
-                "summary": "Robotic Actuator Compliance & Singularity Damping",
-                "description": "Computes compliant joint impedance gain (N*m/rad) and peak impact attenuation (%).",
+                    }
+                },
                 "responses": {
                     "200": {
+                        "description": "Battery energetics prediction success",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/EquilibriumResponse"
+                                    "type": "object",
+                                    "properties": {
+                                        "thermal_runaway_suppression_pct": {
+                                            "type": "number",
+                                            "example": 82.5,
+                                            "description": "Thermal runaway suppression efficiency in percent (0.0% to 100.0%; higher = safer, indicates higher electrochemical stability)."
+                                        },
+                                        "safe_charge_current_derating": {
+                                            "type": "number",
+                                            "example": 0.68,
+                                            "description": "Allowable safe charge current multiplier (0.0 to 1.0; 1.0 = 100% full nominal current allowed; lower = restricted charging current to suppress runaway; decreases as cell temperature rises from 20\u00b0C to 60\u00b0C)."
+                                        },
+                                        "zeta": {
+                                            "type": "number",
+                                            "example": 0.98
+                                        },
+                                        "control_intensity": {
+                                            "type": "number",
+                                            "example": 0.35
+                                        },
+                                        "hardware_reflex_ms": {
+                                            "type": "number",
+                                            "example": 0.0072
+                                        },
+                                        "hardware_seal_id": {
+                                            "type": "string",
+                                            "example": "SEAL-0051003C3434510C32333934-..."
+                                        }
+                                    }
                                 }
-                            }
-                        },
-                        "description": "Robotic impedance outputs."
-                    }
-                },
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/RoboticsRequest"
-                            },
-                            "example": {
-                                "contact_stiffness_n_m": 2200,
-                                "joint_torque_nm": 54,
-                                "singularity_proximity": 0.35
                             }
                         }
                     },
-                    "required": true
-                }
-            }
-        },
-        "/v1/mobility/predict": {
-            "post": {
-                "summary": "Autonomous Mobility Hydroplaning Recovery & Suspension",
-                "description": "Calculates hydroplaning recovery time (ms) and lateral stability margin (%).",
-                "responses": {
-                    "200": {
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/EquilibriumResponse"
-                                }
-                            }
-                        },
-                        "description": "Vehicle stabilization outputs."
+                    "400": {
+                        "description": "Physical Boundary or Schema Violation"
                     }
-                },
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/MobilityRequest"
-                            },
-                            "example": {
-                                "surface_friction_mu": 0.32,
-                                "tire_slip_ratio": 0.24,
-                                "yaw_rate_deg_s": 18.5
-                            }
-                        }
-                    },
-                    "required": true
-                }
-            }
-        },
-        "/v1/pharma/predict": {
-            "post": {
-                "summary": "Bioreactor Cellular Shear Stress & Agitation Control",
-                "description": "Balances dissolved oxygen saturation (%) against impeller shear stress (Pa).",
-                "responses": {
-                    "200": {
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/EquilibriumResponse"
-                                }
-                            }
-                        },
-                        "description": "Bioreactor viability outputs."
-                    }
-                },
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/PharmaRequest"
-                            },
-                            "example": {
-                                "broth_viscosity_cp": 15.5,
-                                "dissolved_oxygen_pct": 38,
-                                "impeller_shear_stress_pa": 2.4
-                            }
-                        }
-                    },
-                    "required": true
                 }
             }
         },
         "/v1/chemistry/predict": {
             "post": {
-                "summary": "Exothermic Chemical Reactor Runaway Quenching",
-                "description": "Determines exothermic quenching efficiency (%) and thermal runaway margin (K).",
-                "responses": {
-                    "200": {
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/EquilibriumResponse"
-                                }
-                            }
-                        },
-                        "description": "Chemical thermal margin outputs."
-                    }
-                },
+                "summary": "Precision Continuous Chemistry & Exothermic Quenching",
+                "description": "Continuous chemical synthesis & exothermic reaction kinetics predictor (Domain 7). Evaluates reactor core temperature, exothermic heat flux, and catalyst activity to determine exothermic quenching efficiency and the thermal runaway margin. The thermal runaway margin (thermal_runaway_margin_k) measures the safe temperature cushion in Kelvin until uncontrolled runaway; higher values indicate a safer operating buffer, and for any constant heat flux/catalyst activity, the margin strictly and monotonically decreases as reactor_temp_k rises (e.g. 320K -> 395K -> 450K).",
                 "requestBody": {
+                    "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/ChemistryRequest"
-                            },
-                            "example": {
-                                "exothermic_heat_flux_w_m2": 5800,
-                                "catalyst_activity_index": 0.84,
-                                "reactor_temp_k": 395
+                                "type": "object",
+                                "required": [
+                                    "reactor_temp_k",
+                                    "exothermic_heat_flux_w_m2",
+                                    "catalyst_activity_index"
+                                ],
+                                "properties": {
+                                    "reactor_temp_k": {
+                                        "type": "number",
+                                        "minimum": 250.0,
+                                        "maximum": 600.0,
+                                        "example": 395.0,
+                                        "description": "Continuous reactor core temperature in Kelvin (250.0K to 600.0K)."
+                                    },
+                                    "exothermic_heat_flux_w_m2": {
+                                        "type": "number",
+                                        "minimum": 0.0,
+                                        "maximum": 25000.0,
+                                        "example": 5800.0,
+                                        "description": "Instantaneous exothermic reaction heat flux in W/m\u00b2 (0.0 to 25000.0 W/m\u00b2)."
+                                    },
+                                    "catalyst_activity_index": {
+                                        "type": "number",
+                                        "minimum": 0.0,
+                                        "maximum": 1.0,
+                                        "example": 0.88,
+                                        "description": "Active catalyst reaction efficiency coefficient (0.0 to 1.0)."
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Chemical kinetics prediction success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "exothermic_quenching_efficiency_pct": {
+                                            "type": "number",
+                                            "example": 78.4,
+                                            "description": "Dynamic thermal quenching efficiency in percent (0.0% to 100.0%; higher = faster heat extraction and runaway suppression)."
+                                        },
+                                        "thermal_runaway_margin_k": {
+                                            "type": "number",
+                                            "example": 68.2,
+                                            "description": "Safe thermal cushion until exothermic runaway in Kelvin (higher = safer operating buffer; strictly and monotonically decreases as reactor_temp_k rises)."
+                                        },
+                                        "zeta": {
+                                            "type": "number",
+                                            "example": 0.94
+                                        },
+                                        "control_intensity": {
+                                            "type": "number",
+                                            "example": 0.28
+                                        },
+                                        "hardware_reflex_ms": {
+                                            "type": "number",
+                                            "example": 0.0079
+                                        },
+                                        "hardware_seal_id": {
+                                            "type": "string",
+                                            "example": "SEAL-0051003C3434510C32333934-..."
+                                        }
+                                    }
+                                }
                             }
                         }
                     },
-                    "required": true
+                    "400": {
+                        "description": "Physical Boundary or Schema Violation"
+                    }
+                }
+            }
+        },
+        "/v1/mobility/predict": {
+            "post": {
+                "summary": "Vehicle Dynamics & Active Chassis Stabilization",
+                "description": "High-g vehicle dynamics and chassis stabilization co-processor (Domain 6). Evaluates surface friction coefficient (mu), tire slip ratio, and yaw rate to compute hydroplaning slip recovery time in milliseconds and active lateral stability margins.",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": [
+                                    "surface_friction_mu",
+                                    "tire_slip_ratio",
+                                    "yaw_rate_deg_s"
+                                ],
+                                "properties": {
+                                    "surface_friction_mu": {
+                                        "type": "number",
+                                        "minimum": 0.05,
+                                        "maximum": 1.2,
+                                        "example": 0.32,
+                                        "description": "Tire-road interface coefficient of friction mu (0.05 icy/wet to 1.20 dry asphalt)."
+                                    },
+                                    "tire_slip_ratio": {
+                                        "type": "number",
+                                        "minimum": 0.0,
+                                        "maximum": 1.0,
+                                        "example": 0.24,
+                                        "description": "Longitudinal wheel slip ratio (0.0 = free rolling, 1.0 = locked wheel)."
+                                    },
+                                    "yaw_rate_deg_s": {
+                                        "type": "number",
+                                        "minimum": -180.0,
+                                        "maximum": 180.0,
+                                        "example": 38.0,
+                                        "description": "Vehicle chassis angular yaw velocity in degrees/second (-180.0 to +180.0 deg/s)."
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Vehicle stabilization prediction success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "hydroplaning_recovery_time_ms": {
+                                            "type": "number",
+                                            "example": 22.4,
+                                            "description": "Chassis slip recovery time in milliseconds (lower = faster stabilization)."
+                                        },
+                                        "lateral_stability_margin_pct": {
+                                            "type": "number",
+                                            "example": 74.2,
+                                            "description": "Chassis lateral grip margin in percent (higher = greater vehicle yaw stability and spin resistance)."
+                                        },
+                                        "zeta": {
+                                            "type": "number",
+                                            "example": 0.96
+                                        },
+                                        "control_intensity": {
+                                            "type": "number",
+                                            "example": 0.32
+                                        },
+                                        "hardware_reflex_ms": {
+                                            "type": "number",
+                                            "example": 0.0075
+                                        },
+                                        "hardware_seal_id": {
+                                            "type": "string",
+                                            "example": "SEAL-0051003C3434510C32333934-..."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Physical Boundary or Schema Violation"
+                    }
+                }
+            }
+        },
+        "/v1/quant/predict": {
+            "post": {
+                "summary": "Quantitative Microstructure & Order Book Slippage Damping",
+                "description": "High-frequency quantitative microstructure predictor (Domain 2). Damps order book liquidity shocks from limit order book imbalance and wide bid-ask spreads, predicting execution slippage reduction and computing optimal slice throttle multipliers.",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": [
+                                    "order_book_imbalance",
+                                    "spread_bps",
+                                    "slice_participation_rate"
+                                ],
+                                "properties": {
+                                    "order_book_imbalance": {
+                                        "type": "number",
+                                        "minimum": -1.0,
+                                        "maximum": 1.0,
+                                        "example": 0.72,
+                                        "description": "Limit order book depth imbalance (-1.0 heavy bid pressure to +1.0 heavy ask pressure)."
+                                    },
+                                    "spread_bps": {
+                                        "type": "number",
+                                        "minimum": 0.0,
+                                        "maximum": 500.0,
+                                        "example": 14.5,
+                                        "description": "Bid-ask spread in basis points (0.0 to 500.0 bps)."
+                                    },
+                                    "slice_participation_rate": {
+                                        "type": "number",
+                                        "minimum": 0.001,
+                                        "maximum": 1.0,
+                                        "example": 0.18,
+                                        "description": "Target order slice volume participation rate (0.001 to 1.0)."
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Quantitative microstructure prediction success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "predicted_slippage_reduction_bps": {
+                                            "type": "number",
+                                            "example": 4.25,
+                                            "description": "Expected execution slippage savings in basis points (higher = more trading cost saved)."
+                                        },
+                                        "recommended_slice_throttle": {
+                                            "type": "number",
+                                            "example": 0.65,
+                                            "description": "Order slicing throttle multiplier (0.01 to 1.0; lower = slow execution to avoid market impact; 1.0 = full-speed execution)."
+                                        },
+                                        "zeta": {
+                                            "type": "number",
+                                            "example": 0.99
+                                        },
+                                        "control_intensity": {
+                                            "type": "number",
+                                            "example": 0.38
+                                        },
+                                        "hardware_reflex_ms": {
+                                            "type": "number",
+                                            "example": 0.0066
+                                        },
+                                        "hardware_seal_id": {
+                                            "type": "string",
+                                            "example": "SEAL-0051003C3434510C32333934-..."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Physical Boundary or Schema Violation"
+                    }
+                }
+            }
+        },
+        "/v1/robotics/predict": {
+            "post": {
+                "summary": "Robotic Dynamic Compliance & Singularity Damping",
+                "description": "Sub-10\u00b5s robotic dynamic compliance and kinematic singularity damping co-processor (Domain 5). Damps impact shocks upon unexpected rigid contact and mitigates kinematic singularity instability by tuning impedance stiffness.",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": [
+                                    "joint_torque_nm",
+                                    "contact_stiffness_n_m",
+                                    "singularity_proximity"
+                                ],
+                                "properties": {
+                                    "joint_torque_nm": {
+                                        "type": "number",
+                                        "minimum": -500.0,
+                                        "maximum": 500.0,
+                                        "example": 145.0,
+                                        "description": "Actuator joint torque in Newton-meters (-500.0 to +500.0 N\u00b7m)."
+                                    },
+                                    "contact_stiffness_n_m": {
+                                        "type": "number",
+                                        "minimum": 10.0,
+                                        "maximum": 100000.0,
+                                        "example": 18500.0,
+                                        "description": "Environment contact stiffness in N/m (10.0 soft tissue/air to 100000.0 rigid metal)."
+                                    },
+                                    "singularity_proximity": {
+                                        "type": "number",
+                                        "minimum": 0.0,
+                                        "maximum": 1.0,
+                                        "example": 0.64,
+                                        "description": "Kinematic singularity proximity index (0.0 far from singularity to 1.0 at kinematic singularity)."
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Robotic compliance prediction success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "compliant_impedance_gain_n_m_rad": {
+                                            "type": "number",
+                                            "example": 420.5,
+                                            "description": "Optimal compliant feedback stiffness in N\u00b7m/rad (higher = stiffer position hold; lower = compliant impact absorption)."
+                                        },
+                                        "peak_impact_attenuation_pct": {
+                                            "type": "number",
+                                            "example": 81.3,
+                                            "description": "Shock load absorption efficiency in percent (higher = better protection of robotic gears and joints)."
+                                        },
+                                        "zeta": {
+                                            "type": "number",
+                                            "example": 0.93
+                                        },
+                                        "control_intensity": {
+                                            "type": "number",
+                                            "example": 0.31
+                                        },
+                                        "hardware_reflex_ms": {
+                                            "type": "number",
+                                            "example": 0.0068
+                                        },
+                                        "hardware_seal_id": {
+                                            "type": "string",
+                                            "example": "SEAL-0051003C3434510C32333934-..."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Physical Boundary or Schema Violation"
+                    }
+                }
+            }
+        },
+        "/v1/pharma/predict": {
+            "post": {
+                "summary": "Bioreactor Hydrodynamic Kinematics & Shear Stress Damping",
+                "description": "Cellular bioprocess and pharmaceutical bioreactor fluid dynamics stabilizer (Domain 4). Optimizes dissolved oxygen transfer and dampens impeller hydrodynamic shear stress to maximize cell viability during high-density fermentation.",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": [
+                                    "impeller_shear_stress_pa",
+                                    "dissolved_oxygen_pct",
+                                    "broth_viscosity_cp"
+                                ],
+                                "properties": {
+                                    "impeller_shear_stress_pa": {
+                                        "type": "number",
+                                        "minimum": 0.0,
+                                        "maximum": 50.0,
+                                        "example": 18.4,
+                                        "description": "Bioreactor impeller hydrodynamic shear stress in Pascals (0.0 to 50.0 Pa)."
+                                    },
+                                    "dissolved_oxygen_pct": {
+                                        "type": "number",
+                                        "minimum": 0.0,
+                                        "maximum": 100.0,
+                                        "example": 42.0,
+                                        "description": "Dissolved oxygen concentration in percent (0.0% to 100.0%)."
+                                    },
+                                    "broth_viscosity_cp": {
+                                        "type": "number",
+                                        "minimum": 0.5,
+                                        "maximum": 5000.0,
+                                        "example": 210.0,
+                                        "description": "Cellular culture broth dynamic viscosity in centipoise (0.5 to 5000.0 cP)."
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Bioreactor kinematics prediction success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "cellular_viability_protection_pct": {
+                                            "type": "number",
+                                            "example": 94.6,
+                                            "description": "Mammalian/bacterial cell survival probability in percent (higher = higher batch yield)."
+                                        },
+                                        "agitation_shear_reduction_pa": {
+                                            "type": "number",
+                                            "example": 6.8,
+                                            "description": "Shear stress damping force in Pascals (higher = greater hydrodynamic protection)."
+                                        },
+                                        "zeta": {
+                                            "type": "number",
+                                            "example": 0.91
+                                        },
+                                        "control_intensity": {
+                                            "type": "number",
+                                            "example": 0.24
+                                        },
+                                        "hardware_reflex_ms": {
+                                            "type": "number",
+                                            "example": 0.0081
+                                        },
+                                        "hardware_seal_id": {
+                                            "type": "string",
+                                            "example": "SEAL-0051003C3434510C32333934-..."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Physical Boundary or Schema Violation"
+                    }
                 }
             }
         },
         "/v1/security/trust-gate": {
             "post": {
-                "summary": "Wave-Response Physical Fingerprint Trust Gate (Patent Pending)",
-                "description": "Hardware-anchored wave-response medium physical fingerprint trusted execution gate. Evaluates zero-point drift, biometrics, and spatial context on analog P-CAM silicon to ALLOW, SAFE_MODE, or REVOKE_AND_BLOCK execution.",
+                "summary": "Wave-Response Medium Physical Fingerprint Trust Gate",
+                "description": "Patent Pending: Hardware-rooted wave-response medium physical fingerprint trusted execution gate (Domain 9). Evaluates high-frequency physical wave propagation, zero-point voltage drift, and biometric/spatial context on analog P-CAM silicon. The physical equilibrium engine couples the wave vector with live silicon PUF entropy to evaluate structural stability (zeta). Based on physical divergence and liveness, it deterministically issues 'ALLOW' (trusted execution), 'SAFE_MODE' (restricted sandbox), or 'REVOKE_AND_BLOCK' (immediate quarantine), generating a verifiable dynamic PUF receipt (SEAL-PCAM003-COM3-*). Sending an empty body ({}) or missing required fields immediately yields HTTP 400 Bad Request.",
                 "requestBody": {
+                    "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
-                              "$ref": "#/components/schemas/PhysicalTrustGateRequest"
-                            },
-                            "example": {
-                                "session_id": "sess-fintech-001",
-                                "action_type": "crypto_key_use",
-                                "wave_telemetry": [
-                                    0.42,
-                                    0.44,
-                                    0.41,
-                                    0.43
+                                "type": "object",
+                                "required": [
+                                    "session_id",
+                                    "action_type",
+                                    "wave_telemetry",
+                                    "liveness_score"
                                 ],
-                                "spatial_context": "default-enclave-zone",
-                                "liveness_score": 0.99
+                                "properties": {
+                                    "session_id": {
+                                        "type": "string",
+                                        "example": "sess-enclave-001",
+                                        "description": "Unique session or transaction identifier (required, non-empty)."
+                                    },
+                                    "action_type": {
+                                        "type": "string",
+                                        "example": "crypto_key_use",
+                                        "description": "Target privileged action (required, e.g. 'crypto_key_use', 'payment_auth', 'robotic_override')."
+                                    },
+                                    "wave_telemetry": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "number"
+                                        },
+                                        "example": [
+                                            0.42,
+                                            0.44,
+                                            0.41,
+                                            0.43
+                                        ],
+                                        "description": "Physical wave-response propagation telemetry vector (required, non-empty array)."
+                                    },
+                                    "spatial_context": {
+                                        "type": "string",
+                                        "example": "default-enclave-zone",
+                                        "description": "Spatial execution zone or hardware perimeter context."
+                                    },
+                                    "liveness_score": {
+                                        "type": "number",
+                                        "minimum": 0.0,
+                                        "maximum": 1.0,
+                                        "example": 0.99,
+                                        "description": "Physical/biometric liveness confidence score (0.0 to 1.0)."
+                                    }
+                                }
                             }
                         }
                     }
                 },
                 "responses": {
                     "200": {
-                        "description": "Trust gate verdict, one-time fused dynamic signature, and hardware telemetry."
+                        "description": "Physical trust evaluation complete",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "hardware_active"
+                                        },
+                                        "domain": {
+                                            "type": "string",
+                                            "example": "Physical-Trust-Security"
+                                        },
+                                        "guard_verdict": {
+                                            "type": "string",
+                                            "example": "ALLOW",
+                                            "description": "Deterministic hardware execution verdict: 'ALLOW', 'SAFE_MODE', or 'REVOKE_AND_BLOCK'."
+                                        },
+                                        "trust_score": {
+                                            "type": "number",
+                                            "example": 0.965,
+                                            "description": "Composite physical trust index (0.0 to 1.0; higher = higher trust)."
+                                        },
+                                        "wave_drift_index": {
+                                            "type": "number",
+                                            "example": 0.035,
+                                            "description": "Physical wave-response medium zero-point drift index (lower = more stable)."
+                                        },
+                                        "zeta": {
+                                            "type": "number",
+                                            "example": 1.02,
+                                            "description": "Silicon physical damping ratio of the evaluated trust state."
+                                        },
+                                        "puf_dynamic_seal": {
+                                            "type": "string",
+                                            "example": "SEAL-PCAM003-COM3-...",
+                                            "description": "Real-time PUF cryptographic receipt issued for this transaction."
+                                        },
+                                        "hardware_seal_id": {
+                                            "type": "string",
+                                            "example": "SEAL-0051003C3434510C32333934-...",
+                                            "description": "Hardware Silicon Root-of-Trust attestation token."
+                                        },
+                                        "hardware_reflex_ms": {
+                                            "type": "number",
+                                            "example": 0.0062,
+                                            "description": "Hardware verification reflex latency in milliseconds."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Empty body, missing required fields, or parameter out of bounds"
                     }
                 }
             }
         },
         "/v1/governance/audit-gate": {
             "post": {
-                "summary": "AI Governance & Regulatory Audit Gate (EU AI Act & NIST RMF)",
-                "description": "Hardware-anchored zero-PRNG AI governance audit gate. Computes physical risk index, damping stability, and outputs COMPLIANT_EXECUTE, REQUIRE_HUMAN_OVERSIGHT, or HARD_HALT_QUARANTINE with tamper-proof compliance certificate seal.",
+                "summary": "Hardware-Anchored AI Governance & EU AI Act Compliance Audit Gate",
+                "description": "Hardware-anchored zero-PRNG AI governance and EU AI Act (Articles 9, 12, 14) / NIST AI RMF regulatory audit gate (Domain 10). Ingests autonomy pressure, policy drift, and hallucination metrics to compute a deterministic physical risk index and zero-PRNG damping stability (zeta) on analog silicon. Emits compliance verdicts: 'COMPLIANT_EXECUTE' (risk < 0.35, autonomous execution granted), 'REQUIRE_HUMAN_OVERSIGHT' (0.35 <= risk < 0.65, human supervisor oversight required), or 'HARD_HALT_QUARANTINE' (risk >= 0.65, instant circuit break), accompanied by a tamper-proof EU AI Act compliance certificate (SEAL-GOV-CH17-*). Sending an empty body ({}) or missing required fields immediately yields HTTP 400 Bad Request.",
                 "requestBody": {
+                    "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
-                              "$ref": "#/components/schemas/AiGovernanceAuditRequest"
-                            },
-                            "example": {
-                                "agent_id": "agent-autonomous-01",
-                                "model_id": "frontier-reasoning-node",
-                                "risk_classification": "high_risk_eu_ai_act",
-                                "autonomy_pressure": 0.35,
-                                "drift_score": 0.12,
-                                "hallucination_index": 0.08,
-                                "human_oversight_active": false
+                                "type": "object",
+                                "required": [
+                                    "agent_id",
+                                    "model_id",
+                                    "risk_classification",
+                                    "autonomy_pressure",
+                                    "drift_score",
+                                    "hallucination_index"
+                                ],
+                                "properties": {
+                                    "agent_id": {
+                                        "type": "string",
+                                        "example": "agent-autonomous-01",
+                                        "description": "Autonomous AI agent identifier (required, non-empty)."
+                                    },
+                                    "model_id": {
+                                        "type": "string",
+                                        "example": "frontier-reasoning-node",
+                                        "description": "Underlying foundation/reasoning model identifier (required, non-empty)."
+                                    },
+                                    "risk_classification": {
+                                        "type": "string",
+                                        "example": "high_risk_eu_ai_act",
+                                        "description": "Regulatory tier: 'minimal', 'limited', 'high_risk_eu_ai_act', 'critical_infrastructure'."
+                                    },
+                                    "autonomy_pressure": {
+                                        "type": "number",
+                                        "minimum": 0.0,
+                                        "maximum": 1.0,
+                                        "example": 0.35,
+                                        "description": "Agent autonomy execution pressure / tool invocation depth (0.0 minimal to 1.0 fully autonomous)."
+                                    },
+                                    "drift_score": {
+                                        "type": "number",
+                                        "minimum": 0.0,
+                                        "maximum": 1.0,
+                                        "example": 0.12,
+                                        "description": "Policy and alignment deviation drift score (0.0 aligned to 1.0 drifted)."
+                                    },
+                                    "hallucination_index": {
+                                        "type": "number",
+                                        "minimum": 0.0,
+                                        "maximum": 1.0,
+                                        "example": 0.08,
+                                        "description": "Model epistemic uncertainty / hallucination probability (0.0 certain to 1.0 hallucinating)."
+                                    },
+                                    "human_oversight_active": {
+                                        "type": "boolean",
+                                        "example": false,
+                                        "description": "Whether human-in-the-loop oversight supervisor is currently active."
+                                    }
+                                }
                             }
                         }
                     }
                 },
                 "responses": {
                     "200": {
-                        "description": "AI governance verdict, execution permission, damping zeta, and compliance certificate seal."
+                        "description": "AI governance compliance audit complete",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "hardware_active"
+                                        },
+                                        "domain": {
+                                            "type": "string",
+                                            "example": "AI-Governance-Compliance"
+                                        },
+                                        "governance_verdict": {
+                                            "type": "string",
+                                            "example": "COMPLIANT_EXECUTE",
+                                            "description": "Regulatory verdict: 'COMPLIANT_EXECUTE', 'REQUIRE_HUMAN_OVERSIGHT', or 'HARD_HALT_QUARANTINE'."
+                                        },
+                                        "physical_risk_index": {
+                                            "type": "number",
+                                            "example": 0.185,
+                                            "description": "Computed physical regulatory risk index (0.0 to 1.0; lower = compliant/safe, higher = dangerous)."
+                                        },
+                                        "zero_prng_damping_stability": {
+                                            "type": "number",
+                                            "example": 0.945,
+                                            "description": "Deterministic zero-PRNG damping stability score (0.0 to 1.0; higher = stable governance control)."
+                                        },
+                                        "compliance_certificate_seal": {
+                                            "type": "string",
+                                            "example": "SEAL-GOV-CH17-...",
+                                            "description": "Tamper-proof hardware compliance certificate seal."
+                                        },
+                                        "hardware_seal_id": {
+                                            "type": "string",
+                                            "example": "SEAL-0051003C3434510C32333934-...",
+                                            "description": "Hardware Silicon Root-of-Trust attestation token."
+                                        },
+                                        "hardware_reflex_ms": {
+                                            "type": "number",
+                                            "example": 0.0062,
+                                            "description": "Audit evaluation latency in milliseconds."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Empty body, missing required fields, or parameter out of bounds"
                     }
                 }
             }
@@ -386,27 +1051,63 @@
                 ]
             },
             "IsingSolveRequest": {
+                "type": "object",
+                "required": [
+                    "num_spins",
+                    "fields",
+                    "couplings"
+                ],
                 "properties": {
                     "num_spins": {
                         "type": "integer",
-                        "description": "Number of Ising spins N (1-64, unit: spins)."
+                        "minimum": 1,
+                        "maximum": 64,
+                        "example": 4,
+                        "description": "Number of coupled spins (1 to 64 spins)."
                     },
                     "fields": {
-                        "description": "External magnetic fields h_i per spin (unit: dimensionless).",
+                        "type": "array",
                         "items": {
-                            "type": "number"
+                            "type": "number",
+                            "minimum": -10.0,
+                            "maximum": 10.0
                         },
-                        "type": "array"
+                        "example": [
+                            0.5,
+                            -0.3,
+                            0.2,
+                            -0.4
+                        ],
+                        "description": "Local field biases h_i (-10.0 to 10.0 per spin)."
                     },
                     "couplings": {
-                        "description": "Pairwise spin couplings J_ij.",
+                        "type": "array",
                         "items": {
-                            "$ref": "#/components/schemas/IsingCoupling"
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            }
                         },
-                        "type": "array"
+                        "example": [
+                            [
+                                0,
+                                1,
+                                1.0
+                            ],
+                            [
+                                1,
+                                2,
+                                -0.8
+                            ],
+                            [
+                                2,
+                                3,
+                                0.6
+                            ]
+                        ],
+                        "description": "Pairwise interaction coupling matrix J_ij [[i, j, weight], ...]."
                     }
-                },
-                "type": "object"
+                }
             },
             "IsingSolveResponse": {
                 "properties": {
@@ -449,131 +1150,207 @@
                 "type": "object"
             },
             "UniversalRequest": {
+                "type": "object",
+                "required": [
+                    "flux_potential_v",
+                    "gradient_velocity",
+                    "gradient_acceleration",
+                    "active_strain"
+                ],
                 "properties": {
                     "flux_potential_v": {
                         "type": "number",
-                        "description": "Normalized boundary potential (unit: Volts, V)."
+                        "minimum": -1.2,
+                        "maximum": 1.2,
+                        "description": "Driving potential in [-1.2, 1.2] (unit: Volts, V)."
                     },
                     "gradient_velocity": {
                         "type": "number",
-                        "description": "First-order potential drift rate (unit: V/s)."
-                    },
-                    "active_strain": {
-                        "type": "number",
-                        "description": "Normalized structural load ratio (unit: dimensionless)."
-                    },
-                    "damping_target": {
-                        "type": "number",
-                        "description": "Target damping ratio zeta (unit: dimensionless)."
+                        "minimum": -5000.0,
+                        "maximum": 5000.0,
+                        "description": "Drift velocity in [-5000, 5000] (unit: V/s or units/s)."
                     },
                     "gradient_acceleration": {
                         "type": "number",
-                        "description": "Second-order impulse acceleration (unit: V/s^2)."
+                        "minimum": -50000.0,
+                        "maximum": 50000.0,
+                        "description": "Second-order acceleration in [-50000, 50000] (unit: V/s^2)."
+                    },
+                    "active_strain": {
+                        "type": "number",
+                        "minimum": 0.0,
+                        "maximum": 10.0,
+                        "description": "System strain in [0, 10] (unit: dimensionless)."
                     }
-                },
-                "type": "object"
+                }
             },
             "QuantRequest": {
+                "type": "object",
+                "required": [
+                    "order_book_imbalance",
+                    "spread_bps",
+                    "slice_participation_rate"
+                ],
                 "properties": {
                     "order_book_imbalance": {
                         "type": "number",
-                        "description": "Top-of-book bid/ask imbalance in [-1, 1] (unit: dimensionless)."
+                        "minimum": -1.0,
+                        "maximum": 1.0,
+                        "description": "LOB imbalance in [-1, 1]."
                     },
                     "spread_bps": {
                         "type": "number",
-                        "description": "Bid-ask spread width (unit: basis points, bps)."
+                        "minimum": 0.0,
+                        "maximum": 500.0,
+                        "description": "Bid-ask spread in [0, 500] (unit: bps)."
                     },
                     "slice_participation_rate": {
                         "type": "number",
-                        "description": "Child order volume fraction in [0, 1] (unit: dimensionless)."
+                        "minimum": 0.001,
+                        "maximum": 1.0,
+                        "description": "Execution slice participation rate in [0.001, 1.0]."
                     }
-                },
-                "type": "object"
+                }
             },
             "BatteryRequest": {
+                "type": "object",
+                "required": [
+                    "state_of_charge_pct",
+                    "cell_temperature_c",
+                    "c_rate"
+                ],
                 "properties": {
                     "state_of_charge_pct": {
                         "type": "number",
+                        "minimum": 0.0,
+                        "maximum": 100.0,
                         "description": "State of Charge in [0, 100] (unit: percent, %)."
                     },
                     "cell_temperature_c": {
                         "type": "number",
-                        "description": "Cell temperature (unit: degrees Celsius, degC)."
+                        "minimum": -40.0,
+                        "maximum": 85.0,
+                        "description": "Cell temperature in [-40, 85] (unit: degrees Celsius, degC)."
                     },
                     "c_rate": {
                         "type": "number",
-                        "description": "Charge/discharge current rate (unit: C-rate, 1/h)."
+                        "minimum": 0.0,
+                        "maximum": 10.0,
+                        "description": "Charge/discharge current rate in [0, 10] (unit: C-rate, 1/h)."
                     }
-                },
-                "type": "object"
+                }
             },
             "RoboticsRequest": {
+                "type": "object",
+                "required": [
+                    "joint_torque_nm",
+                    "contact_stiffness_n_m",
+                    "singularity_proximity"
+                ],
                 "properties": {
-                    "contact_stiffness_n_m": {
-                        "type": "number",
-                        "description": "Contact stiffness (unit: N/m)."
-                    },
                     "joint_torque_nm": {
                         "type": "number",
-                        "description": "Actuator joint torque (unit: Newton-meters, N*m)."
+                        "minimum": -500.0,
+                        "maximum": 500.0,
+                        "description": "Joint torque in [-500, 500] (unit: N*m)."
+                    },
+                    "contact_stiffness_n_m": {
+                        "type": "number",
+                        "minimum": 10.0,
+                        "maximum": 100000.0,
+                        "description": "Contact stiffness in [10, 100000] (unit: N/m)."
                     },
                     "singularity_proximity": {
                         "type": "number",
-                        "description": "Jacobian singularity index in [0, 1] (unit: dimensionless)."
+                        "minimum": 0.0,
+                        "maximum": 1.0,
+                        "description": "Singularity proximity index in [0, 1]."
                     }
-                },
-                "type": "object"
+                }
             },
             "MobilityRequest": {
+                "type": "object",
+                "required": [
+                    "surface_friction_mu",
+                    "tire_slip_ratio",
+                    "yaw_rate_deg_s"
+                ],
                 "properties": {
                     "surface_friction_mu": {
                         "type": "number",
-                        "description": "Road surface friction coefficient mu (unit: dimensionless)."
+                        "minimum": 0.05,
+                        "maximum": 1.2,
+                        "description": "Friction coefficient in [0.05, 1.20]."
                     },
                     "tire_slip_ratio": {
                         "type": "number",
-                        "description": "Tire-road slip ratio in [0, 1] (unit: dimensionless)."
+                        "minimum": 0.0,
+                        "maximum": 1.0,
+                        "description": "Tire slip ratio in [0, 1]."
                     },
                     "yaw_rate_deg_s": {
                         "type": "number",
-                        "description": "Vehicle yaw rate (unit: deg/s)."
+                        "minimum": -180.0,
+                        "maximum": 180.0,
+                        "description": "Yaw rate in [-180, 180] (unit: deg/s)."
                     }
-                },
-                "type": "object"
+                }
             },
             "PharmaRequest": {
+                "type": "object",
+                "required": [
+                    "impeller_shear_stress_pa",
+                    "dissolved_oxygen_pct",
+                    "broth_viscosity_cp"
+                ],
                 "properties": {
-                    "broth_viscosity_cp": {
+                    "impeller_shear_stress_pa": {
                         "type": "number",
-                        "description": "Culture broth viscosity (unit: centipoise, cP)."
+                        "minimum": 0.0,
+                        "maximum": 50.0,
+                        "description": "Shear stress in [0, 50] (unit: Pa)."
                     },
                     "dissolved_oxygen_pct": {
                         "type": "number",
-                        "description": "Dissolved oxygen saturation in [0, 100] (unit: percent, %)."
+                        "minimum": 0.0,
+                        "maximum": 100.0,
+                        "description": "Dissolved oxygen in [0, 100] (unit: %)."
                     },
-                    "impeller_shear_stress_pa": {
+                    "broth_viscosity_cp": {
                         "type": "number",
-                        "description": "Hydrodynamic impeller shear stress (unit: Pascals, Pa)."
+                        "minimum": 0.5,
+                        "maximum": 5000.0,
+                        "description": "Broth viscosity in [0.5, 5000] (unit: cP)."
                     }
-                },
-                "type": "object"
+                }
             },
             "ChemistryRequest": {
+                "type": "object",
+                "required": [
+                    "reactor_temp_k",
+                    "exothermic_heat_flux_w_m2",
+                    "catalyst_activity_index"
+                ],
                 "properties": {
+                    "reactor_temp_k": {
+                        "type": "number",
+                        "minimum": 250.0,
+                        "maximum": 600.0,
+                        "description": "Chemical reactor temperature in [250, 600] (unit: Kelvin, K)."
+                    },
                     "exothermic_heat_flux_w_m2": {
                         "type": "number",
-                        "description": "Exothermic heat flux (unit: W/m^2)."
+                        "minimum": 0.0,
+                        "maximum": 25000.0,
+                        "description": "Exothermic heat flux in [0, 25000] (unit: W/m^2)."
                     },
                     "catalyst_activity_index": {
                         "type": "number",
+                        "minimum": 0.0,
+                        "maximum": 1.0,
                         "description": "Catalyst activity factor in [0, 1] (unit: dimensionless)."
-                    },
-                    "reactor_temp_k": {
-                        "type": "number",
-                        "description": "Chemical reactor temperature (unit: Kelvin, K)."
                     }
-                },
-                "type": "object"
+                }
             },
             "EquilibriumResponse": {
                 "properties": {
@@ -622,61 +1399,101 @@
             },
             "PhysicalTrustGateRequest": {
                 "type": "object",
+                "required": [
+                    "session_id",
+                    "action_type",
+                    "wave_telemetry",
+                    "liveness_score"
+                ],
                 "properties": {
                     "session_id": {
                         "type": "string",
-                        "default": "sess-anonymous"
+                        "example": "sess-enclave-001",
+                        "description": "Unique session or transaction identifier (required, non-empty)."
                     },
                     "action_type": {
                         "type": "string",
-                        "default": "crypto_key_use"
+                        "example": "crypto_key_use",
+                        "description": "Target action (required, e.g. 'crypto_key_use', 'payment_auth', 'robotic_override')."
                     },
                     "wave_telemetry": {
                         "type": "array",
                         "items": {
                             "type": "number"
-                        }
+                        },
+                        "example": [
+                            0.42,
+                            0.44,
+                            0.41,
+                            0.43
+                        ],
+                        "description": "Wave telemetry vector (required, non-empty array)."
                     },
                     "spatial_context": {
                         "type": "string",
-                        "default": "default-enclave-zone"
+                        "example": "default-enclave-zone",
+                        "description": "Spatial execution zone or hardware perimeter context."
                     },
                     "liveness_score": {
                         "type": "number",
-                        "default": 0.99
+                        "minimum": 0.0,
+                        "maximum": 1.0,
+                        "example": 0.99,
+                        "description": "Physical/biometric liveness confidence score (0.0 to 1.0)."
                     }
                 }
             },
             "AiGovernanceAuditRequest": {
                 "type": "object",
+                "required": [
+                    "agent_id",
+                    "model_id",
+                    "risk_classification",
+                    "autonomy_pressure",
+                    "drift_score",
+                    "hallucination_index"
+                ],
                 "properties": {
                     "agent_id": {
                         "type": "string",
-                        "default": "agent-autonomous-01"
+                        "example": "agent-autonomous-01",
+                        "description": "Autonomous AI agent identifier (required, non-empty)."
                     },
                     "model_id": {
                         "type": "string",
-                        "default": "frontier-reasoning-node"
+                        "example": "frontier-reasoning-node",
+                        "description": "Underlying foundation/reasoning model identifier (required, non-empty)."
                     },
                     "risk_classification": {
                         "type": "string",
-                        "default": "high_risk_eu_ai_act"
+                        "example": "high_risk_eu_ai_act",
+                        "description": "Regulatory tier ('minimal', 'limited', 'high_risk_eu_ai_act', 'critical_infrastructure')."
                     },
                     "autonomy_pressure": {
                         "type": "number",
-                        "default": 0.35
+                        "minimum": 0.0,
+                        "maximum": 1.0,
+                        "example": 0.35,
+                        "description": "Agent autonomy pressure (0.0 minimal to 1.0 fully autonomous)."
                     },
                     "drift_score": {
                         "type": "number",
-                        "default": 0.12
+                        "minimum": 0.0,
+                        "maximum": 1.0,
+                        "example": 0.12,
+                        "description": "Policy and alignment deviation drift score (0.0 aligned to 1.0 drifted)."
                     },
                     "hallucination_index": {
                         "type": "number",
-                        "default": 0.08
+                        "minimum": 0.0,
+                        "maximum": 1.0,
+                        "example": 0.08,
+                        "description": "Model hallucination probability (0.0 certain to 1.0 hallucinating)."
                     },
                     "human_oversight_active": {
                         "type": "boolean",
-                        "default": false
+                        "example": false,
+                        "description": "Whether human supervisor is actively overseeing execution."
                     }
                 }
             }

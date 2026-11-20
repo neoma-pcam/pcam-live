@@ -1,0 +1,1457 @@
+{
+  "components": {
+    "schemas": {
+      "AiGovernanceAuditRequest": {
+        "properties": {
+          "agent_id": {
+            "example": "agent-autonomous-01",
+            "type": "string"
+          },
+          "autonomy_pressure": {
+            "example": 0.35,
+            "format": "double",
+            "maximum": 1,
+            "minimum": 0,
+            "type": "number"
+          },
+          "drift_score": {
+            "example": 0.12,
+            "format": "double",
+            "maximum": 1,
+            "minimum": 0,
+            "type": "number"
+          },
+          "hallucination_index": {
+            "example": 0.08,
+            "format": "double",
+            "maximum": 1,
+            "minimum": 0,
+            "type": "number"
+          },
+          "human_oversight_active": {
+            "example": false,
+            "type": "boolean"
+          },
+          "model_id": {
+            "example": "frontier-reasoning-node",
+            "type": "string"
+          },
+          "risk_classification": {
+            "example": "high_risk_eu_ai_act",
+            "type": "string"
+          }
+        },
+        "required": [
+          "agent_id",
+          "model_id",
+          "risk_classification",
+          "autonomy_pressure",
+          "drift_score",
+          "hallucination_index"
+        ],
+        "type": "object"
+      },
+      "DisturbancePayload": {
+        "properties": {
+          "active_strain": {
+            "example": 1.55,
+            "format": "double",
+            "maximum": 10,
+            "minimum": 0,
+            "type": "number"
+          },
+          "flux_potential_v": {
+            "example": 0.082,
+            "format": "double",
+            "maximum": 1.2,
+            "minimum": -1.2,
+            "type": "number"
+          },
+          "gradient_acceleration": {
+            "example": 16000.0,
+            "format": "double",
+            "maximum": 50000,
+            "minimum": -50000,
+            "type": "number"
+          },
+          "gradient_velocity": {
+            "example": 520.0,
+            "format": "double",
+            "maximum": 5000,
+            "minimum": -5000,
+            "type": "number"
+          }
+        },
+        "required": [
+          "flux_potential_v",
+          "gradient_velocity",
+          "gradient_acceleration",
+          "active_strain"
+        ],
+        "type": "object"
+      },
+      "ErrorResponse": {
+        "properties": {
+          "code": {
+            "format": "int32",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "error": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "error",
+          "code",
+          "message"
+        ],
+        "type": "object"
+      },
+      "GatewayStats": {
+        "properties": {
+          "domain_calls": {
+            "additionalProperties": {
+              "format": "int64",
+              "minimum": 0,
+              "type": "integer"
+            },
+            "propertyNames": {
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "last_call_timestamp": {
+            "example": "2026-11-19T14:32:05Z",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "total_mcp_calls": {
+            "example": 0,
+            "format": "int64",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "total_v1_calls": {
+            "example": 0,
+            "format": "int64",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "traffic_sources": {
+            "$ref": "#/components/schemas/TrafficSources"
+          }
+        },
+        "required": [
+          "total_mcp_calls",
+          "total_v1_calls",
+          "domain_calls"
+        ],
+        "type": "object"
+      },
+      "HardwareTelemetryResponse": {
+        "properties": {
+          "entropy_ent": {
+            "example": 0.001,
+            "format": "double",
+            "type": "number"
+          },
+          "gen_cycle": {
+            "example": 95920383,
+            "format": "int64",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "hardware_connected": {
+            "example": true,
+            "type": "boolean"
+          },
+          "hardware_uid": {
+            "example": "0051003C3434510C32333934",
+            "type": "string"
+          },
+          "shock_rate_pct": {
+            "example": 200.0,
+            "format": "double",
+            "type": "number"
+          },
+          "v_out_measured_v": {
+            "example": 0.085,
+            "format": "double",
+            "type": "number"
+          }
+        },
+        "required": [
+          "hardware_uid",
+          "v_out_measured_v",
+          "entropy_ent",
+          "shock_rate_pct",
+          "gen_cycle",
+          "hardware_connected"
+        ],
+        "type": "object"
+      },
+      "PhysicalTrustGateRequest": {
+        "properties": {
+          "action_type": {
+            "example": "crypto_key_use",
+            "type": "string"
+          },
+          "liveness_score": {
+            "example": 0.99,
+            "format": "double",
+            "maximum": 1,
+            "minimum": 0,
+            "type": "number"
+          },
+          "session_id": {
+            "example": "sess-enclave-001",
+            "type": "string"
+          },
+          "spatial_context": {
+            "example": "default-enclave-zone",
+            "type": "string"
+          },
+          "wave_telemetry": {
+            "example": [
+              0.42,
+              0.44,
+              0.41,
+              0.43
+            ],
+            "items": {
+              "format": "double",
+              "type": "number"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "session_id",
+          "action_type",
+          "wave_telemetry",
+          "liveness_score"
+        ],
+        "type": "object"
+      },
+      "ReflexSolutionResponse": {
+        "properties": {
+          "cognitive_synthesis": {
+            "example": "[Physical AI Core] Domain: Universal-Equilibrium | Regime: Overdamped Stability | Equilibrium Converged",
+            "type": "string"
+          },
+          "control_intensity": {
+            "example": 0.705,
+            "format": "double",
+            "type": "number"
+          },
+          "domain": {
+            "example": "Universal-Equilibrium",
+            "type": "string"
+          },
+          "equilibrium_converged": {
+            "example": true,
+            "type": "boolean"
+          },
+          "hardware_reflex_ms": {
+            "example": 0.0066,
+            "format": "double",
+            "type": "number"
+          },
+          "hardware_seal_id": {
+            "example": "SEAL-0051003C3434510C32333934-3FF34CA2B8E68BEBB2265E24C03F79AF43612046715AAAA436B8919C94423124",
+            "type": "string"
+          },
+          "state_mode": {
+            "example": 3,
+            "format": "int32",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "status": {
+            "example": "hardware_active",
+            "type": "string"
+          },
+          "telemetry": {
+            "$ref": "#/components/schemas/HardwareTelemetryResponse"
+          },
+          "trajectory_summary": {
+            "example": "Temporal Buffer Active: Secure frames retained.",
+            "type": "string"
+          },
+          "zeta": {
+            "example": 1.0293,
+            "format": "double",
+            "type": "number"
+          }
+        },
+        "required": [
+          "status",
+          "domain",
+          "zeta",
+          "control_intensity",
+          "state_mode",
+          "hardware_seal_id",
+          "equilibrium_converged",
+          "hardware_reflex_ms",
+          "cognitive_synthesis",
+          "trajectory_summary",
+          "telemetry"
+        ],
+        "type": "object"
+      },
+      "TrafficSources": {
+        "properties": {
+          "blocked_free_riders": {
+            "example": 0,
+            "format": "int64",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "localhost": {
+            "example": 0,
+            "format": "int64",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "rapidapi": {
+            "example": 0,
+            "format": "int64",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "self_billed": {
+            "example": 0,
+            "format": "int64",
+            "minimum": 0,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "rapidapi",
+          "self_billed",
+          "localhost",
+          "blocked_free_riders"
+        ],
+        "type": "object"
+      }
+    },
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "description": "NEOMA Gateway API Key (or RapidAPI token)",
+        "in": "header",
+        "name": "x-neoma-api-key",
+        "type": "apiKey"
+      }
+    }
+  },
+  "info": {
+    "description": "Sub-0.02ms Room-Temperature Analog Silicon 10-Domain Physical Equilibrium, 64-Spin Ising, Physical-Trust Security & AI Governance Co-Processor.",
+    "license": {
+      "name": ""
+    },
+    "title": "NEOMA P-CAM 10-Domain Deterministic Physical Reflex, Security & Governance Gateway",
+    "version": "5.6.0"
+  },
+  "openapi": "3.1.0",
+  "paths": {
+    "/v1/battery/predict": {
+      "post": {
+        "description": "Solid-state & lithium-ion battery energetics predictor (Domain 3). Analyzes SEI layer phase stability, state of charge, and C-rate to calculate thermal runaway suppression efficiency and the allowable safe charge current derating ratio. Higher derating values (e.g. 0.85-1.0) allow near-nominal current under safe room temperatures (20\u00b0C); as cell temperature rises (e.g. to 60\u00b0C), the safe current derates significantly (e.g. down to 0.45-0.55) to arrest exothermic thermal runaway.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "c_rate": {
+                    "description": "Instantaneous charge/discharge current rate (0.0C to 10.0C).",
+                    "example": 2.8,
+                    "maximum": 10.0,
+                    "minimum": 0.0,
+                    "type": "number"
+                  },
+                  "cell_temperature_c": {
+                    "description": "Core cell temperature in Celsius (-40.0\u00b0C to +85.0\u00b0C).",
+                    "example": 46.5,
+                    "maximum": 85.0,
+                    "minimum": -40.0,
+                    "type": "number"
+                  },
+                  "state_of_charge_pct": {
+                    "description": "Battery cell State of Charge in percent (0.0% to 100.0%).",
+                    "example": 82.0,
+                    "maximum": 100.0,
+                    "minimum": 0.0,
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "state_of_charge_pct",
+                  "cell_temperature_c",
+                  "c_rate"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "control_intensity": {
+                      "example": 0.35,
+                      "type": "number"
+                    },
+                    "hardware_reflex_ms": {
+                      "example": 0.0072,
+                      "type": "number"
+                    },
+                    "hardware_seal_id": {
+                      "example": "SEAL-0051003C3434510C32333934-...",
+                      "type": "string"
+                    },
+                    "safe_charge_current_derating": {
+                      "description": "Allowable safe charge current multiplier (0.0 to 1.0; 1.0 = 100% full nominal current allowed; lower = restricted charging current to suppress runaway; decreases as cell temperature rises from 20\u00b0C to 60\u00b0C).",
+                      "example": 0.68,
+                      "type": "number"
+                    },
+                    "thermal_runaway_suppression_pct": {
+                      "description": "Thermal runaway suppression efficiency in percent (0.0% to 100.0%; higher = safer, indicates higher electrochemical stability).",
+                      "example": 82.5,
+                      "type": "number"
+                    },
+                    "zeta": {
+                      "example": 0.98,
+                      "type": "number"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Battery energetics prediction success"
+          },
+          "400": {
+            "description": "Physical Boundary or Schema Violation"
+          }
+        },
+        "summary": "Battery Energetics & Thermal Runaway Suppression"
+      }
+    },
+    "/v1/chemistry/predict": {
+      "post": {
+        "description": "Continuous chemical synthesis & exothermic reaction kinetics predictor (Domain 7). Evaluates reactor core temperature, exothermic heat flux, and catalyst activity to determine exothermic quenching efficiency and the thermal runaway margin. The thermal runaway margin (thermal_runaway_margin_k) measures the safe temperature cushion in Kelvin until uncontrolled runaway; higher values indicate a safer operating buffer, and for any constant heat flux/catalyst activity, the margin strictly and monotonically decreases as reactor_temp_k rises (e.g. 320K -> 395K -> 450K).",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "catalyst_activity_index": {
+                    "description": "Active catalyst reaction efficiency coefficient (0.0 to 1.0).",
+                    "example": 0.88,
+                    "maximum": 1.0,
+                    "minimum": 0.0,
+                    "type": "number"
+                  },
+                  "exothermic_heat_flux_w_m2": {
+                    "description": "Instantaneous exothermic reaction heat flux in W/m\u00b2 (0.0 to 25000.0 W/m\u00b2).",
+                    "example": 5800.0,
+                    "maximum": 25000.0,
+                    "minimum": 0.0,
+                    "type": "number"
+                  },
+                  "reactor_temp_k": {
+                    "description": "Continuous reactor core temperature in Kelvin (250.0K to 600.0K).",
+                    "example": 395.0,
+                    "maximum": 600.0,
+                    "minimum": 250.0,
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "reactor_temp_k",
+                  "exothermic_heat_flux_w_m2",
+                  "catalyst_activity_index"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "control_intensity": {
+                      "example": 0.28,
+                      "type": "number"
+                    },
+                    "exothermic_quenching_efficiency_pct": {
+                      "description": "Dynamic thermal quenching efficiency in percent (0.0% to 100.0%; higher = faster heat extraction and runaway suppression).",
+                      "example": 78.4,
+                      "type": "number"
+                    },
+                    "hardware_reflex_ms": {
+                      "example": 0.0079,
+                      "type": "number"
+                    },
+                    "hardware_seal_id": {
+                      "example": "SEAL-0051003C3434510C32333934-...",
+                      "type": "string"
+                    },
+                    "thermal_runaway_margin_k": {
+                      "description": "Safe thermal cushion until exothermic runaway in Kelvin (higher = safer operating buffer; strictly and monotonically decreases as reactor_temp_k rises).",
+                      "example": 68.2,
+                      "type": "number"
+                    },
+                    "zeta": {
+                      "example": 0.94,
+                      "type": "number"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Chemical kinetics prediction success"
+          },
+          "400": {
+            "description": "Physical Boundary or Schema Violation"
+          }
+        },
+        "summary": "Precision Continuous Chemistry & Exothermic Quenching"
+      }
+    },
+    "/v1/demo/shock": {
+      "post": {
+        "description": "Inject an intentional voltage shock pulse directly into the P-CAM 003 analog silicon matrix to observe physical equilibrium convergence, microsecond damping reflexes, and telemetry updates in real-time.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "shock_voltage": {
+                    "description": "Injected shock pulse amplitude in Volts (0.1V to 1.2V).",
+                    "example": 0.55,
+                    "maximum": 1.2,
+                    "minimum": 0.1,
+                    "type": "number"
+                  }
+                },
+                "type": "object"
+              }
+            }
+          },
+          "required": false
+        },
+        "responses": {
+          "200": {
+            "description": "Shock pulse injected and physical reflex converged"
+          },
+          "429": {
+            "description": "Rate Limit Exceeded (10 req/min per IP)"
+          }
+        },
+        "summary": "Interactive Silicon Shock Pulse Injection"
+      }
+    },
+    "/v1/governance/audit-gate": {
+      "post": {
+        "description": "Hardware-anchored zero-PRNG AI governance and EU AI Act (Articles 9, 12, 14) / NIST AI RMF regulatory audit gate (Domain 10). Ingests autonomy pressure, policy drift, and hallucination metrics to compute a deterministic physical risk index and zero-PRNG damping stability (zeta) on analog silicon. Emits compliance verdicts: 'COMPLIANT_EXECUTE' (risk < 0.35, autonomous execution granted), 'REQUIRE_HUMAN_OVERSIGHT' (0.35 <= risk < 0.65, human supervisor oversight required), or 'HARD_HALT_QUARANTINE' (risk >= 0.65, instant circuit break), accompanied by a tamper-proof EU AI Act compliance certificate (SEAL-GOV-CH17-*). Sending an empty body ({}) or missing required fields immediately yields HTTP 400 Bad Request.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "agent_id": {
+                    "description": "Autonomous AI agent identifier (required, non-empty).",
+                    "example": "agent-autonomous-01",
+                    "type": "string"
+                  },
+                  "autonomy_pressure": {
+                    "description": "Agent autonomy execution pressure / tool invocation depth (0.0 minimal to 1.0 fully autonomous).",
+                    "example": 0.35,
+                    "maximum": 1.0,
+                    "minimum": 0.0,
+                    "type": "number"
+                  },
+                  "drift_score": {
+                    "description": "Policy and alignment deviation drift score (0.0 aligned to 1.0 drifted).",
+                    "example": 0.12,
+                    "maximum": 1.0,
+                    "minimum": 0.0,
+                    "type": "number"
+                  },
+                  "hallucination_index": {
+                    "description": "Model epistemic uncertainty / hallucination probability (0.0 certain to 1.0 hallucinating).",
+                    "example": 0.08,
+                    "maximum": 1.0,
+                    "minimum": 0.0,
+                    "type": "number"
+                  },
+                  "human_oversight_active": {
+                    "description": "Whether human-in-the-loop oversight supervisor is currently active.",
+                    "example": false,
+                    "type": "boolean"
+                  },
+                  "model_id": {
+                    "description": "Underlying foundation/reasoning model identifier (required, non-empty).",
+                    "example": "frontier-reasoning-node",
+                    "type": "string"
+                  },
+                  "risk_classification": {
+                    "description": "Regulatory tier: 'minimal', 'limited', 'high_risk_eu_ai_act', 'critical_infrastructure'.",
+                    "example": "high_risk_eu_ai_act",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "agent_id",
+                  "model_id",
+                  "risk_classification",
+                  "autonomy_pressure",
+                  "drift_score",
+                  "hallucination_index"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "compliance_certificate_seal": {
+                      "description": "Tamper-proof hardware compliance certificate seal.",
+                      "example": "SEAL-GOV-CH17-...",
+                      "type": "string"
+                    },
+                    "domain": {
+                      "example": "AI-Governance-Compliance",
+                      "type": "string"
+                    },
+                    "governance_verdict": {
+                      "description": "Regulatory verdict: 'COMPLIANT_EXECUTE', 'REQUIRE_HUMAN_OVERSIGHT', or 'HARD_HALT_QUARANTINE'.",
+                      "example": "COMPLIANT_EXECUTE",
+                      "type": "string"
+                    },
+                    "hardware_reflex_ms": {
+                      "description": "Audit evaluation latency in milliseconds.",
+                      "example": 0.0062,
+                      "type": "number"
+                    },
+                    "hardware_seal_id": {
+                      "description": "Hardware Silicon Root-of-Trust attestation token.",
+                      "example": "SEAL-0051003C3434510C32333934-...",
+                      "type": "string"
+                    },
+                    "physical_risk_index": {
+                      "description": "Computed physical regulatory risk index (0.0 to 1.0; lower = compliant/safe, higher = dangerous).",
+                      "example": 0.185,
+                      "type": "number"
+                    },
+                    "status": {
+                      "example": "hardware_active",
+                      "type": "string"
+                    },
+                    "zero_prng_damping_stability": {
+                      "description": "Deterministic zero-PRNG damping stability score (0.0 to 1.0; higher = stable governance control).",
+                      "example": 0.945,
+                      "type": "number"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": "AI governance compliance audit complete"
+          },
+          "400": {
+            "description": "Empty body, missing required fields, or parameter out of bounds"
+          }
+        },
+        "summary": "Hardware-Anchored AI Governance & EU AI Act Compliance Audit Gate"
+      }
+    },
+    "/v1/ising/solve": {
+      "post": {
+        "description": "Room-temperature 64-spin analog Ising Hamiltonian ground-state optimizer (Domain 8). Directly minimizes H = -sum(J_ij * s_i * s_j) - sum(h_i * s_i) in microseconds through physical substrate charge dissipation without PRNG or heuristic Monte Carlo steps. Optimal ground-state configuration is returned with Hamiltonian energy, magnetization, and hardware attestation.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "couplings": {
+                    "description": "Pairwise interaction coupling matrix J_ij formatted as [[i, j, weight], ...].",
+                    "example": [
+                      [
+                        0,
+                        1,
+                        1.0
+                      ],
+                      [
+                        1,
+                        2,
+                        -0.8
+                      ],
+                      [
+                        2,
+                        3,
+                        0.6
+                      ]
+                    ],
+                    "items": {
+                      "items": {
+                        "type": "number"
+                      },
+                      "type": "array"
+                    },
+                    "type": "array"
+                  },
+                  "fields": {
+                    "description": "Local magnetic field bias h_i for each active spin variable (-10.0 to 10.0).",
+                    "example": [
+                      0.5,
+                      -0.3,
+                      0.2,
+                      -0.4
+                    ],
+                    "items": {
+                      "maximum": 10.0,
+                      "minimum": -10.0,
+                      "type": "number"
+                    },
+                    "type": "array"
+                  },
+                  "num_spins": {
+                    "description": "Number of coupled spins mapped to the analog silicon core (1 to 64 spins).",
+                    "example": 4,
+                    "maximum": 64,
+                    "minimum": 1,
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "num_spins",
+                  "fields",
+                  "couplings"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "couplings_count": {
+                      "example": 3,
+                      "type": "integer"
+                    },
+                    "domain": {
+                      "example": "Ising-64Spin-Hamiltonian",
+                      "type": "string"
+                    },
+                    "equilibrium_converged": {
+                      "example": true,
+                      "type": "boolean"
+                    },
+                    "ground_state_energy": {
+                      "description": "Converged Hamiltonian energy H (lower value indicates a deeper, more optimal ground state).",
+                      "example": -2.4,
+                      "type": "number"
+                    },
+                    "hardware_reflex_ms": {
+                      "description": "Hardware convergence latency in milliseconds.",
+                      "example": 0.0066,
+                      "type": "number"
+                    },
+                    "hardware_seal_id": {
+                      "description": "Hardware Silicon Root-of-Trust attestation token.",
+                      "example": "SEAL-0051003C3434510C32333934-...",
+                      "type": "string"
+                    },
+                    "magnetization": {
+                      "description": "Average magnetization of the spin system (-1.0 all down to +1.0 all up).",
+                      "example": 0.0,
+                      "type": "number"
+                    },
+                    "num_spins": {
+                      "example": 4,
+                      "type": "integer"
+                    },
+                    "relaxation_sweeps": {
+                      "description": "Analog silicon relaxation clock cycles executed.",
+                      "example": 100,
+                      "type": "integer"
+                    },
+                    "spins": {
+                      "description": "Converged ground-state spin configuration vector (+1 or -1 per spin).",
+                      "example": [
+                        1,
+                        -1,
+                        1,
+                        -1
+                      ],
+                      "items": {
+                        "type": "integer"
+                      },
+                      "type": "array"
+                    },
+                    "status": {
+                      "example": "hardware_active",
+                      "type": "string"
+                    },
+                    "zeta": {
+                      "description": "Silicon physical damping ratio.",
+                      "example": 1.0,
+                      "type": "number"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Ground-state convergence success"
+          },
+          "400": {
+            "description": "Physical Boundary or Schema Violation"
+          }
+        },
+        "summary": "64-Spin Physical Ising Hamiltonian Ground-State Solver"
+      }
+    },
+    "/v1/mobility/predict": {
+      "post": {
+        "description": "High-g vehicle dynamics and chassis stabilization co-processor (Domain 6). Evaluates surface friction coefficient (mu), tire slip ratio, and yaw rate to compute hydroplaning slip recovery time in milliseconds and active lateral stability margins.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "surface_friction_mu": {
+                    "description": "Tire-road interface coefficient of friction mu (0.05 icy/wet to 1.20 dry asphalt).",
+                    "example": 0.32,
+                    "maximum": 1.2,
+                    "minimum": 0.05,
+                    "type": "number"
+                  },
+                  "tire_slip_ratio": {
+                    "description": "Longitudinal wheel slip ratio (0.0 = free rolling, 1.0 = locked wheel).",
+                    "example": 0.24,
+                    "maximum": 1.0,
+                    "minimum": 0.0,
+                    "type": "number"
+                  },
+                  "yaw_rate_deg_s": {
+                    "description": "Vehicle chassis angular yaw velocity in degrees/second (-180.0 to +180.0 deg/s).",
+                    "example": 38.0,
+                    "maximum": 180.0,
+                    "minimum": -180.0,
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "surface_friction_mu",
+                  "tire_slip_ratio",
+                  "yaw_rate_deg_s"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "control_intensity": {
+                      "example": 0.32,
+                      "type": "number"
+                    },
+                    "hardware_reflex_ms": {
+                      "example": 0.0075,
+                      "type": "number"
+                    },
+                    "hardware_seal_id": {
+                      "example": "SEAL-0051003C3434510C32333934-...",
+                      "type": "string"
+                    },
+                    "hydroplaning_recovery_time_ms": {
+                      "description": "Chassis slip recovery time in milliseconds (lower = faster stabilization).",
+                      "example": 22.4,
+                      "type": "number"
+                    },
+                    "lateral_stability_margin_pct": {
+                      "description": "Chassis lateral grip margin in percent (higher = greater vehicle yaw stability and spin resistance).",
+                      "example": 74.2,
+                      "type": "number"
+                    },
+                    "zeta": {
+                      "example": 0.96,
+                      "type": "number"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Vehicle stabilization prediction success"
+          },
+          "400": {
+            "description": "Physical Boundary or Schema Violation"
+          }
+        },
+        "summary": "Vehicle Dynamics & Active Chassis Stabilization"
+      }
+    },
+    "/v1/pharma/predict": {
+      "post": {
+        "description": "Cellular bioprocess and pharmaceutical bioreactor fluid dynamics stabilizer (Domain 4). Optimizes dissolved oxygen transfer and dampens impeller hydrodynamic shear stress to maximize cell viability during high-density fermentation.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "broth_viscosity_cp": {
+                    "description": "Cellular culture broth dynamic viscosity in centipoise (0.5 to 5000.0 cP).",
+                    "example": 210.0,
+                    "maximum": 5000.0,
+                    "minimum": 0.5,
+                    "type": "number"
+                  },
+                  "dissolved_oxygen_pct": {
+                    "description": "Dissolved oxygen concentration in percent (0.0% to 100.0%).",
+                    "example": 42.0,
+                    "maximum": 100.0,
+                    "minimum": 0.0,
+                    "type": "number"
+                  },
+                  "impeller_shear_stress_pa": {
+                    "description": "Bioreactor impeller hydrodynamic shear stress in Pascals (0.0 to 50.0 Pa).",
+                    "example": 18.4,
+                    "maximum": 50.0,
+                    "minimum": 0.0,
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "impeller_shear_stress_pa",
+                  "dissolved_oxygen_pct",
+                  "broth_viscosity_cp"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "agitation_shear_reduction_pa": {
+                      "description": "Shear stress damping force in Pascals (higher = greater hydrodynamic protection).",
+                      "example": 6.8,
+                      "type": "number"
+                    },
+                    "cellular_viability_protection_pct": {
+                      "description": "Mammalian/bacterial cell survival probability in percent (higher = higher batch yield).",
+                      "example": 94.6,
+                      "type": "number"
+                    },
+                    "control_intensity": {
+                      "example": 0.24,
+                      "type": "number"
+                    },
+                    "hardware_reflex_ms": {
+                      "example": 0.0081,
+                      "type": "number"
+                    },
+                    "hardware_seal_id": {
+                      "example": "SEAL-0051003C3434510C32333934-...",
+                      "type": "string"
+                    },
+                    "zeta": {
+                      "example": 0.91,
+                      "type": "number"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Bioreactor kinematics prediction success"
+          },
+          "400": {
+            "description": "Physical Boundary or Schema Violation"
+          }
+        },
+        "summary": "Bioreactor Hydrodynamic Kinematics & Shear Stress Damping"
+      }
+    },
+    "/v1/quant/predict": {
+      "post": {
+        "description": "High-frequency quantitative microstructure predictor (Domain 2). Damps order book liquidity shocks from limit order book imbalance and wide bid-ask spreads, predicting execution slippage reduction and computing optimal slice throttle multipliers.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "order_book_imbalance": {
+                    "description": "Limit order book depth imbalance (-1.0 heavy bid pressure to +1.0 heavy ask pressure).",
+                    "example": 0.72,
+                    "maximum": 1.0,
+                    "minimum": -1.0,
+                    "type": "number"
+                  },
+                  "slice_participation_rate": {
+                    "description": "Target order slice volume participation rate (0.001 to 1.0).",
+                    "example": 0.18,
+                    "maximum": 1.0,
+                    "minimum": 0.001,
+                    "type": "number"
+                  },
+                  "spread_bps": {
+                    "description": "Bid-ask spread in basis points (0.0 to 500.0 bps).",
+                    "example": 14.5,
+                    "maximum": 500.0,
+                    "minimum": 0.0,
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "order_book_imbalance",
+                  "spread_bps",
+                  "slice_participation_rate"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "control_intensity": {
+                      "example": 0.38,
+                      "type": "number"
+                    },
+                    "hardware_reflex_ms": {
+                      "example": 0.0066,
+                      "type": "number"
+                    },
+                    "hardware_seal_id": {
+                      "example": "SEAL-0051003C3434510C32333934-...",
+                      "type": "string"
+                    },
+                    "predicted_slippage_reduction_bps": {
+                      "description": "Expected execution slippage savings in basis points (higher = more trading cost saved).",
+                      "example": 4.25,
+                      "type": "number"
+                    },
+                    "recommended_slice_throttle": {
+                      "description": "Order slicing throttle multiplier (0.01 to 1.0; lower = slow execution to avoid market impact; 1.0 = full-speed execution).",
+                      "example": 0.65,
+                      "type": "number"
+                    },
+                    "zeta": {
+                      "example": 0.99,
+                      "type": "number"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Quantitative microstructure prediction success"
+          },
+          "400": {
+            "description": "Physical Boundary or Schema Violation"
+          }
+        },
+        "summary": "Quantitative Microstructure & Order Book Slippage Damping"
+      }
+    },
+    "/v1/robotics/predict": {
+      "post": {
+        "description": "Sub-10\u00b5s robotic dynamic compliance and kinematic singularity damping co-processor (Domain 5). Damps impact shocks upon unexpected rigid contact and mitigates kinematic singularity instability by tuning impedance stiffness.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "contact_stiffness_n_m": {
+                    "description": "Environment contact stiffness in N/m (10.0 soft tissue/air to 100000.0 rigid metal).",
+                    "example": 18500.0,
+                    "maximum": 100000.0,
+                    "minimum": 10.0,
+                    "type": "number"
+                  },
+                  "joint_torque_nm": {
+                    "description": "Actuator joint torque in Newton-meters (-500.0 to +500.0 N\u00b7m).",
+                    "example": 145.0,
+                    "maximum": 500.0,
+                    "minimum": -500.0,
+                    "type": "number"
+                  },
+                  "singularity_proximity": {
+                    "description": "Kinematic singularity proximity index (0.0 far from singularity to 1.0 at kinematic singularity).",
+                    "example": 0.64,
+                    "maximum": 1.0,
+                    "minimum": 0.0,
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "joint_torque_nm",
+                  "contact_stiffness_n_m",
+                  "singularity_proximity"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "compliant_impedance_gain_n_m_rad": {
+                      "description": "Optimal compliant feedback stiffness in N\u00b7m/rad (higher = stiffer position hold; lower = compliant impact absorption).",
+                      "example": 420.5,
+                      "type": "number"
+                    },
+                    "control_intensity": {
+                      "example": 0.31,
+                      "type": "number"
+                    },
+                    "hardware_reflex_ms": {
+                      "example": 0.0068,
+                      "type": "number"
+                    },
+                    "hardware_seal_id": {
+                      "example": "SEAL-0051003C3434510C32333934-...",
+                      "type": "string"
+                    },
+                    "peak_impact_attenuation_pct": {
+                      "description": "Shock load absorption efficiency in percent (higher = better protection of robotic gears and joints).",
+                      "example": 81.3,
+                      "type": "number"
+                    },
+                    "zeta": {
+                      "example": 0.93,
+                      "type": "number"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Robotic compliance prediction success"
+          },
+          "400": {
+            "description": "Physical Boundary or Schema Violation"
+          }
+        },
+        "summary": "Robotic Dynamic Compliance & Singularity Damping"
+      }
+    },
+    "/v1/security/trust-gate": {
+      "post": {
+        "description": "Patent Pending: Hardware-rooted wave-response medium physical fingerprint trusted execution gate (Domain 9). Evaluates high-frequency physical wave propagation, zero-point voltage drift, and biometric/spatial context on analog P-CAM silicon. The physical equilibrium engine couples the wave vector with live silicon PUF entropy to evaluate structural stability (zeta). Based on physical divergence and liveness, it deterministically issues 'ALLOW' (trusted execution), 'SAFE_MODE' (restricted sandbox), or 'REVOKE_AND_BLOCK' (immediate quarantine), generating a verifiable dynamic PUF receipt (SEAL-PCAM003-COM3-*). Sending an empty body ({}) or missing required fields immediately yields HTTP 400 Bad Request.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "action_type": {
+                    "description": "Target privileged action (required, e.g. 'crypto_key_use', 'payment_auth', 'robotic_override').",
+                    "example": "crypto_key_use",
+                    "type": "string"
+                  },
+                  "liveness_score": {
+                    "description": "Physical/biometric liveness confidence score (0.0 to 1.0).",
+                    "example": 0.99,
+                    "maximum": 1.0,
+                    "minimum": 0.0,
+                    "type": "number"
+                  },
+                  "session_id": {
+                    "description": "Unique session or transaction identifier (required, non-empty).",
+                    "example": "sess-enclave-001",
+                    "type": "string"
+                  },
+                  "spatial_context": {
+                    "description": "Spatial execution zone or hardware perimeter context.",
+                    "example": "default-enclave-zone",
+                    "type": "string"
+                  },
+                  "wave_telemetry": {
+                    "description": "Physical wave-response propagation telemetry vector (required, non-empty array).",
+                    "example": [
+                      0.42,
+                      0.44,
+                      0.41,
+                      0.43
+                    ],
+                    "items": {
+                      "type": "number"
+                    },
+                    "type": "array"
+                  }
+                },
+                "required": [
+                  "session_id",
+                  "action_type",
+                  "wave_telemetry",
+                  "liveness_score"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "domain": {
+                      "example": "Physical-Trust-Security",
+                      "type": "string"
+                    },
+                    "guard_verdict": {
+                      "description": "Deterministic hardware execution verdict: 'ALLOW', 'SAFE_MODE', or 'REVOKE_AND_BLOCK'.",
+                      "example": "ALLOW",
+                      "type": "string"
+                    },
+                    "hardware_reflex_ms": {
+                      "description": "Hardware verification reflex latency in milliseconds.",
+                      "example": 0.0062,
+                      "type": "number"
+                    },
+                    "hardware_seal_id": {
+                      "description": "Hardware Silicon Root-of-Trust attestation token.",
+                      "example": "SEAL-0051003C3434510C32333934-...",
+                      "type": "string"
+                    },
+                    "puf_dynamic_seal": {
+                      "description": "Real-time PUF cryptographic receipt issued for this transaction.",
+                      "example": "SEAL-PCAM003-COM3-...",
+                      "type": "string"
+                    },
+                    "status": {
+                      "example": "hardware_active",
+                      "type": "string"
+                    },
+                    "trust_score": {
+                      "description": "Composite physical trust index (0.0 to 1.0; higher = higher trust).",
+                      "example": 0.965,
+                      "type": "number"
+                    },
+                    "wave_drift_index": {
+                      "description": "Physical wave-response medium zero-point drift index (lower = more stable).",
+                      "example": 0.035,
+                      "type": "number"
+                    },
+                    "zeta": {
+                      "description": "Silicon physical damping ratio of the evaluated trust state.",
+                      "example": 1.02,
+                      "type": "number"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Physical trust evaluation complete"
+          },
+          "400": {
+            "description": "Empty body, missing required fields, or parameter out of bounds"
+          }
+        },
+        "summary": "Wave-Response Medium Physical Fingerprint Trust Gate"
+      }
+    },
+    "/v1/solve-universal-equilibrium": {
+      "post": {
+        "description": "Sub-millisecond thermodynamic kinetic equilibrium solver (Domain 1). Directly models continuous non-linear second-order dynamic equilibrium across physical systems. Calculates the deterministic damping ratio (zeta) and corrective control intensity on analog phase-change silicon to suppress chaotic oscillations and ensure system stability.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "active_strain": {
+                    "description": "Normalized structural or mechanical strain (0.0 to 10.0).",
+                    "example": 1.55,
+                    "maximum": 10.0,
+                    "minimum": 0.0,
+                    "type": "number"
+                  },
+                  "flux_potential_v": {
+                    "description": "Driving field potential or disturbance magnitude in Volts (-1.2V to +1.2V).",
+                    "example": 0.082,
+                    "maximum": 1.2,
+                    "minimum": -1.2,
+                    "type": "number"
+                  },
+                  "gradient_acceleration": {
+                    "description": "Second-order inertial shock acceleration (-50000.0 to +50000.0).",
+                    "example": 16000.0,
+                    "maximum": 50000.0,
+                    "minimum": -50000.0,
+                    "type": "number"
+                  },
+                  "gradient_velocity": {
+                    "description": "First-order state drift rate or drift velocity (-5000.0 to +5000.0).",
+                    "example": 520.0,
+                    "maximum": 5000.0,
+                    "minimum": -5000.0,
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "flux_potential_v",
+                  "gradient_velocity",
+                  "gradient_acceleration",
+                  "active_strain"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "control_intensity": {
+                      "description": "Dimensionless corrective control gain (0.0 to 1.0; higher = stronger restoring damping force required to restore equilibrium).",
+                      "example": 0.225,
+                      "type": "number"
+                    },
+                    "equilibrium_converged": {
+                      "example": true,
+                      "type": "boolean"
+                    },
+                    "hardware_reflex_ms": {
+                      "description": "Silicon reflex latency in milliseconds (typically < 0.02 ms).",
+                      "example": 0.0088,
+                      "type": "number"
+                    },
+                    "hardware_seal_id": {
+                      "description": "Hardware Silicon Root-of-Trust attestation token.",
+                      "example": "SEAL-0051003C3434510C32333934-...",
+                      "type": "string"
+                    },
+                    "puf_dynamic_seal": {
+                      "description": "Real-time PUF cryptographic receipt.",
+                      "example": "SEAL-PCAM003-COM3-...",
+                      "type": "string"
+                    },
+                    "zeta": {
+                      "description": "Dimensionless damping ratio (zeta < 1.0 underdamped; zeta = 1.0 critically damped; zeta > 1.0 overdamped; safe stable regime is 0.1 <= zeta <= 2.0).",
+                      "example": 0.95,
+                      "type": "number"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Thermodynamic equilibrium convergence success"
+          },
+          "400": {
+            "description": "Physical Boundary or Schema Violation"
+          }
+        },
+        "summary": "Universal Thermodynamic Equilibrium Solver"
+      }
+    }
+  },
+  "security": [
+    {
+      "ApiKeyAuth": []
+    }
+  ],
+  "tags": [
+    {
+      "description": "Deterministic Room-Temperature 64-Spin Ising Hamiltonian Ground-State Solver",
+      "name": "Ising 64-Spin Solver"
+    },
+    {
+      "description": "Non-Linear Physical Equilibrium Damping & Corrective Control",
+      "name": "Universal Equilibrium"
+    },
+    {
+      "description": "LOB Order Book Shock Damping & Microsecond Liquidity Defense",
+      "name": "Quant HFT"
+    },
+    {
+      "description": "SEI Layer Phase Stabilization & Thermal Runaway Suppression",
+      "name": "Battery Energetics"
+    },
+    {
+      "description": "Fluid Shear Equilibrium & Cellular Stress Damping",
+      "name": "Bioreactor Kinematics"
+    },
+    {
+      "description": "Sub-10\u00b5s Dynamic Stiffness & Reflex Trajectory Correction",
+      "name": "Robotic Compliance"
+    },
+    {
+      "description": "High-g Lateral Acceleration Decoupling & Vehicle Slip Recovery",
+      "name": "Mobility Dynamics"
+    },
+    {
+      "description": "Exothermic Phase Transition & Chemical Reactor Runaway Damping",
+      "name": "Precision Synthesis"
+    },
+    {
+      "description": "Wave-Response Medium Physical Fingerprint Trusted Execution Gate (Patent Pending)",
+      "name": "Physical Trust Security"
+    },
+    {
+      "description": "Hardware-Anchored Zero-PRNG AI Governance & EU AI Act Art. 9/12/14 Compliance Gate",
+      "name": "AI Governance Compliance"
+    }
+  ]
+}
