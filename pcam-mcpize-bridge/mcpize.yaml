@@ -1,0 +1,11 @@
+version: 1
+name: neoma-pcam-solver
+runtime: typescript
+entry: src/index.ts
+description: Deterministic sub-0.02ms room-temperature analog silicon 64-spin Ising Hamiltonian solver, 10-domain physical equilibrium, physical trust security, and zero-PRNG AI governance co-processor.
+build:
+  install: npm install
+  build: npm run build
+startCommand:
+  type: http
+  command: node dist/index.js

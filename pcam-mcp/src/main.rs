@@ -14,6 +14,8 @@ fn resolve_endpoint(domain: &str) -> &'static str {
         "robotics" => "https://neoma-p-cam-hyper-physical-control.p.rapidapi.com/v1/robotics/predict",
         "mobility" => "https://neoma-p-cam-hyper-physical-control.p.rapidapi.com/v1/mobility/predict",
         "chemistry" => "https://neoma-p-cam-hyper-physical-control.p.rapidapi.com/v1/chemistry/predict",
+        "security" | "trust" => "https://neoma-p-cam-hyper-physical-control.p.rapidapi.com/v1/security/trust-gate",
+        "governance" | "audit" => "https://neoma-p-cam-hyper-physical-control.p.rapidapi.com/v1/governance/audit-gate",
         _ => "https://neoma-p-cam-hyper-physical-control.p.rapidapi.com/v1/solve-universal-equilibrium",
     }
 }
@@ -70,6 +72,36 @@ fn tool_definitions() -> Value {
                         "zeta": { "type": "number" }
                     },
                     "required": ["hardware_seal_id", "zeta"]
+                }
+            },
+            {
+                "name": "pcam_physical_trust_gate",
+                "description": "Hardware-rooted wave-response medium physical fingerprint trusted execution gate (Patent Pending). Evaluates zero-point drift and biometrics/spatial context to ALLOW, SAFE_MODE, or REVOKE_AND_BLOCK execution.",
+                "inputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "session_id": { "type": "string", "default": "sess-anonymous" },
+                        "action_type": { "type": "string", "default": "crypto_key_use" },
+                        "wave_telemetry": { "type": "array", "items": { "type": "number" } },
+                        "spatial_context": { "type": "string", "default": "default-enclave-zone" },
+                        "liveness_score": { "type": "number", "default": 0.99 }
+                    }
+                }
+            },
+            {
+                "name": "pcam_ai_governance_audit",
+                "description": "Hardware-anchored zero-PRNG AI governance and EU AI Act regulatory compliance audit gate. Computes physical risk index, damping stability, and outputs COMPLIANT_EXECUTE, REQUIRE_HUMAN_OVERSIGHT, or HARD_HALT_QUARANTINE.",
+                "inputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "agent_id": { "type": "string", "default": "agent-autonomous-01" },
+                        "model_id": { "type": "string", "default": "frontier-reasoning-node" },
+                        "risk_classification": { "type": "string", "default": "high_risk_eu_ai_act" },
+                        "autonomy_pressure": { "type": "number", "default": 0.35 },
+                        "drift_score": { "type": "number", "default": 0.12 },
+                        "hallucination_index": { "type": "number", "default": 0.08 },
+                        "human_oversight_active": { "type": "boolean", "default": false }
+                    }
                 }
             }
         ]
@@ -168,6 +200,33 @@ async fn execute_tool(client: &Client, name: &str, args: &Value) -> Result<Strin
                 "zeta": zeta
             });
             serde_json::to_string_pretty(&verdict).map_err(|e| e.to_string())
+        }
+        "pcam_physical_trust_gate" => {
+            let endpoint = resolve_endpoint("security");
+            let default_wave = json!([0.42, 0.44, 0.41, 0.43]);
+            let payload = json!({
+                "session_id": args.get("session_id").and_then(|v| v.as_str()).unwrap_or("sess-anonymous"),
+                "action_type": args.get("action_type").and_then(|v| v.as_str()).unwrap_or("crypto_key_use"),
+                "wave_telemetry": args.get("wave_telemetry").unwrap_or(&default_wave),
+                "spatial_context": args.get("spatial_context").and_then(|v| v.as_str()).unwrap_or("default-enclave-zone"),
+                "liveness_score": args.get("liveness_score").and_then(|v| v.as_f64()).unwrap_or(0.99)
+            });
+            let res = call_pcam_gateway(client, endpoint, payload).await?;
+            serde_json::to_string_pretty(&res).map_err(|e| e.to_string())
+        }
+        "pcam_ai_governance_audit" => {
+            let endpoint = resolve_endpoint("governance");
+            let payload = json!({
+                "agent_id": args.get("agent_id").and_then(|v| v.as_str()).unwrap_or("agent-autonomous-01"),
+                "model_id": args.get("model_id").and_then(|v| v.as_str()).unwrap_or("frontier-reasoning-node"),
+                "risk_classification": args.get("risk_classification").and_then(|v| v.as_str()).unwrap_or("high_risk_eu_ai_act"),
+                "autonomy_pressure": args.get("autonomy_pressure").and_then(|v| v.as_f64()).unwrap_or(0.35),
+                "drift_score": args.get("drift_score").and_then(|v| v.as_f64()).unwrap_or(0.12),
+                "hallucination_index": args.get("hallucination_index").and_then(|v| v.as_f64()).unwrap_or(0.08),
+                "human_oversight_active": args.get("human_oversight_active").and_then(|v| v.as_bool()).unwrap_or(false)
+            });
+            let res = call_pcam_gateway(client, endpoint, payload).await?;
+            serde_json::to_string_pretty(&res).map_err(|e| e.to_string())
         }
         _ => Err(format!("Unknown tool: {}", name)),
     }

@@ -877,9 +877,9 @@ fn spawn_benchmark_ticker(hw_state: Arc<RwLock<HwTelemetry>>) {
 #[derive(OpenApi)]
 #[openapi(
     info(
-        title = "NEOMA P-CAM 8-Domain Deterministic Physical Reflex & Ising Gateway",
-        version = "5.4.0",
-        description = "Sub-0.02ms Room-Temperature Analog Silicon 64-Spin Ising & Physical Equilibrium Solver."
+        title = "NEOMA P-CAM 10-Domain Deterministic Physical Reflex, Security & Governance Gateway",
+        version = "5.6.0",
+        description = "Sub-0.02ms Room-Temperature Analog Silicon 10-Domain Physical Equilibrium, 64-Spin Ising, Physical-Trust Security & AI Governance Co-Processor."
     ),
     components(schemas(DisturbancePayload, HardwareTelemetryResponse, ReflexSolutionResponse, ErrorResponse, GatewayStats, TrafficSources, PhysicalTrustGateRequest, AiGovernanceAuditRequest)),
     tags(
@@ -890,7 +890,9 @@ fn spawn_benchmark_ticker(hw_state: Arc<RwLock<HwTelemetry>>) {
         (name = "Bioreactor Kinematics", description = "Fluid Shear Equilibrium & Cellular Stress Damping"),
         (name = "Robotic Compliance", description = "Sub-10µs Dynamic Stiffness & Reflex Trajectory Correction"),
         (name = "Mobility Dynamics", description = "High-g Lateral Acceleration Decoupling & Vehicle Slip Recovery"),
-        (name = "Precision Synthesis", description = "Exothermic Phase Transition & Chemical Reactor Runaway Damping")
+        (name = "Precision Synthesis", description = "Exothermic Phase Transition & Chemical Reactor Runaway Damping"),
+        (name = "Physical Trust Security", description = "Wave-Response Medium Physical Fingerprint Trusted Execution Gate (Patent Pending)"),
+        (name = "AI Governance Compliance", description = "Hardware-Anchored Zero-PRNG AI Governance & EU AI Act Art. 9/12/14 Compliance Gate")
     )
 )]
 pub struct ApiDoc;
@@ -1493,6 +1495,7 @@ async fn main() {
 
     let app = Router::new()
         .route("/docs", get(serve_swagger_ui))
+        .route("/openapi.json", get(serve_openapi_json))
         .route("/v1/telemetry", get(get_telemetry_snapshot))
         .route("/v1/stats", get(get_stats_handler))
         .route("/stats", get(get_stats_handler))
@@ -1519,21 +1522,278 @@ async fn main() {
 
     let addr = "0.0.0.0:8000";
     println!("==================================================");
-    println!(" [P-CAM 7-DOMAIN GATEWAY] 12Q Inline Core Active");
+    println!(" [P-CAM 10-DOMAIN GATEWAY] 12Q Inline Core Active");
     println!(" * Hardware Port : {} (Default: COM3)", serial_port);
-    println!(" * Endpoints     : 7 Physical Domains Active");
+    println!(" * Endpoints     : 10 Official Domains Active");
+    println!(" * Trust Gate    : /v1/security/trust-gate");
+    println!(" * AI Governance : /v1/governance/audit-gate");
     println!(" * Swagger UI    : http://localhost:8000/docs");
+    println!(" * OpenAPI JSON  : http://localhost:8000/openapi.json");
     println!("==================================================");
 
     let listener = tokio::net::TcpListener::bind(addr).await.unwrap();
     axum::serve(listener, app).await.unwrap();
 }
 
+async fn serve_openapi_json() -> impl IntoResponse {
+    use utoipa::OpenApi;
+    let mut doc = serde_json::to_value(ApiDoc::openapi()).unwrap_or_else(|_| serde_json::json!({}));
+    doc["paths"] = serde_json::json!({
+        "/v1/ising/solve": {
+            "post": {
+                "summary": "64-Spin Physical Ising Hamiltonian Solver",
+                "description": "Minimize H = -sum(J_ij * s_i * s_j) - sum(h_i * s_i) for 1 to 64 coupled spins.",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": ["num_spins", "fields", "couplings"],
+                                "properties": {
+                                    "num_spins": { "type": "integer", "example": 4 },
+                                    "fields": { "type": "array", "items": { "type": "number" }, "example": [0.5, -0.3, 0.2, -0.4] },
+                                    "couplings": { "type": "array", "items": { "type": "array", "items": { "type": "number" } }, "example": [[0, 1, 1.0], [1, 2, -0.8], [2, 3, 0.6]] }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": { "description": "Physical Convergence Success" },
+                    "400": { "description": "Physical Boundary / Schema Violation" }
+                }
+            }
+        },
+        "/v1/solve-universal-equilibrium": {
+            "post": {
+                "summary": "Universal Equilibrium Solver",
+                "description": "Bounds: flux_potential_v [-1.2, 1.2], gradient_velocity [-5000, 5000], gradient_acceleration [-50000, 50000], active_strain [0, 10].",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/DisturbancePayload"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": { "description": "Physical Convergence Success" },
+                    "400": { "description": "Physical Boundary / Schema Violation" }
+                }
+            }
+        },
+        "/v1/battery/predict": {
+            "post": {
+                "summary": "Battery Energetics",
+                "description": "Bounds: state_of_charge_pct [0, 100], cell_temperature_c [-40, 85], c_rate [0, 10].",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": ["state_of_charge_pct", "cell_temperature_c", "c_rate"],
+                                "properties": {
+                                    "state_of_charge_pct": { "type": "number", "example": 82.0 },
+                                    "cell_temperature_c": { "type": "number", "example": 46.5 },
+                                    "c_rate": { "type": "number", "example": 2.8 }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": { "description": "Physical Convergence Success" },
+                    "400": { "description": "Physical Boundary / Schema Violation" }
+                }
+            }
+        },
+        "/v1/chemistry/predict": {
+            "post": {
+                "summary": "Precision Chemistry",
+                "description": "Bounds: reactor_temp_k [250, 600], exothermic_heat_flux_w_m2 [0, 25000], catalyst_activity_index [0, 1].",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": ["reactor_temp_k", "exothermic_heat_flux_w_m2", "catalyst_activity_index"],
+                                "properties": {
+                                    "reactor_temp_k": { "type": "number", "example": 395.0 },
+                                    "exothermic_heat_flux_w_m2": { "type": "number", "example": 5800.0 },
+                                    "catalyst_activity_index": { "type": "number", "example": 0.88 }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": { "description": "Physical Convergence Success" },
+                    "400": { "description": "Physical Boundary / Schema Violation" }
+                }
+            }
+        },
+        "/v1/mobility/predict": {
+            "post": {
+                "summary": "Mobility Dynamics",
+                "description": "Bounds: surface_friction_mu [0.05, 1.20], tire_slip_ratio [0, 1], yaw_rate_deg_s [-180, 180].",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": ["surface_friction_mu", "tire_slip_ratio", "yaw_rate_deg_s"],
+                                "properties": {
+                                    "surface_friction_mu": { "type": "number", "example": 0.32 },
+                                    "tire_slip_ratio": { "type": "number", "example": 0.24 },
+                                    "yaw_rate_deg_s": { "type": "number", "example": 38.0 }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": { "description": "Physical Convergence Success" },
+                    "400": { "description": "Physical Boundary / Schema Violation" }
+                }
+            }
+        },
+        "/v1/quant/predict": {
+            "post": {
+                "summary": "Quant Microstructure (HFT)",
+                "description": "Bounds: order_book_imbalance [-1, 1], spread_bps [0, 500], slice_participation_rate [0.001, 1].",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": ["order_book_imbalance", "spread_bps", "slice_participation_rate"],
+                                "properties": {
+                                    "order_book_imbalance": { "type": "number", "example": 0.72 },
+                                    "spread_bps": { "type": "number", "example": 14.5 },
+                                    "slice_participation_rate": { "type": "number", "example": 0.18 }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": { "description": "Physical Convergence Success" },
+                    "400": { "description": "Physical Boundary / Schema Violation" }
+                }
+            }
+        },
+        "/v1/robotics/predict": {
+            "post": {
+                "summary": "Robotic Compliance",
+                "description": "Bounds: joint_torque_nm [-500, 500], contact_stiffness_n_m [10, 100000], singularity_proximity [0, 1].",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": ["joint_torque_nm", "contact_stiffness_n_m", "singularity_proximity"],
+                                "properties": {
+                                    "joint_torque_nm": { "type": "number", "example": 145.0 },
+                                    "contact_stiffness_n_m": { "type": "number", "example": 18500.0 },
+                                    "singularity_proximity": { "type": "number", "example": 0.64 }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": { "description": "Physical Convergence Success" },
+                    "400": { "description": "Physical Boundary / Schema Violation" }
+                }
+            }
+        },
+        "/v1/pharma/predict": {
+            "post": {
+                "summary": "Pharma Bioreactor Kinematics",
+                "description": "Bounds: impeller_shear_stress_pa [0, 50], dissolved_oxygen_pct [0, 100], broth_viscosity_cp [0.5, 5000].",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": ["impeller_shear_stress_pa", "dissolved_oxygen_pct", "broth_viscosity_cp"],
+                                "properties": {
+                                    "impeller_shear_stress_pa": { "type": "number", "example": 18.4 },
+                                    "dissolved_oxygen_pct": { "type": "number", "example": 42.0 },
+                                    "broth_viscosity_cp": { "type": "number", "example": 210.0 }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": { "description": "Physical Convergence Success" },
+                    "400": { "description": "Physical Boundary / Schema Violation" }
+                }
+            }
+        },
+        "/v1/security/trust-gate": {
+            "post": {
+                "summary": "Physical Trust Security Gate",
+                "description": "Patent Pending: Hardware-rooted wave-response medium physical fingerprint trusted execution gate.",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PhysicalTrustGateRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": { "description": "Physical Convergence Success" },
+                    "400": { "description": "Physical Boundary / Schema Violation" }
+                }
+            }
+        },
+        "/v1/governance/audit-gate": {
+            "post": {
+                "summary": "AI Governance & Compliance Audit Gate",
+                "description": "EU AI Act Art. 9/12/14 & NIST AI RMF hardware-anchored zero-PRNG AI governance audit gate.",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AiGovernanceAuditRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": { "description": "Physical Convergence Success" },
+                    "400": { "description": "Physical Boundary / Schema Violation" }
+                }
+            }
+        }
+    });
+    (
+        StatusCode::OK,
+        [("content-type", "application/json")],
+        Json(doc),
+    )
+}
+
 async fn serve_swagger_ui() -> axum::response::Html<&'static str> {
     axum::response::Html(r#"<!DOCTYPE html>
 <html>
 <head>
-    <title>P-CAM Interactive Swagger Docs (v5.4.0)</title>
+    <title>P-CAM Interactive Swagger Docs (v5.6.0)</title>
     <link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@5.11.0/swagger-ui.css" />
 </head>
 <body style="margin: 0; background: #fafafa;">
@@ -1571,9 +1831,9 @@ async fn serve_swagger_ui() -> axum::response::Html<&'static str> {
                 spec: {
                     openapi: "3.0.0",
                     info: {
-                        title: "NEOMA P-CAM 8-Domain Deterministic Physical Reflex & Ising API",
-                        version: "5.4.0",
-                        description: "Deterministic sub-0.02ms room-temperature analog silicon 64-spin Ising Hamiltonian solver and 7-vertical physical equilibrium co-processor."
+                        title: "NEOMA P-CAM 10-Domain Deterministic Physical Reflex, Security & Governance API",
+                        version: "5.6.0",
+                        description: "Deterministic sub-0.02ms room-temperature analog silicon 10-domain physical equilibrium, 64-spin Ising, physical-trust security and zero-PRNG AI governance co-processor."
                     },
                     paths: {
                         "/v1/ising/solve": makeEndpoint(
@@ -1656,6 +1916,32 @@ async fn serve_swagger_ui() -> axum::response::Html<&'static str> {
                                 broth_viscosity_cp: { type: "number", example: 210.0 }
                             },
                             ["impeller_shear_stress_pa", "dissolved_oxygen_pct", "broth_viscosity_cp"]
+                        ),
+                        "/v1/security/trust-gate": makeEndpoint(
+                            "Physical Trust Security Gate",
+                            "Patent Pending: Hardware-rooted wave-response medium physical fingerprint trusted execution gate.",
+                            {
+                                session_id: { type: "string", example: "sess-fintech-001" },
+                                action_type: { type: "string", example: "crypto_key_use" },
+                                wave_telemetry: { type: "array", items: { type: "number" }, example: [0.42, 0.44, 0.41, 0.43] },
+                                spatial_context: { type: "string", example: "default-enclave-zone" },
+                                liveness_score: { type: "number", example: 0.99 }
+                            },
+                            ["session_id", "action_type", "wave_telemetry"]
+                        ),
+                        "/v1/governance/audit-gate": makeEndpoint(
+                            "AI Governance & Compliance Audit Gate",
+                            "EU AI Act Art. 9/12/14 & NIST AI RMF hardware-anchored zero-PRNG AI governance audit gate.",
+                            {
+                                agent_id: { type: "string", example: "agent-autonomous-01" },
+                                model_id: { type: "string", example: "frontier-reasoning-node" },
+                                risk_classification: { type: "string", example: "high_risk_eu_ai_act" },
+                                autonomy_pressure: { type: "number", example: 0.35 },
+                                drift_score: { type: "number", example: 0.12 },
+                                hallucination_index: { type: "number", example: 0.08 },
+                                human_oversight_active: { type: "boolean", example: false }
+                            },
+                            ["agent_id", "model_id", "risk_classification"]
                         )
                     }
                 }

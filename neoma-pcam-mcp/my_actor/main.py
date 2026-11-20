@@ -15,6 +15,9 @@ DOMAIN_ENDPOINTS = {
     "robotics": "/v1/robotics/predict",
     "mobility": "/v1/mobility/predict",
     "chemistry": "/v1/chemistry/predict",
+    "security": "/v1/security/trust-gate",
+    "governance": "/v1/governance/audit-gate",
+    "ising": "/v1/ising/solve",
 }
 server = FastMCP("neoma-pcam-mcp")
 
@@ -53,9 +56,9 @@ async def solve_nonlinear_equilibrium(
     gradient_velocity: float,
     gradient_acceleration: float,
     active_strain: float,
-    domain: Literal["universal", "quant", "battery", "pharma", "robotics", "mobility", "chemistry"] = "universal",
+    domain: Literal["universal", "quant", "battery", "pharma", "robotics", "mobility", "chemistry", "security", "governance", "ising"] = "universal",
 ) -> dict[str, Any]:
-    """Solve stiff non-linear physical equilibrium across 7 domains in <0.02ms with dynamic silicon PUF seal."""
+    """Domain 1-7 & 10-domain: Solve stiff non-linear physical equilibrium across 10 domains in <0.02ms with dynamic silicon PUF seal."""
     ep = DOMAIN_ENDPOINTS.get(domain, "/v1/solve-universal-equilibrium")
     res = await _call_pcam_gateway(ep, {
         "flux_potential_v": flux_potential_v,
@@ -94,6 +97,56 @@ async def verify_silicon_seal(puf_dynamic_seal: str) -> dict[str, Any]:
     """Free audit tool: Verify authenticity of a NEOMA P-CAM dynamic silicon PUF receipt."""
     ok = puf_dynamic_seal.startswith(SEAL_PREFIX) and len(puf_dynamic_seal) == len(SEAL_PREFIX) + 32
     return {"verified": ok, "firewall_guard": "ACTIVE_RUST_CH17_PUF" if ok else "INVALID_SEAL"}
+
+
+@server.tool()
+async def pcam_physical_trust_gate(
+    session_id: str = "sess-anonymous",
+    action_type: str = "crypto_key_use",
+    wave_telemetry: list[float] | None = None,
+    spatial_context: str = "default-enclave-zone",
+    liveness_score: float = 0.99,
+) -> dict[str, Any]:
+    """Domain 9 (/v1/security/trust-gate): Hardware-rooted wave-response medium physical fingerprint trusted execution gate (Patent Pending)."""
+    payload = {
+        "session_id": session_id,
+        "action_type": action_type,
+        "wave_telemetry": wave_telemetry or [0.42, 0.44, 0.41, 0.43],
+        "spatial_context": spatial_context,
+        "liveness_score": liveness_score,
+    }
+    res = await _call_pcam_gateway("/v1/security/trust-gate", payload)
+    if res.get("status") == "firewall_blocked":
+        return res
+    res["billed"] = await _safe_charge("pcam-trust-gate-evaluate", res.get("puf_dynamic_seal", ""))
+    return res
+
+
+@server.tool()
+async def pcam_ai_governance_audit(
+    agent_id: str = "agent-autonomous-01",
+    model_id: str = "frontier-reasoning-node",
+    risk_classification: Literal["minimal", "limited", "high_risk_eu_ai_act", "critical_infrastructure"] = "high_risk_eu_ai_act",
+    autonomy_pressure: float = 0.35,
+    drift_score: float = 0.12,
+    hallucination_index: float = 0.08,
+    human_oversight_active: bool = False,
+) -> dict[str, Any]:
+    """Domain 10 (/v1/governance/audit-gate): Hardware-anchored zero-PRNG AI governance & EU AI Act regulatory compliance audit gate."""
+    payload = {
+        "agent_id": agent_id,
+        "model_id": model_id,
+        "risk_classification": risk_classification,
+        "autonomy_pressure": autonomy_pressure,
+        "drift_score": drift_score,
+        "hallucination_index": hallucination_index,
+        "human_oversight_active": human_oversight_active,
+    }
+    res = await _call_pcam_gateway("/v1/governance/audit-gate", payload)
+    if res.get("status") == "firewall_blocked":
+        return res
+    res["billed"] = await _safe_charge("pcam-governance-audit", res.get("puf_dynamic_seal", ""))
+    return res
 
 
 async def main() -> None:

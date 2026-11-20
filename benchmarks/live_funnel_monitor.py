@@ -1,5 +1,5 @@
 """
-NEOMA P-CAM Live Funnel & 7-Domain Endpoint Health Monitor
+NEOMA P-CAM Live Funnel & 10-Domain Endpoint Health Monitor
 Verifies that every inbound enterprise engineer testing our endpoints
 gets deterministic 200 OK convergence (< 0.27 ms) and tracks public repo traction.
 """
@@ -16,6 +16,8 @@ ENDPOINTS = [
     ("Mobility", "/v1/mobility/predict"),
     ("Chemistry", "/v1/chemistry/predict"),
     ("Quant / Execution", "/v1/quant/predict"),
+    ("Physical Trust", "/v1/security/trust-gate"),
+    ("AI Governance", "/v1/governance/audit-gate"),
 ]
 
 SAMPLE_PAYLOAD = {
@@ -27,7 +29,7 @@ SAMPLE_PAYLOAD = {
 
 
 def check_endpoints():
-    print("================ NEOMA P-CAM 7-DOMAIN LIVE AUDIT ================")
+    print("================ NEOMA P-CAM 10-DOMAIN LIVE AUDIT ================")
     all_ok = True
     for label, path in ENDPOINTS:
         t0 = time.perf_counter()

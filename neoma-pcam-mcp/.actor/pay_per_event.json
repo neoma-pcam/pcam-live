@@ -1,12 +1,22 @@
 {
   "pcam-equilibrium-solve": {
-    "eventTitle": "P-CAM 7-Domain Physical Equilibrium Solve",
-    "eventDescription": "Sub-0.02ms deterministic analog silicon equilibrium solve with SEAL-PoPW cryptographic receipt.",
+    "eventTitle": "P-CAM 10-Domain Physical Equilibrium Solve",
+    "eventDescription": "Sub-0.02ms deterministic analog silicon equilibrium solve across 10 domains with SEAL-PoPW cryptographic receipt.",
     "eventPriceUsd": 0.02
   },
   "pcam-ising-solve": {
     "eventTitle": "P-CAM 64-Spin Ising Optimization Solve",
     "eventDescription": "Room-temperature 64-spin Ising Hamiltonian ground-state convergence via silicon substrate relaxation.",
     "eventPriceUsd": 0.05
+  },
+  "pcam-trust-gate-evaluate": {
+    "eventTitle": "P-CAM Wave Fingerprint Physical Trust Gate",
+    "eventDescription": "Hardware-anchored wave-response medium physical fingerprint trusted execution gate with fused dynamic signature.",
+    "eventPriceUsd": 0.03
+  },
+  "pcam-governance-audit": {
+    "eventTitle": "P-CAM AI Governance & EU AI Act Audit Gate",
+    "eventDescription": "Hardware-anchored zero-PRNG AI governance audit gate and compliance certificate seal generation.",
+    "eventPriceUsd": 0.04
   }
 }

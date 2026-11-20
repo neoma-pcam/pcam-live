@@ -10,7 +10,7 @@ class NeomaPcam {
         group: ['transform'],
         version: 1,
         subtitle: '={{$parameter["operation"]}}',
-        description: 'Sub-millisecond Physical AI diagnosis, industrial risk damping, and 64-spin Ising optimization',
+        description: 'Sub-millisecond Physical AI diagnosis, 10-domain industrial risk damping, physical trust gate, and 64-spin Ising optimization',
         defaults: {
             name: 'NEOMA P-CAM',
         },
@@ -40,6 +40,18 @@ class NeomaPcam {
                         value: 'solveIsing',
                         description: 'Solve scheduling, routing, or portfolio allocation via 64-spin physical Ising solver',
                         action: 'Solve 64-spin Ising optimization problem',
+                    },
+                    {
+                        name: 'Physical Trust & Security Gate',
+                        value: 'trustGate',
+                        description: 'Hardware-rooted wave-response medium physical fingerprint trusted execution gate',
+                        action: 'Evaluate physical trust security gate',
+                    },
+                    {
+                        name: 'AI Governance & Compliance Audit',
+                        value: 'governanceAudit',
+                        description: 'Hardware-anchored zero-PRNG AI governance and EU AI Act regulatory compliance audit gate',
+                        action: 'Audit AI governance compliance gate',
                     },
                 ],
                 default: 'solveEquilibrium',
@@ -81,6 +93,14 @@ class NeomaPcam {
                     {
                         name: 'Robotics & Automation (Joint Compliance)',
                         value: '/v1/robotics/predict',
+                    },
+                    {
+                        name: 'Physical Trust & Security (Wave Fingerprint Gate)',
+                        value: '/v1/security/trust-gate',
+                    },
+                    {
+                        name: 'AI Governance & Compliance (EU AI Act & Audit Gate)',
+                        value: '/v1/governance/audit-gate',
                     },
                 ],
                 default: '/v1/solve-universal-equilibrium',
@@ -175,6 +195,112 @@ class NeomaPcam {
                 default: '[[0, 1, -1.0], [1, 2, 0.8], [2, 3, -0.6]]',
                 description: 'JSON array of pairwise interactions [node_i, node_j, coupling_weight]',
             },
+            {
+                displayName: 'Session ID',
+                name: 'sessionId',
+                type: 'string',
+                displayOptions: { show: { operation: ['trustGate'] } },
+                default: 'sess-n8n-01',
+                description: 'Session identifier for trust verification',
+            },
+            {
+                displayName: 'Action Type',
+                name: 'actionType',
+                type: 'string',
+                displayOptions: { show: { operation: ['trustGate'] } },
+                default: 'crypto_key_use',
+                description: 'Action to authorize (crypto_key_use, payment_auth, robotic_command)',
+            },
+            {
+                displayName: 'Wave Telemetry (JSON Array)',
+                name: 'waveTelemetryJson',
+                type: 'string',
+                displayOptions: { show: { operation: ['trustGate'] } },
+                default: '[0.42, 0.44, 0.41, 0.43]',
+                description: 'JSON array of wave response telemetry numbers',
+            },
+            {
+                displayName: 'Spatial Context',
+                name: 'spatialContext',
+                type: 'string',
+                displayOptions: { show: { operation: ['trustGate'] } },
+                default: 'default-enclave-zone',
+                description: 'Terminal or spatial usage context',
+            },
+            {
+                displayName: 'Liveness Score',
+                name: 'livenessScore',
+                type: 'number',
+                typeOptions: { numberPrecision: 4 },
+                displayOptions: { show: { operation: ['trustGate'] } },
+                default: 0.99,
+                description: 'Biometric liveness confidence score (0.0 to 1.0)',
+            },
+            {
+                displayName: 'Agent ID',
+                name: 'agentId',
+                type: 'string',
+                displayOptions: { show: { operation: ['governanceAudit'] } },
+                default: 'agent-n8n-01',
+                description: 'Autonomous agent identifier',
+            },
+            {
+                displayName: 'Model ID',
+                name: 'modelId',
+                type: 'string',
+                displayOptions: { show: { operation: ['governanceAudit'] } },
+                default: 'frontier-reasoning-node',
+                description: 'AI model identifier',
+            },
+            {
+                displayName: 'Risk Classification',
+                name: 'riskClassification',
+                type: 'options',
+                displayOptions: { show: { operation: ['governanceAudit'] } },
+                options: [
+                    { name: 'High Risk (EU AI Act)', value: 'high_risk_eu_ai_act' },
+                    { name: 'Critical Infrastructure', value: 'critical_infrastructure' },
+                    { name: 'Limited Risk', value: 'limited' },
+                    { name: 'Minimal Risk', value: 'minimal' },
+                ],
+                default: 'high_risk_eu_ai_act',
+                description: 'Regulatory risk classification under EU AI Act & NIST RMF',
+            },
+            {
+                displayName: 'Autonomy Pressure',
+                name: 'autonomyPressure',
+                type: 'number',
+                typeOptions: { numberPrecision: 4 },
+                displayOptions: { show: { operation: ['governanceAudit'] } },
+                default: 0.35,
+                description: 'Agent autonomy execution pressure (0.0 to 1.0)',
+            },
+            {
+                displayName: 'Drift Score',
+                name: 'driftScore',
+                type: 'number',
+                typeOptions: { numberPrecision: 4 },
+                displayOptions: { show: { operation: ['governanceAudit'] } },
+                default: 0.12,
+                description: 'Policy/ethics deviation drift score (0.0 to 1.0)',
+            },
+            {
+                displayName: 'Hallucination Index',
+                name: 'hallucinationIndex',
+                type: 'number',
+                typeOptions: { numberPrecision: 4 },
+                displayOptions: { show: { operation: ['governanceAudit'] } },
+                default: 0.08,
+                description: 'Uncertainty / hallucination index (0.0 to 1.0)',
+            },
+            {
+                displayName: 'Human Oversight Active',
+                name: 'humanOversightActive',
+                type: 'boolean',
+                displayOptions: { show: { operation: ['governanceAudit'] } },
+                default: false,
+                description: 'Whether human supervisor approval is active',
+            },
         ],
     };
     async execute() {
@@ -207,6 +333,35 @@ class NeomaPcam {
                         num_spins: numSpins,
                         fields: JSON.parse(fieldsRaw),
                         couplings: JSON.parse(couplingsRaw),
+                    };
+                }
+                else if (operation === 'trustGate') {
+                    endpointPath = '/v1/security/trust-gate';
+                    let waveTelemetry = [0.42, 0.44, 0.41, 0.43];
+                    try {
+                        const rawWave = this.getNodeParameter('waveTelemetryJson', i);
+                        if (rawWave)
+                            waveTelemetry = JSON.parse(rawWave);
+                    }
+                    catch { }
+                    payload = {
+                        session_id: String(this.getNodeParameter('sessionId', i) || 'sess-n8n-01'),
+                        action_type: String(this.getNodeParameter('actionType', i) || 'crypto_key_use'),
+                        wave_telemetry: waveTelemetry,
+                        spatial_context: String(this.getNodeParameter('spatialContext', i) || 'default-enclave-zone'),
+                        liveness_score: Number(this.getNodeParameter('livenessScore', i) || 0.99),
+                    };
+                }
+                else if (operation === 'governanceAudit') {
+                    endpointPath = '/v1/governance/audit-gate';
+                    payload = {
+                        agent_id: String(this.getNodeParameter('agentId', i) || 'agent-n8n-01'),
+                        model_id: String(this.getNodeParameter('modelId', i) || 'frontier-reasoning-node'),
+                        risk_classification: String(this.getNodeParameter('riskClassification', i) || 'high_risk_eu_ai_act'),
+                        autonomy_pressure: Number(this.getNodeParameter('autonomyPressure', i) || 0.35),
+                        drift_score: Number(this.getNodeParameter('driftScore', i) || 0.12),
+                        hallucination_index: Number(this.getNodeParameter('hallucinationIndex', i) || 0.08),
+                        human_oversight_active: Boolean(this.getNodeParameter('humanOversightActive', i) || false),
                     };
                 }
                 else {

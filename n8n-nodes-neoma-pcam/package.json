@@ -1,7 +1,7 @@
 {
   "name": "n8n-nodes-neoma-pcam",
-  "version": "1.0.0",
-  "description": "Official n8n community node for NEOMA P-CAM Room-Temperature Physical AI & 64-Spin Ising Solver (RapidAPI & Direct Enclave)",
+  "version": "1.0.1",
+  "description": "Official n8n community node for NEOMA P-CAM 10-Domain Physical AI, Trust Security & 64-Spin Ising Solver (RapidAPI & Direct Enclave)",
   "keywords": [
     "n8n-community-node-package",
     "neoma",
@@ -11,7 +11,10 @@
     "predictive-maintenance",
     "quant",
     "battery",
-    "supply-chain"
+    "supply-chain",
+    "trust-security",
+    "ai-governance",
+    "eu-ai-act"
   ],
   "license": "MIT",
   "homepage": "https://github.com/neoma-pcam/pcam-live",
