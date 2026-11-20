@@ -21,14 +21,20 @@ DOMAIN_ENDPOINTS = {
 }
 server = FastMCP("neoma-pcam-mcp")
 
+# Log API key presence at initialization without exposing secret values
+print(f"[NEOMA] API key loaded: {bool(os.environ.get('NEOMA_API_KEY', '').strip())}", flush=True)
+
 
 async def _call_pcam_gateway(endpoint: str, payload: dict[str, Any]) -> dict[str, Any]:
+    neoma_api_key = os.environ.get("NEOMA_API_KEY", "").strip()
     api_key = os.getenv("PCAM_API_KEY", PCAM_API_KEY).strip()
-    headers = {
-        "x-neoma-api-key": api_key,
-        "Authorization": f"Bearer {api_key}",
+    auth_token = neoma_api_key or api_key
+    headers: dict[str, str] = {
+        "Authorization": f"Bearer {auth_token}",
         "User-Agent": "NEOMA-PCAM-Apify-Actor/1.0"
     }
+    if neoma_api_key:
+        headers["x-neoma-api-key"] = neoma_api_key
     async with httpx.AsyncClient(timeout=10.0) as client:
         resp = await client.post(f"{PCAM_BASE_URL}{endpoint}", json=payload, headers=headers)
         if resp.status_code in (401, 403, 429):
@@ -58,7 +64,7 @@ async def solve_nonlinear_equilibrium(
     active_strain: float,
     domain: Literal["universal", "quant", "battery", "pharma", "robotics", "mobility", "chemistry", "security", "governance", "ising"] = "universal",
 ) -> dict[str, Any]:
-    """Domain 1-7 & 10-domain: Solve stiff non-linear physical equilibrium across 10 domains in <0.02ms with dynamic silicon PUF seal."""
+    """10 Official Domains: Solve stiff non-linear physical equilibrium across 10 domains in <0.02ms with dynamic silicon PUF seal."""
     ep = DOMAIN_ENDPOINTS.get(domain, "/v1/solve-universal-equilibrium")
     res = await _call_pcam_gateway(ep, {
         "flux_potential_v": flux_potential_v,

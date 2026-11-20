@@ -30,7 +30,7 @@ NEOMA P-CAM natively processes continuous non-linear dynamic equilibrium across 
 
 ## 🛠️ 5 Exposed MCP Tools
 
-The server exposes 5 specialized MCP tools designed for natural language agent tool-calling:
+The server exposes 5 specialized production MCP tools designed for autonomous agent tool-calling, upgraded from the legacy 3-tool architecture to natively support all 10 official production domains (incorporating Domain 9: Physical-Trust-Security and Domain 10: AI-Governance-Compliance):
 
 ```
                                  ┌────────────────────────────────────────────────────────┐
@@ -48,7 +48,7 @@ The server exposes 5 specialized MCP tools designed for natural language agent t
 ```
 
 ### 1. `solve_nonlinear_equilibrium`
-- **Domains Covered:** Domain 1–7, 9–10 & Universal Core
+- **Domains Covered:** All 10 Official Physical Domains (Domain 1: Universal-Equilibrium, Domain 2: Quant-Microstructure, Domain 3: Battery-Energetics, Domain 4: Pharma-Bioreactor, Domain 5: Robotic-Compliance, Domain 6: Mobility-Dynamics, Domain 7: Precision-Chemistry, Domain 8: Ising-64Spin-Hamiltonian, Domain 9: Physical-Trust-Security, Domain 10: AI-Governance-Compliance)
 - **Description:** Solves stiff non-linear physical equilibrium in `<0.02 ms` on analog silicon, returning damping ratio ($\zeta$), control intensity, hardware reflex latency, and cryptographic PUF dynamic receipt (`SEAL-PCAM003-COM3-*`).
 - **Billing Event:** `pcam-equilibrium-solve` ($0.02 / call)
 - **Input Parameters:**
@@ -173,7 +173,8 @@ This Actor uses the [Apify Pay Per Event (PPE)](https://docs.apify.com/platform/
         "https://<your-username>--neoma-pcam-mcp.apify.actor/mcp"
       ],
       "headers": {
-        "Authorization": "Bearer <YOUR_APIFY_API_TOKEN>"
+        "Authorization": "Bearer <YOUR_APIFY_API_TOKEN>",
+        "x-neoma-api-key": "<YOUR_NEOMA_API_KEY>"
       }
     }
   }
@@ -187,17 +188,32 @@ This Actor uses the [Apify Pay Per Event (PPE)](https://docs.apify.com/platform/
     "neoma-pcam": {
       "url": "https://<your-username>--neoma-pcam-mcp.apify.actor/mcp",
       "headers": {
-        "Authorization": "Bearer <YOUR_APIFY_API_TOKEN>"
+        "Authorization": "Bearer <YOUR_APIFY_API_TOKEN>",
+        "x-neoma-api-key": "<YOUR_NEOMA_API_KEY>"
       }
     }
   }
 }
 ```
 
-### 3. Apify Standby Endpoint (Streamable HTTP)
+### 3. Hosted Direct P-CAM Gateway (`mcp.json`)
+```json
+{
+  "mcpServers": {
+    "neoma-pcam": {
+      "url": "https://api.neoma-pcam.com/mcp",
+      "headers": {
+        "x-neoma-api-key": "<YOUR_NEOMA_API_KEY>"
+      }
+    }
+  }
+}
+```
+
+### 4. Apify Standby Endpoint (Streamable HTTP)
 - **URL:** `https://<actor-name>.apify.actor/mcp`
 - **Transport:** Streamable HTTP / SSE (`FastMCP`)
-- **Authentication:** `Authorization: Bearer <APIFY_API_TOKEN>`
+- **Authentication:** `Authorization: Bearer <APIFY_API_TOKEN>` and optional `x-neoma-api-key: <YOUR_NEOMA_API_KEY>`
 
 ---
 
@@ -207,12 +223,15 @@ This Actor uses the [Apify Pay Per Event (PPE)](https://docs.apify.com/platform/
 # 1. Install dependencies
 pip install -r requirements.txt
 
-# 2. Run locally in Apify Standby mode
-APIFY_META_ORIGIN=STANDBY ACTOR_STANDBY_PORT=4321 python -m my_actor
+# 2. Run locally in Apify Standby mode (with NEOMA_API_KEY)
+NEOMA_API_KEY=<YOUR_NEOMA_API_KEY> APIFY_META_ORIGIN=STANDBY ACTOR_STANDBY_PORT=4321 python -m my_actor
 
 # 3. Or run standard Apify batch solve
-python -m my_actor
+NEOMA_API_KEY=<YOUR_NEOMA_API_KEY> python -m my_actor
 ```
+
+Upon initialization, the Actor verifies key recognition and logs a single status line:
+`[NEOMA] API key loaded: True` (or `False` if unconfigured) to stdout without exposing secret credentials.
 
 ---
 
