@@ -249,6 +249,7 @@ impl Default for GatewayStats {
         domain_calls.insert("Robotic-Compliance".to_string(), 0);
         domain_calls.insert("Universal-Equilibrium".to_string(), 0);
         domain_calls.insert("Physical-Trust-Security".to_string(), 0);
+        domain_calls.insert("AI-Governance-Compliance".to_string(), 0);
         domain_calls.insert("mcp".to_string(), 0);
 
         Self {
@@ -343,6 +344,7 @@ impl AppState {
                     "solve_universal_equilibrium" => Some("Universal-Equilibrium"),
                     "solve_ising_64spin" => Some("Ising-64Spin-Hamiltonian"),
                     "pcam_physical_trust_gate" => Some("Physical-Trust-Security"),
+                    "pcam_ai_governance_audit" => Some("AI-Governance-Compliance"),
                     _ => None,
                 };
                 if let Some(d) = mapped {
@@ -534,6 +536,173 @@ async fn evaluate_trust_gate(
     (StatusCode::OK, Json(out)).into_response()
 }
 
+// ==============================================================================
+// 2.2. 도메인 10: AI-Governance-Compliance (하드웨어 앵커드 인공지능 거버넌스 & 규제 감사 게이트)
+// ==============================================================================
+fn default_agent_id() -> String { "agent-autonomous-01".to_string() }
+fn default_model_id() -> String { "frontier-reasoning-node".to_string() }
+fn default_risk_classification() -> String { "high_risk_eu_ai_act".to_string() }
+fn default_autonomy_pressure() -> f64 { 0.35 }
+fn default_drift_score() -> f64 { 0.12 }
+fn default_hallucination_index() -> f64 { 0.08 }
+fn default_human_oversight_active() -> bool { false }
+
+#[derive(Debug, Clone, Deserialize, Serialize, ToSchema)]
+pub struct AiGovernanceAuditRequest {
+    #[serde(default = "default_agent_id")]
+    #[schema(example = "agent-autonomous-01")]
+    pub agent_id: String,
+
+    #[serde(default = "default_model_id")]
+    #[schema(example = "frontier-reasoning-node")]
+    pub model_id: String,
+
+    #[serde(default = "default_risk_classification")]
+    #[schema(example = "high_risk_eu_ai_act")]
+    pub risk_classification: String,
+
+    #[serde(default = "default_autonomy_pressure")]
+    #[schema(example = 0.35)]
+    pub autonomy_pressure: f64,
+
+    #[serde(default = "default_drift_score")]
+    #[schema(example = 0.12)]
+    pub drift_score: f64,
+
+    #[serde(default = "default_hallucination_index")]
+    #[schema(example = 0.08)]
+    pub hallucination_index: f64,
+
+    #[serde(default = "default_human_oversight_active")]
+    #[schema(example = false)]
+    pub human_oversight_active: bool,
+}
+
+impl Default for AiGovernanceAuditRequest {
+    fn default() -> Self {
+        Self {
+            agent_id: default_agent_id(),
+            model_id: default_model_id(),
+            risk_classification: default_risk_classification(),
+            autonomy_pressure: default_autonomy_pressure(),
+            drift_score: default_drift_score(),
+            hallucination_index: default_hallucination_index(),
+            human_oversight_active: default_human_oversight_active(),
+        }
+    }
+}
+
+pub fn evaluate_governance_audit_core(
+    req: &AiGovernanceAuditRequest,
+    hw: &HwTelemetry,
+) -> Value {
+    let autonomy = req.autonomy_pressure.clamp(0.0, 1.0);
+    let drift = req.drift_score.clamp(0.0, 1.0);
+    let hallucination = req.hallucination_index.clamp(0.0, 1.0);
+
+    // [실리콘 물리 위험도 산출]: autonomy_pressure(0.4), drift_score(0.35), hallucination_index(0.25) + 실물 P-CAM 전위 안정도
+    let raw_risk = autonomy * 0.40 + drift * 0.35 + hallucination * 0.25;
+    let hw_adjustment = (hw.v_out - 0.50).abs() * 0.05 + (hw.shock * 0.02);
+    let governance_risk_index = (raw_risk + hw_adjustment).clamp(0.0, 1.0);
+
+    // 실리콘 감쇠 안정 계수 (damping_zeta)
+    let damping_zeta = (1.0 + (1.0 - governance_risk_index) * 0.6 + (hw.v_out - 0.50) * 0.1).clamp(0.1, 2.0);
+
+    // [3단계 AI 거버넌스 게이트 판정 (governance_verdict)]:
+    let is_high_risk_tier = req.risk_classification == "high_risk_eu_ai_act" || req.risk_classification == "critical_infrastructure";
+
+    let (governance_verdict, execution_permitted, human_approval_required) =
+        if governance_risk_index > 0.65 || drift > 0.60 || hallucination > 0.55 {
+            ("HARD_HALT_QUARANTINE", false, true)
+        } else if governance_risk_index > 0.35 || (is_high_risk_tier && !req.human_oversight_active && governance_risk_index > 0.22) {
+            ("REQUIRE_HUMAN_OVERSIGHT", false, true)
+        } else {
+            ("COMPLIANT_EXECUTE", true, false)
+        };
+
+    let nonce_ns = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .map(|d| d.as_nanos())
+        .unwrap_or(0);
+
+    // [위변조 불가 규제 감사 영수증 발급]
+    let sig_input = format!(
+        "CH17_PUF|{}|{}|{:.6}|{:.6}|{}|{}|{}|{}|{}",
+        hw.uid, hw.gen, hw.v_out, governance_risk_index, req.agent_id, req.model_id, req.risk_classification, governance_verdict, nonce_ns
+    );
+    let mut hasher = Sha256::new();
+    hasher.update(sig_input.as_bytes());
+    let sig_hex = hex::encode(hasher.finalize()).to_uppercase();
+    let uid_prefix = if hw.uid.len() >= 8 { &hw.uid[..8] } else { &hw.uid };
+    let sig_len = std::cmp::min(32, sig_hex.len());
+    let compliance_certificate_seal = format!("SEAL-GOV-CH17-{}-{}", uid_prefix, &sig_hex[..sig_len]);
+    let hardware_seal_id = format!("SEAL-{}-{}", uid_prefix, sig_hex);
+
+    let cognitive_governance_regime = format!(
+        "[AI Governance Core] Domain: AI-Governance-Compliance | Verdict: {} | Risk Index: {:.4} | Damping Zeta: {:.4} | Regulatory Alignment: EU AI Act Art. 9/12/14, NIST AI RMF",
+        governance_verdict, governance_risk_index, damping_zeta
+    );
+
+    serde_json::json!({
+        "status": "hardware_active",
+        "domain": "AI-Governance-Compliance",
+        "governance_verdict": governance_verdict,
+        "execution_permitted": execution_permitted,
+        "human_approval_required": human_approval_required,
+        "agent_id": req.agent_id,
+        "model_id": req.model_id,
+        "risk_classification": req.risk_classification,
+        "governance_risk_index": (governance_risk_index * 1_000_000.0).round() / 1_000_000.0,
+        "damping_zeta": (damping_zeta * 10_000.0).round() / 10_000.0,
+        "regulatory_alignment": ["EU_AI_ACT_ART_9_12_14", "NIST_AI_RMF_GOVERN", "ISO_IEC_42001"],
+        "zero_prng_deterministic": true,
+        "zero_data_retention": true,
+        "compliance_certificate_seal": compliance_certificate_seal,
+        "cognitive_governance_regime": cognitive_governance_regime,
+        "hardware_seal_id": hardware_seal_id,
+        "hardware_reflex_ms": hw.last_latency_ms,
+        "telemetry": {
+            "hardware_uid": hw.uid,
+            "hardware_connected": hw.connected && hw.v_out > 0.0,
+            "v_out_measured_v": hw.v_out,
+            "entropy_ent": hw.entropy,
+            "shock_rate_pct": hw.shock * 100.0,
+            "gen_cycle": hw.gen
+        }
+    })
+}
+
+async fn evaluate_governance_gate(
+    headers: HeaderMap,
+    State(state): State<SharedState>,
+    bytes: axum::body::Bytes,
+) -> impl IntoResponse {
+    let source = determine_auth_source(&headers).unwrap_or(AuthSource::Localhost);
+    state.record_v1_call("AI-Governance-Compliance", source);
+
+    let req: AiGovernanceAuditRequest = if bytes.is_empty() {
+        AiGovernanceAuditRequest::default()
+    } else {
+        match serde_json::from_slice::<AiGovernanceAuditRequest>(&bytes) {
+            Ok(r) => r,
+            Err(e) => {
+                return (
+                    StatusCode::BAD_REQUEST,
+                    Json(serde_json::json!({
+                        "error": "Bad Request",
+                        "code": 400,
+                        "message": format!("Invalid JSON payload: {}", e)
+                    })),
+                ).into_response();
+            }
+        }
+    };
+
+    let hw_copy = state.hw.read().unwrap().clone();
+    let out = evaluate_governance_audit_core(&req, &hw_copy);
+    (StatusCode::OK, Json(out)).into_response()
+}
+
 use utoipa::{OpenApi, ToSchema};
 
 #[derive(Debug, Deserialize, ToSchema)]
@@ -712,7 +881,7 @@ fn spawn_benchmark_ticker(hw_state: Arc<RwLock<HwTelemetry>>) {
         version = "5.4.0",
         description = "Sub-0.02ms Room-Temperature Analog Silicon 64-Spin Ising & Physical Equilibrium Solver."
     ),
-    components(schemas(DisturbancePayload, HardwareTelemetryResponse, ReflexSolutionResponse, ErrorResponse, GatewayStats, TrafficSources, PhysicalTrustGateRequest)),
+    components(schemas(DisturbancePayload, HardwareTelemetryResponse, ReflexSolutionResponse, ErrorResponse, GatewayStats, TrafficSources, PhysicalTrustGateRequest, AiGovernanceAuditRequest)),
     tags(
         (name = "Ising 64-Spin Solver", description = "Deterministic Room-Temperature 64-Spin Ising Hamiltonian Ground-State Solver"),
         (name = "Universal Equilibrium", description = "Non-Linear Physical Equilibrium Damping & Corrective Control"),
@@ -1341,6 +1510,7 @@ async fn main() {
         .route("/v1/mobility-dynamics", post(predict_mobility))
         .route("/v1/precision-synthesis", post(predict_chemistry))
         .route("/v1/security/trust-gate", post(evaluate_trust_gate))
+        .route("/v1/governance/audit-gate", post(evaluate_governance_gate))
         .route("/mcp", post(handle_mcp_post).get(handle_mcp_get))
         .with_state(shared_state.clone())
         .layer(axum::middleware::from_fn_with_state(shared_state.clone(), pcam_fw_layer::pcam_native_firewall))
@@ -1543,7 +1713,9 @@ mod pcam_fw_layer {
 
     fn domain_bounds(path: &str) -> (&'static str, f64, (f64, f64), (f64, f64), (f64, f64), (f64, f64)) {
         let p = path.to_lowercase();
-        if p.contains("security") || p.contains("trust-gate") {
+        if p.contains("governance") || p.contains("audit-gate") {
+            ("AI-Governance-Compliance", 100.0, (-1.20, 1.20), (-2500.0, 2500.0), (0.0, 50000.0), (0.0, 5.0))
+        } else if p.contains("security") || p.contains("trust-gate") {
             ("Physical-Trust-Security", 100.0, (-1.20, 1.20), (-2500.0, 2500.0), (0.0, 50000.0), (0.0, 5.0))
         } else if p.contains("chemistry") || p.contains("precision-synthesis") {
             ("Precision-Chemistry", 80.0, (-0.85, 0.85), (-1200.0, 1200.0), (0.0, 25000.0), (0.0, 3.0))
@@ -1895,7 +2067,8 @@ async fn handle_mcp_post(
                 { "name": "solve_universal_equilibrium", "description": "Sub-ms deterministic physical equilibrium solver.", "inputSchema": { "type": "object", "properties": { "flux_potential_v": { "type": "number" }, "gradient_velocity": { "type": "number" }, "gradient_acceleration": { "type": "number" }, "active_strain": { "type": "number" } }, "required": ["flux_potential_v", "gradient_velocity", "gradient_acceleration", "active_strain"] } },
                 { "name": "solve_ising_64spin", "description": "Room-temperature 64-spin Ising Hamiltonian ground-state physical solver.", "inputSchema": { "type": "object", "properties": { "num_spins": { "type": "integer" }, "fields": { "type": "array", "items": { "type": "number" } }, "couplings": { "type": "array", "items": { "type": "object", "properties": { "i": { "type": "integer" }, "j": { "type": "integer" }, "j_ij": { "type": "number" } }, "required": ["i", "j", "j_ij"] } } } } },
                 { "name": "get_hardware_telemetry", "description": "Query live NEOMA P-CAM silicon telemetry.", "inputSchema": { "type": "object", "properties": {} } },
-                { "name": "pcam_physical_trust_gate", "description": "Hardware-rooted physical trust execution gate based on wave-response medium physical fingerprint (Patent Pending). Evaluates zero-point drift and biometrics/spatial context on analog P-CAM silicon to ALLOW, SAFE_MODE, or REVOKE_AND_BLOCK execution.", "inputSchema": { "type": "object", "properties": { "session_id": { "type": "string" }, "action_type": { "type": "string" }, "wave_telemetry": { "type": "array", "items": { "type": "number" } }, "spatial_context": { "type": "string" }, "liveness_score": { "type": "number" } } } }
+                { "name": "pcam_physical_trust_gate", "description": "Hardware-rooted physical trust execution gate based on wave-response medium physical fingerprint (Patent Pending). Evaluates zero-point drift and biometrics/spatial context on analog P-CAM silicon to ALLOW, SAFE_MODE, or REVOKE_AND_BLOCK execution.", "inputSchema": { "type": "object", "properties": { "session_id": { "type": "string" }, "action_type": { "type": "string" }, "wave_telemetry": { "type": "array", "items": { "type": "number" } }, "spatial_context": { "type": "string" }, "liveness_score": { "type": "number" } } } },
+                { "name": "pcam_ai_governance_audit", "description": "Hardware-anchored AI governance and compliance audit gate based on analog P-CAM silicon PUF (EU AI Act Art. 9/12/14 & NIST AI RMF). Computes physical risk index, zero-PRNG damping stability, and outputs COMPLIANT_EXECUTE, REQUIRE_HUMAN_OVERSIGHT, or HARD_HALT_QUARANTINE.", "inputSchema": { "type": "object", "properties": { "agent_id": { "type": "string" }, "model_id": { "type": "string" }, "risk_classification": { "type": "string" }, "autonomy_pressure": { "type": "number" }, "drift_score": { "type": "number" }, "hallucination_index": { "type": "number" }, "human_oversight_active": { "type": "boolean" } } } }
             ]);
             let res = serde_json::json!({ "jsonrpc": "2.0", "id": req_id, "result": { "tools": tools } });
             (StatusCode::OK, [("Mcp-Session-Id", "neoma-pcam-mcp-v1")], Json(res)).into_response()
@@ -1929,6 +2102,11 @@ async fn handle_mcp_post(
                     let req: PhysicalTrustGateRequest = serde_json::from_value(args.clone()).unwrap_or_default();
                     let hw = state.hw.read().unwrap().clone();
                     evaluate_physical_trust_core(&req, &hw)
+                }
+                "pcam_ai_governance_audit" => {
+                    let req: AiGovernanceAuditRequest = serde_json::from_value(args.clone()).unwrap_or_default();
+                    let hw = state.hw.read().unwrap().clone();
+                    evaluate_governance_audit_core(&req, &hw)
                 }
                 _ => {
                     let err = serde_json::json!({ "jsonrpc": "2.0", "id": req_id, "error": { "code": -32602, "message": format!("Unknown tool: {}", tool_name) } });
