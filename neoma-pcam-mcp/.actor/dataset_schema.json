@@ -1,6 +1,39 @@
 {
     "$schema": "https://apify.com/schemas/v1/dataset.ide.json",
     "actorSpecification": 1,
-    "fields": {},
+    "fields": {
+        "status": {
+            "type": "string",
+            "title": "Status"
+        },
+        "domain": {
+            "type": "string",
+            "title": "Physical Domain"
+        },
+        "zeta": {
+            "type": "number",
+            "title": "Damping Ratio (Zeta)"
+        },
+        "control_intensity": {
+            "type": "number",
+            "title": "Control Intensity"
+        },
+        "hardware_reflex_latency_ms": {
+            "type": "number",
+            "title": "Hardware Reflex Latency (ms)"
+        },
+        "puf_dynamic_seal": {
+            "type": "string",
+            "title": "PUF Dynamic Seal"
+        },
+        "firewall_guard": {
+            "type": "string",
+            "title": "Firewall Guard"
+        },
+        "billed": {
+            "type": "boolean",
+            "title": "PPE Billed Status"
+        }
+    },
     "views": {}
 }

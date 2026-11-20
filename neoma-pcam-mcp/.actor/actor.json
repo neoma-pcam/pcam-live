@@ -1,32 +1,72 @@
 {
-    "$schema":  "https://apify.com/schemas/v1/actor.ide.json",
-    "actorSpecification":  1,
-    "name":  "neoma-pcam-mcp",
-    "title":  "NEOMA P-CAM Physical Ising \u0026 Nonlinear Equilibrium MCP",
-    "description":  "Sub-millisecond (0.02ms) physical Ising QUBO optimizer, quant microstructure predictor, and hardware PUF-attested equilibrium engine.",
-    "version":  "0.0",
-    "buildTag":  "latest",
-    "usesStandbyMode":  true,
-    "meta":  {
-                 "templateId":  "python-mcp-empty",
-                 "generatedBy":  "\u003cFILL-IN-MODEL\u003e"
-             },
-    "inputSchema":  {
-                        "title":  "Actor input schema",
-                        "description":  "This is Actor input schema",
-                        "type":  "object",
-                        "schemaVersion":  1,
-                        "properties":  {
-
-                                       },
-                        "required":  [
-
-                                     ]
-                    },
-    "outputSchema":  "./output_schema.json",
-    "storages":  {
-                     "dataset":  "./dataset_schema.json"
-                 },
-    "dockerfile":  "../Dockerfile",
-    "webServerMcpPath":  "/mcp"
+    "$schema": "https://apify.com/schemas/v1/actor.ide.json",
+    "actorSpecification": 1,
+    "name": "neoma-pcam-mcp",
+    "title": "NEOMA P-CAM: 10-Domain Physical AI, Trust Security & 64-Spin Ising MCP",
+    "description": "Sub-millisecond (0.02ms) physical Ising QUBO optimizer, quant microstructure predictor, hardware-rooted physical trust gate, and EU AI Act compliance engine across 10 official domains with 5 specialized MCP tools.",
+    "version": "1.0",
+    "buildTag": "latest",
+    "usesStandbyMode": true,
+    "meta": {
+        "templateId": "python-mcp-empty",
+        "generatedBy": "Gemini CLI"
+    },
+    "inputSchema": {
+        "title": "NEOMA P-CAM Actor Input Schema",
+        "description": "Batch or Standby execution input for NEOMA P-CAM 10-domain physical co-processor.",
+        "type": "object",
+        "schemaVersion": 1,
+        "properties": {
+            "domain": {
+                "title": "Physical Domain",
+                "type": "string",
+                "description": "Target domain out of 10 official physical domains.",
+                "default": "universal",
+                "editor": "select",
+                "enum": [
+                    "universal",
+                    "quant",
+                    "battery",
+                    "pharma",
+                    "robotics",
+                    "mobility",
+                    "chemistry",
+                    "security",
+                    "governance",
+                    "ising"
+                ]
+            },
+            "flux_potential_v": {
+                "title": "Flux Potential (V)",
+                "type": "number",
+                "description": "Driving field potential or disturbance magnitude.",
+                "default": 0.55
+            },
+            "gradient_velocity": {
+                "title": "Gradient Velocity",
+                "type": "number",
+                "description": "First-order state drift velocity.",
+                "default": 520.0
+            },
+            "gradient_acceleration": {
+                "title": "Gradient Acceleration",
+                "type": "number",
+                "description": "Second-order inertial shock acceleration.",
+                "default": 16000.0
+            },
+            "active_strain": {
+                "title": "Active Strain",
+                "type": "number",
+                "description": "Normalized structural or system strain.",
+                "default": 1.55
+            }
+        },
+        "required": []
+    },
+    "outputSchema": "./output_schema.json",
+    "storages": {
+        "dataset": "./dataset_schema.json"
+    },
+    "dockerfile": "../Dockerfile",
+    "webServerMcpPath": "/mcp"
 }
