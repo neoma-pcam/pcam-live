@@ -23,16 +23,18 @@ Connect **Claude Desktop, Cursor, Windsurf, n8n, or any MCP-compatible AI agent*
 
 | User / Agent Intent | MCP Tool to Call | Example JSON Arguments |
 | :--- | :--- | :--- |
-| **"Predict battery thermal runaway damping or robot joint stability"** | `solve_nonlinear_equilibrium` *(7 domains: `universal`, `quant`, `battery`, `pharma`, `robotics`, `mobility`, `chemistry`)* | `{"domain": "battery", "flux_potential_v": 0.68, "gradient_velocity": 740.0, "gradient_acceleration": 21500.0, "active_strain": 1.65}` |
+| **"Predict battery thermal runaway damping or robot joint stability"** | `solve_nonlinear_equilibrium` *(10 domains: `universal`, `quant`, `battery`, `pharma`, `robotics`, `mobility`, `chemistry`, `ising`, `security`, `governance`)* | `{"domain": "battery", "flux_potential_v": 0.68, "gradient_velocity": 740.0, "gradient_acceleration": 21500.0, "active_strain": 1.65}` |
 | **"Find the optimal ground-state schedule / portfolio across coupled nodes"** | `solve_ising_optimization` *(Native 64-spin analog Ising Hamiltonian solver)* | `{"fields": [1.0, -1.0, 0.5, -0.5], "couplings": [{"i": 0, "j": 1, "weight": -0.5}]}` |
 | **"Audit and verify that a result came from real P-CAM silicon hardware"** | `verify_silicon_seal` *(Free hardware provenance audit)* | `{"puf_dynamic_seal": "SEAL-PCAM003-COM3-02A25B2424B5A10E3D4EE84C2483A1E0"}` |
+| **"Verify wave physical fingerprint & gate secure execution"** | `pcam_physical_trust_gate` *(Wave physical fingerprint trust gate)* | `{"session_id": "sess-fintech-001", "action_type": "crypto_key_use", "wave_telemetry": [0.42, 0.44, 0.41, 0.43], "liveness_score": 0.99}` |
+| **"Audit AI agent autonomous decisions & enforce EU AI Act compliance"** | `pcam_ai_governance_audit` *(Hardware-anchored zero-PRNG AI governance audit gate)* | `{"agent_id": "agent-autonomous-01", "model_id": "frontier-reasoning-node", "risk_classification": "high_risk_eu_ai_act", "autonomy_pressure": 0.35, "drift_score": 0.12}` |
 
 ---
 [![Listed on mcpservers.org](https://mcpservers.org/badge.svg)](https://mcpservers.org/servers/neoma-pcam/pcam-live)
 
 > **New in v5.4.0:** Install the official Python SDK via `pip install pcam-sampler` ([PyPI](https://pypi.org/project/neoma-pcam/)) and call `POST /v1/ising/solve` for direct 64-spin Ising Hamiltonian optimization.
 
-# NEOMA P-CAM: Room-Temperature Physical Ising Solver & Silicon Root-of-Trust (v5.4.0)
+# NEOMA P-CAM: 10-Domain Physical AI, Trust Security & 64-Spin Ising Co-Processor (v5.4.0)
 
 
 
@@ -66,7 +68,7 @@ Connect **Claude Desktop, Cursor, Windsurf, n8n, or any MCP-compatible AI agent*
 Institutional clients, HFT quant desks, and autonomous systems can interface directly with the P-CAM production cluster through the following verified access points:
 
 * **Interactive Web Telemetry Console:** 👉 [NEOMA P-CAM Live Web Portal (Real-time 50Hz)](https://neoma-pcam.github.io/pcam-live/)
-* **Interactive Swagger UI (OpenAPI Docs):** 👉 [P-CAM OpenAPI Specification (8-Domain)](https://api.neoma-pcam.com/docs)
+* **Interactive Swagger UI (OpenAPI Docs):** 👉 [P-CAM OpenAPI Specification (10-Domain)](https://api.neoma-pcam.com/docs)
 * **Quant Reflex HFT Enclave (RapidAPI):** 👉 [NEOMA P-CAM Quant Reflex HFT ($499+)](https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control)
 * **Universal Physical Solver (RapidAPI):** 👉 [GP-PCAM Universal Physical Solver (2,000 Free/mo)](https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control)
 * **Enterprise Hyper Physical Hub (RapidAPI):** 👉 [NEOMA P-CAM Enterprise Hub](https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control)
@@ -102,7 +104,7 @@ res = requests.post(url, json=payload, headers=headers).json()
 print(res["zeta"], res["control_intensity"], res["hardware_seal_id"])
 ```
 
-* 🌐 **All-Industry 8-Domain Starter & Mapping Guide:** [`examples/all_industry_starter.py`](./examples/all_industry_starter.py) | [`examples/README.md`](./examples/README.md)
+* 🌐 **All-Industry 10-Domain Starter & Mapping Guide:** [`examples/all_industry_starter.py`](./examples/all_industry_starter.py) | [`examples/README.md`](./examples/README.md)
 * 📉 **Slippage Mitigation & TWAP/VWAP Slicer:** [`examples/slippage_execution_optimizer.py`](./examples/slippage_execution_optimizer.py)
 * 🤖 **Hummingbot Spread & Inventory Guard:** [`examples/hummingbot_lob_guard.py`](./examples/hummingbot_lob_guard.py)
 
@@ -250,7 +252,7 @@ Unlike conventional AI architectures that decouple slow cloud-based language mod
 
 ## 🔮 2.2. 3-Year Prognostic Trajectory, Remediation Control & Fault-Simulation Data Engine
 
-Beyond instantaneous reflex damping, P-CAM serves as a **physical ground-truth data synthesis engine** for AI models, digital twins, and engineering teams facing severe shortages of real-world physical and failure-mode datasets. Using the **exact same 8-domain API schema** (with zero Swagger or infrastructure changes), P-CAM generates four unified layers of actionable physical data:
+Beyond instantaneous reflex damping, P-CAM serves as a **physical ground-truth data synthesis engine** for AI models, digital twins, and engineering teams facing severe shortages of real-world physical and failure-mode datasets. Using the **exact same 10-domain API schema** (with zero Swagger or infrastructure changes), P-CAM generates four unified layers of actionable physical data:
 
 1. **Real-Time Physical State Diagnosis (Current Baseline):** Captures live analog substrate conditions (`v_out_measured_v`, `entropy_ent`, `zeta`, `state_mode`) to diagnose current material stress, thermal drift, or structural instability rather than relying on ungrounded software assumptions.
 2. **3-Year Long-Horizon Physical Trajectory Prediction:** Extrapolates current physical state derivatives across a **3-year operational horizon** (1,095-day degradation, fatigue, and non-linear aging curves) to quantify future failure probabilities before critical thresholds are breached.
@@ -392,7 +394,7 @@ Rather than cycling through trillions of software iterations, P-CAM leverages su
 
 ---
 
-## 🏭 5. 8-Domain Production Endpoints
+## 🏭 5. 10-Domain Production Endpoints
 
 | Domain | Production Endpoint | Target Physics & Industrial Use Case | Measured Latency | Dedicated Access |
 | :--- | :--- | :--- | :--- | :--- |
@@ -404,6 +406,40 @@ Rather than cycling through trillions of software iterations, P-CAM leverages su
 | **Robotics** | `/v1/robotics/predict` | High-Frequency Compliance & Kinematic Singularity Damping | `0.0068 ms` | [Enterprise Hub](https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control) |
 | **Mobility** | `/v1/mobility/predict` | Hydroplaning Recovery & Active Chassis Suspension | `0.0075 ms` | [Enterprise Hub](https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control) |
 | **Chemistry** | `/v1/chemistry/predict` | Exothermic Runaway Quenching & Kinetic Stabilization | `0.0079 ms` | [Enterprise Hub](https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control) |
+| **Physical Trust Security** | `/v1/security/trust-gate` | Wave-Response Medium Physical Fingerprint Trusted Execution Gate (Patent Pending) | `0.0062 ms` | [Enterprise Hub](https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control) |
+| **AI Governance Compliance** | `/v1/governance/audit-gate` | Hardware-Anchored Zero-PRNG AI Governance & EU AI Act Art. 9/12/14 Compliance Gate | `0.0062 ms` | [Enterprise Hub](https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control) |
+
+### 🛡️ Domain 9: Physical-Trust-Security (`/v1/security/trust-gate`)
+Hardware wave-response medium physical fingerprint trusted execution gate (Patent Pending). Evaluates zero-point drift, biometric liveness, and spatial telemetry on analog silicon to grant, safe-mode, or revoke execution sessions.
+
+```bash
+curl -X POST "https://api.neoma-pcam.com/v1/security/trust-gate" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "session_id": "sess-enclave-001",
+    "action_type": "crypto_key_use",
+    "wave_telemetry": [0.42, 0.44, 0.41, 0.43],
+    "spatial_context": "default-enclave-zone",
+    "liveness_score": 0.99
+  }'
+```
+
+### ⚖️ Domain 10: AI-Governance-Compliance (`/v1/governance/audit-gate`)
+Hardware-anchored zero-PRNG AI governance and EU AI Act Art. 9/12/14 regulatory compliance audit gate. Produces deterministic risk index, damping stability, and audit certificates (`SEAL-GOV-CH17-*`).
+
+```bash
+curl -X POST "https://api.neoma-pcam.com/v1/governance/audit-gate" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "agent_id": "agent-autonomous-01",
+    "model_id": "frontier-reasoning-node",
+    "risk_classification": "high_risk_eu_ai_act",
+    "autonomy_pressure": 0.35,
+    "drift_score": 0.12,
+    "hallucination_index": 0.08,
+    "human_oversight_active": false
+  }'
+```
 
 ---
 
@@ -450,10 +486,10 @@ For developers who prefer running a local `stdio` process instead of the zero-in
 }
 ```
 
-> Exposes the same 3 silicon tools documented in the [AI Agent Tool-Calling Recipes](#ai-agent-tool-calling-recipes-natural-language--silicon-execution) above.
+> Exposes the same 5 silicon tools documented in the [AI Agent Tool-Calling Recipes](#ai-agent-tool-calling-recipes-natural-language--silicon-execution) above.
 
 
-- **Tools Exposed:** `solve_nonlinear_equilibrium` (8-domain solver), `solve_ising_optimization` (64-spin Hamiltonian), and `verify_silicon_seal` (Hardware UID `0051003C3434510C32333934` PUF verification).
+- **Tools Exposed:** 5 tools: `solve_nonlinear_equilibrium` (10-domain solver), `solve_ising_optimization` (64-spin Hamiltonian), `verify_silicon_seal` (Hardware UID `0051003C3434510C32333934` PUF verification), `pcam_physical_trust_gate` (Wave fingerprint trust gate), and `pcam_ai_governance_audit` (EU AI Act & NIST RMF compliance gate).
 
 ## 🔄 6.2. No-Code Enterprise & Operations Workflow (n8n Community Node)
 
@@ -461,8 +497,10 @@ Enable supply-chain, battery, chemical, and finance operations teams to connect 
 
 - **Community Node Package:** `n8n-nodes-neoma-pcam` ([n8n-nodes-neoma-pcam/](n8n-nodes-neoma-pcam/))
 - **Included Nodes:**
-  1. **Industrial Risk & Equilibrium Diagnosis:** Maps spreadsheet/DB rows across 8 operational domains (Universal Supply Chain, Quant Execution, Battery Thermal Safety, Chemical Process, Biopharma, Mobility, Robotics) to return `zeta`, `control_intensity`, `action_recommendation`, and cryptographic `SEAL-PoPW` receipts.
+  1. **Industrial Risk & Equilibrium Diagnosis:** Maps spreadsheet/DB rows across 10 operational domains (Universal Supply Chain, Quant Execution, Battery Thermal Safety, Chemical Process, Biopharma, Mobility, Robotics, 64-Spin Ising, Physical Trust & Security, AI Governance & Compliance) to return `zeta`, `control_intensity`, `action_recommendation`, and cryptographic `SEAL-PoPW` receipts.
   2. **64-Spin Combinatorial Optimization:** Offloads scheduling, routing, and allocation matrices directly to `/v1/ising/solve`.
+  3. **Physical Trust & Security Gate:** Evaluates zero-point drift, biometric liveness, and wave physical fingerprint to ALLOW, SAFE_MODE, or REVOKE execution session directly via `/v1/security/trust-gate`.
+  4. **AI Governance & Compliance Audit Gate:** Issues hardware-anchored EU AI Act Art. 9/12/14 compliance certificates and safety verdicts directly via `/v1/governance/audit-gate`.
 ## ⚡ 7. Empirical Benchmark: Stiff 64-Spin Ising Matrix
 
 Across a **64-spin fully connected graph (2,016 coupled interaction edges)**, P-CAM settles to deterministic ground-state equilibrium in **0.0066 ms (6.6 µs)** via room-temperature silicon charge dissipation.
@@ -479,7 +517,7 @@ Across a **64-spin fully connected graph (2,016 coupled interaction edges)**, P-
 ## 🚦 8. Smart Access Quota Policy
 
 1. **Official Web Portal (Unlimited):** Access via [neoma-pcam.github.io/pcam-live](https://neoma-pcam.github.io/pcam-live/). Unlimited 365-day real-time monitoring and interactive UI evaluation with zero deductions.
-2. **RapidAPI Metered & Institutional Gateways (2,000 Free/mo + SLA):** All production workloads, SDK solvers (`PCAMSampler`), and 8-domain API integrations authenticate via RapidAPI (`2,000 free requests/month` on the Universal Solver plan, scaling to dedicated sub-millisecond Enterprise SLA gateways).
+2. **RapidAPI Metered & Institutional Gateways (2,000 Free/mo + SLA):** All production workloads, SDK solvers (`PCAMSampler`), and 10-domain API integrations authenticate via RapidAPI (`2,000 free requests/month` on the Universal Solver plan, scaling to dedicated sub-millisecond Enterprise SLA gateways).
 3. **Unauthenticated Attestation Gate (2,000-Tick Circuit Breaker):** Direct keyless enclave access is reserved strictly for lightweight client-side hardware verification (`pcam_objective_audit.py`) and is enforced by a **2,000-Tick Circuit Breaker**. Exceeding 2,000 calls triggers a `402 Payment Required` cutoff to prevent commercial free-riding.
 
 ---

@@ -1,8 +1,8 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.neoma-pcam/neoma-pcam-mcp",
-  "title": "NEOMA P-CAM Physical AI & Ising MCP Server",
-  "description": "Sub-ms analog silicon solver for 7-domain physical equilibrium and 64-spin Ising with PUF.",
+  "title": "NEOMA P-CAM Physical AI, Trust Security & Ising MCP Server",
+  "description": "Sub-ms analog silicon co-processor for 10-domain physical equilibrium, 64-spin Ising, wave physical trust security, and zero-PRNG AI governance compliance.",
   "websiteUrl": "https://neoma-pcam.github.io/pcam-live/",
   "icons": [
     {
@@ -15,7 +15,7 @@
     "url": "https://github.com/neoma-pcam/pcam-live",
     "source": "github"
   },
-  "version": "1.0.2",
+  "version": "1.1.0",
   "remotes": [
     {
       "type": "streamable-http",

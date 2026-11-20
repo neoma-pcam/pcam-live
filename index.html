@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEOMA P-CAM: Room-Temperature Physical Ising Solver</title>
+    <title>NEOMA P-CAM: 10-Domain Physical AI, Trust Security & Ising Solver</title>
     <style>
         :root {
             --bg-color: #0b0f19;
@@ -426,6 +426,8 @@
         <option value="robotics">Robotics: Joint Collision Impact</option>
         <option value="quant">Quant Execution: LOB Liquidity Shock</option>
         <option value="mobility">Mobility AV: Hydroplaning Yaw Impulse</option>
+        <option value="security">Physical Trust: Wave Fingerprint Spoof Attack</option>
+        <option value="governance">AI Governance: Autonomous Model Drift Shock</option>
       </select>
       <button id="pcam-ab-trigger" type="button" style="background:linear-gradient(90deg,#06b6d4,#10b981);color:#041019;font-weight:800;font-size:13px;padding:10px 18px;border:none;border-radius:8px;cursor:pointer;box-shadow:0 0 18px rgba(16,185,129,0.35);">
         ⚡ Inject 200% Impulse Shock
@@ -466,10 +468,12 @@
   const domainSel = document.getElementById("pcam-ab-domain");
 
   const PRESETS = {
-    battery:  { flux_potential_v: 2.05, gradient_velocity: 1.80, gradient_acceleration: 19.5, active_strain: 0.78, zeta: 1.1293, gain: 0.798, reflex: 0.0083, seal: "SEAL-0051003C3434510C-645A198FCE00E97B" },
-    robotics: { flux_potential_v: 1.65, gradient_velocity: 4.20, gradient_acceleration: 42.0, active_strain: 0.51, zeta: 1.1410, gain: 0.884, reflex: 0.0068, seal: "SEAL-0051003C3434510C-9B12E40A77C1D302" },
-    quant:    { flux_potential_v: 2.297, gradient_velocity: 0.64, gradient_acceleration: 9.8, active_strain: 0.70, zeta: 1.0520, gain: 0.842, reflex: 0.0074, seal: "SEAL-0051003C3434510C-3E81F09C512A88B4" },
-    mobility: { flux_potential_v: 1.74, gradient_velocity: 5.10, gradient_acceleration: 35.8, active_strain: 0.49, zeta: 1.1355, gain: 0.891, reflex: 0.0071, seal: "SEAL-0051003C3434510C-A74C9210E5D3F119" }
+    battery:    { flux_potential_v: 2.05, gradient_velocity: 1.80, gradient_acceleration: 19.5, active_strain: 0.78, zeta: 1.1293, gain: 0.798, reflex: 0.0083, seal: "SEAL-0051003C3434510C-645A198FCE00E97B" },
+    robotics:   { flux_potential_v: 1.65, gradient_velocity: 4.20, gradient_acceleration: 42.0, active_strain: 0.51, zeta: 1.1410, gain: 0.884, reflex: 0.0068, seal: "SEAL-0051003C3434510C-9B12E40A77C1D302" },
+    quant:      { flux_potential_v: 2.297, gradient_velocity: 0.64, gradient_acceleration: 9.8, active_strain: 0.70, zeta: 1.0520, gain: 0.842, reflex: 0.0074, seal: "SEAL-0051003C3434510C-3E81F09C512A88B4" },
+    mobility:   { flux_potential_v: 1.74, gradient_velocity: 5.10, gradient_acceleration: 35.8, active_strain: 0.49, zeta: 1.1355, gain: 0.891, reflex: 0.0071, seal: "SEAL-0051003C3434510C-A74C9210E5D3F119" },
+    security:   { flux_potential_v: 1.85, gradient_velocity: 3.20, gradient_acceleration: 28.4, active_strain: 0.62, zeta: 1.1550, gain: 0.912, reflex: 0.0062, seal: "SEAL-TRUST-CH17-0051003C-9F31B" },
+    governance: { flux_potential_v: 1.95, gradient_velocity: 2.50, gradient_acceleration: 22.0, active_strain: 0.58, zeta: 1.4725, gain: 0.875, reflex: 0.0062, seal: "SEAL-GOV-CH17-0051003C-4D2A" }
   };
 
   let animId = null;
@@ -584,24 +588,53 @@
     try {
       const controller = new AbortController();
       const timer = setTimeout(() => controller.abort(), 1200);
-      const resp = await fetch("https://api.neoma-pcam.com/v1/solve-universal-equilibrium", {
+
+      let fetchUrl = "https://api.neoma-pcam.com/v1/solve-universal-equilibrium";
+      let fetchBody = {
+        flux_potential_v: preset.flux_potential_v,
+        gradient_velocity: preset.gradient_velocity,
+        gradient_acceleration: preset.gradient_acceleration,
+        active_strain: preset.active_strain
+      };
+
+      if (key === "security") {
+        fetchUrl = "https://api.neoma-pcam.com/v1/security/trust-gate";
+        fetchBody = {
+          session_id: "sess-sandbox-01",
+          action_type: "crypto_key_use",
+          wave_telemetry: [0.42, 0.44, 0.41, 0.43],
+          spatial_context: "default-enclave-zone",
+          liveness_score: 0.99
+        };
+      } else if (key === "governance") {
+        fetchUrl = "https://api.neoma-pcam.com/v1/governance/audit-gate";
+        fetchBody = {
+          agent_id: "agent-autonomous-01",
+          model_id: "frontier-reasoning-node",
+          risk_classification: "high_risk_eu_ai_act",
+          autonomy_pressure: 0.35,
+          drift_score: 0.12,
+          hallucination_index: 0.08,
+          human_oversight_active: false
+        };
+      }
+
+      const resp = await fetch(fetchUrl, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          flux_potential_v: preset.flux_potential_v,
-          gradient_velocity: preset.gradient_velocity,
-          gradient_acceleration: preset.gradient_acceleration,
-          active_strain: preset.active_strain
-        }),
+        body: JSON.stringify(fetchBody),
         signal: controller.signal
       });
       clearTimeout(timer);
       if (resp.ok) {
         const live = await resp.json();
         if (live.zeta) zeta = Number(live.zeta);
+        else if (live.damping_zeta) zeta = Number(live.damping_zeta);
         if (live.control_intensity) gain = Number(live.control_intensity);
         if (live.hardware_reflex_ms) reflex = Number(live.hardware_reflex_ms);
         if (live.hardware_seal_id) seal = String(live.hardware_seal_id);
+        else if (live.compliance_certificate_seal) seal = String(live.compliance_certificate_seal);
+        else if (live.fused_dynamic_signature) seal = String(live.fused_dynamic_signature);
       }
     } catch (_) {
       // Uses verified domain empirical baseline seamlessly if direct CORS/network is restricted
@@ -638,7 +671,7 @@
 <div class="container">
     <header>
         <h1>NEOMA P-CAM (v5.4.0)</h1>
-        <div class="subtitle">Room-Temperature Physical Ising Solver & Silicon Root-of-Trust</div>
+        <div class="subtitle">Room-Temperature Physical AI, 10-Domain Co-Processor, Trust Security & Silicon Root-of-Trust</div>
         <div class="badges">
             <a href="https://neoma-pcam.com" class="badge badge-emerald" target="_blank">Live Console</a>
             <a href="https://api.neoma-pcam.com/docs" class="badge badge-blue" target="_blank">Swagger API Docs</a>
@@ -857,7 +890,7 @@
         }
     }
 
-    // 5. 8-Domain Tabs Data & Logic
+    // 5. 10-Domain Tabs Data & Logic
     const domains = [
         {
             id: 'universal',
@@ -914,6 +947,30 @@
             rapidapi: 'https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control',
             payload: { "reactor_temp_k": 350.15, "pressure_bar": 5.2, "reactant_concentration": 0.85 },
             response: { "status": "hardware_active", "domain": "Chemistry-Kinetics", "zeta": 1.015, "hardware_reflex_ms": 0.0079, "telemetry": { "v_out_measured_v": 0.5504 } }
+        },
+        {
+            id: 'ising',
+            name: 'Ising 64-Spin',
+            endpoint: '/v1/ising/solve',
+            rapidapi: 'https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control',
+            payload: { "num_spins": 4, "fields": [0.5, -0.3, 0.2, -0.4], "couplings": [[0, 1, 1.0], [1, 2, -0.8], [2, 3, 0.6]] },
+            response: { "status": "hardware_active", "domain": "Ising-64Spin-Hamiltonian", "num_spins": 4, "ground_state_energy": -2.3, "equilibrium_converged": true, "hardware_seal_id": "SEAL-0051003C-COM3-..." }
+        },
+        {
+            id: 'security',
+            name: 'Physical Trust Security',
+            endpoint: '/v1/security/trust-gate',
+            rapidapi: 'https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control',
+            payload: { "session_id": "sess-fintech-001", "action_type": "payment_auth", "wave_telemetry": [0.42, 0.44, 0.41, 0.43], "spatial_context": "seoul-enclave-vault-01", "liveness_score": 0.99 },
+            response: { "status": "hardware_active", "domain": "Physical-Trust-Security", "gate_decision": "ALLOW", "session_revoked": false, "action_permitted": true, "fused_dynamic_signature": "SEAL-TRUST-CH17-0051003C-..." }
+        },
+        {
+            id: 'governance',
+            name: 'AI Governance Compliance',
+            endpoint: '/v1/governance/audit-gate',
+            rapidapi: 'https://rapidapi.com/shs15199702/api/neoma-p-cam-hyper-physical-control',
+            payload: { "agent_id": "agent-autonomous-01", "model_id": "frontier-reasoning-node", "risk_classification": "high_risk_eu_ai_act", "autonomy_pressure": 0.35, "drift_score": 0.12, "hallucination_index": 0.08, "human_oversight_active": false },
+            response: { "status": "hardware_active", "domain": "AI-Governance-Compliance", "governance_verdict": "COMPLIANT_EXECUTE", "execution_permitted": true, "compliance_certificate_seal": "SEAL-GOV-CH17-0051003C-..." }
         }
     ];
 

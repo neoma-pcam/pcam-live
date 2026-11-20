@@ -1,9 +1,9 @@
 {
   "mcpServers": {
     "neoma-pcam": {
-      "url": "https://neoma-pcam--neoma-pcam-mcp.apify.actor/mcp",
+      "url": "https://api.neoma-pcam.com/mcp",
       "headers": {
-        "Authorization": "Bearer <YOUR_APIFY_API_TOKEN>"
+        "x-neoma-api-key": "<YOUR_NEOMA_API_KEY>"
       }
     }
   }
