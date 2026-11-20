@@ -1445,6 +1445,137 @@ async fn predict_robotics(headers: HeaderMap, state: State<SharedState>, p: Vali
 async fn predict_mobility(headers: HeaderMap, state: State<SharedState>, p: ValidatedJson<serde_json::Value>) -> impl IntoResponse { handle_rest_request("Mobility-Dynamics", 0.96, headers, state, p).await }
 async fn predict_chemistry(headers: HeaderMap, state: State<SharedState>, p: ValidatedJson<serde_json::Value>) -> impl IntoResponse { handle_rest_request("Precision-Chemistry", 0.94, headers, state, p).await }
 
+static DEMO_RATE_LIMITER: std::sync::OnceLock<std::sync::Mutex<std::collections::HashMap<String, std::collections::VecDeque<std::time::Instant>>>> = std::sync::OnceLock::new();
+
+fn get_client_ip_from_headers(headers: &HeaderMap) -> String {
+    if let Some(cf) = headers.get("cf-connecting-ip").and_then(|v| v.to_str().ok()) {
+        let ip = cf.trim();
+        if !ip.is_empty() { return ip.to_string(); }
+    }
+    if let Some(xff) = headers.get("x-forwarded-for").and_then(|v| v.to_str().ok()) {
+        if let Some(ip) = xff.split(',').next() {
+            let ip = ip.trim();
+            if !ip.is_empty() { return ip.to_string(); }
+        }
+    }
+    if let Some(xreal) = headers.get("x-real-ip").and_then(|v| v.to_str().ok()) {
+        let ip = xreal.trim();
+        if !ip.is_empty() { return ip.to_string(); }
+    }
+    "127.0.0.1".to_string()
+}
+
+fn check_demo_rate_limit(client_ip: &str, max_per_min: usize) -> Result<(), String> {
+    let map_mutex = DEMO_RATE_LIMITER.get_or_init(|| std::sync::Mutex::new(std::collections::HashMap::new()));
+    let mut map = map_mutex.lock().unwrap();
+    let now = std::time::Instant::now();
+    let window = map.entry(client_ip.to_string()).or_insert_with(std::collections::VecDeque::new);
+
+    while let Some(&front) = window.front() {
+        if now.duration_since(front) > std::time::Duration::from_secs(60) {
+            window.pop_front();
+        } else {
+            break;
+        }
+    }
+    if window.len() >= max_per_min {
+        return Err(format!("[DEMO-RATE-LIMIT] IP {} exceeded 10 requests per minute.", client_ip));
+    }
+    window.push_back(now);
+    Ok(())
+}
+
+async fn handle_demo_shock(
+    headers: HeaderMap,
+    State(state): State<SharedState>,
+    body_bytes: axum::body::Bytes,
+) -> Response {
+    let client_ip = get_client_ip_from_headers(&headers);
+    if let Err(msg) = check_demo_rate_limit(&client_ip, 10) {
+        return (
+            StatusCode::TOO_MANY_REQUESTS,
+            Json(serde_json::json!({
+                "error": "Rate limit exceeded. Live demo shock is limited to 10 requests per minute per IP.",
+                "code": 429,
+                "detail": msg
+            })),
+        ).into_response();
+    }
+
+    let parsed_flux: f64 = if !body_bytes.is_empty() {
+        if let Ok(v) = serde_json::from_slice::<serde_json::Value>(&body_bytes) {
+            v.get("flux_potential_v")
+                .and_then(|val| val.as_f64())
+                .unwrap_or(0.85)
+        } else {
+            0.85
+        }
+    } else {
+        0.85
+    };
+
+    let clamped_flux = parsed_flux.clamp(0.1, 1.2);
+
+    let p = DisturbancePayload {
+        flux_potential_v: clamped_flux,
+        gradient_velocity: 520.0,
+        gradient_acceleration: 16000.0 * (clamped_flux / 0.85),
+        active_strain: 1.55 * (clamped_flux / 0.85),
+    };
+
+    let reflex = compute_reflex(
+        "Universal-Equilibrium",
+        &p,
+        0.95,
+        state.clone(),
+        true,
+        "DEMO_PORTAL".to_string(),
+        client_ip,
+        true,
+    ).await;
+
+    let (v_out, ent, gen, uid, last_lat, is_conn) = {
+        let hw = state.hw.read().unwrap();
+        (hw.v_out, hw.entropy, hw.gen, hw.uid.clone(), hw.last_latency_ms, hw.connected)
+    };
+
+    let measured_reflex_ms = if reflex.hardware_reflex_ms > 0.001 {
+        reflex.hardware_reflex_ms
+    } else {
+        last_lat.max(0.0066)
+    };
+
+    let shock_pct = reflex.telemetry.shock_rate_pct;
+
+    state.demo_counter.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
+
+    (
+        StatusCode::OK,
+        Json(serde_json::json!({
+            "status": reflex.status,
+            "domain": "Universal-Equilibrium",
+            "flux_potential_v": clamped_flux,
+            "hardware_reflex_ms": measured_reflex_ms,
+            "shock_rate_pct": shock_pct,
+            "hardware_seal_id": reflex.hardware_seal_id,
+            "zeta": reflex.zeta,
+            "control_intensity": reflex.control_intensity,
+            "v_out_measured_v": v_out,
+            "entropy_ent": ent,
+            "gen_cycle": gen,
+            "hardware_uid": uid,
+            "telemetry": {
+                "hardware_uid": uid,
+                "v_out_measured_v": v_out,
+                "entropy_ent": ent,
+                "shock_rate_pct": shock_pct,
+                "gen_cycle": gen,
+                "hardware_connected": is_conn
+            }
+        }))
+    ).into_response()
+}
+
 // ==========================================
 // 7. 메인 서버 실행 및 Swagger UI 서빙
 // ==========================================
@@ -1514,6 +1645,7 @@ async fn main() {
         .route("/v1/precision-synthesis", post(predict_chemistry))
         .route("/v1/security/trust-gate", post(evaluate_trust_gate))
         .route("/v1/governance/audit-gate", post(evaluate_governance_gate))
+        .route("/v1/demo/shock", post(handle_demo_shock))
         .route("/mcp", post(handle_mcp_post).get(handle_mcp_get))
         .with_state(shared_state.clone())
         .layer(axum::middleware::from_fn_with_state(shared_state.clone(), pcam_fw_layer::pcam_native_firewall))
@@ -1780,8 +1912,49 @@ async fn serve_openapi_json() -> impl IntoResponse {
                     "400": { "description": "Physical Boundary / Schema Violation" }
                 }
             }
+        },
+        "/v1/demo/shock": {
+            "post": {
+                "summary": "Live Enclave Physical Shock Demo",
+                "description": "Send a physical shock pulse (0.1V - 1.2V) to the P-CAM 003 analog silicon enclave. Rate limited to 10 calls/minute per IP.",
+                "requestBody": {
+                    "required": false,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "flux_potential_v": { "type": "number", "example": 0.85 }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": { "description": "Physical Convergence Success" },
+                    "429": { "description": "Rate Limit Exceeded (10 req/min per IP)" }
+                }
+            }
         }
     });
+
+    if doc.get("components").is_none() {
+        doc["components"] = serde_json::json!({});
+    }
+    doc["components"]["securitySchemes"] = serde_json::json!({
+        "ApiKeyAuth": {
+            "type": "apiKey",
+            "in": "header",
+            "name": "x-neoma-api-key",
+            "description": "NEOMA Gateway API Key (or RapidAPI token)"
+        }
+    });
+    doc["security"] = serde_json::json!([
+        {
+            "ApiKeyAuth": []
+        }
+    ]);
+
     (
         StatusCode::OK,
         [("content-type", "application/json")],
@@ -1806,7 +1979,7 @@ async fn serve_swagger_ui() -> axum::response::Html<&'static str> {
                     summary: summary,
                     description: description,
                     requestBody: {
-                        required: true,
+                        required: requiredFields.length > 0,
                         content: {
                             "application/json": {
                                 schema: {
@@ -1835,6 +2008,19 @@ async fn serve_swagger_ui() -> axum::response::Html<&'static str> {
                         version: "5.6.0",
                         description: "Deterministic sub-0.02ms room-temperature analog silicon 10-domain physical equilibrium, 64-spin Ising, physical-trust security and zero-PRNG AI governance co-processor."
                     },
+                    components: {
+                        securitySchemes: {
+                            ApiKeyAuth: {
+                                type: "apiKey",
+                                in: "header",
+                                name: "x-neoma-api-key",
+                                description: "NEOMA Gateway API Key (or RapidAPI token)"
+                            }
+                        }
+                    },
+                    security: [
+                        { "ApiKeyAuth": [] }
+                    ],
                     paths: {
                         "/v1/ising/solve": makeEndpoint(
                             "64-Spin Physical Ising Hamiltonian Solver",
@@ -1942,6 +2128,14 @@ async fn serve_swagger_ui() -> axum::response::Html<&'static str> {
                                 human_oversight_active: { type: "boolean", example: false }
                             },
                             ["agent_id", "model_id", "risk_classification"]
+                        ),
+                        "/v1/demo/shock": makeEndpoint(
+                            "Live Enclave Physical Shock Demo",
+                            "Send physical shock pulse (0.1V - 1.2V) to P-CAM 003 analog silicon. Rate limited to 10 req/min per IP.",
+                            {
+                                flux_potential_v: { type: "number", example: 0.85 }
+                            },
+                            []
                         )
                     }
                 }
@@ -2191,6 +2385,11 @@ mod pcam_fw_layer {
         // C. 모든 /v1/* 물리 연산 라우트 (POST)
         let is_v1_post = method == Method::POST && path.starts_with("/v1/");
         if is_v1_post {
+            // 데모 쇼크 엔드포인트는 웹 포털 체험 전용으로 401 방화벽을 통과 (자체 IP당 분당 10회 Rate Limit 적용)
+            if path == "/v1/demo/shock" {
+                return next.run(req).await;
+            }
+
             // [차단 4 - 외부 무임승차]
             if auth_source.is_none() {
                 state.record_blocked_free_rider();
