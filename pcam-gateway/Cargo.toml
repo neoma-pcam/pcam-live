@@ -1,0 +1,28 @@
+[package]
+name = "pcam-gateway"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+# 1. 비동기 런타임 및 웹 프레임워크 (Swagger UI 및 CORS 지원)
+axum = { version = "0.7", features = ["ws"] }
+tokio = { version = "1", features = ["full"] }
+futures-util = "0.3"
+tower-http = { version = "0.5", features = ["cors"] }
+
+# 2. 직렬화 / 역직렬화
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+# 3. 내부 HTTP 클라이언트
+reqwest = { version = "0.11", features = ["json"] }
+
+# 4. 물리 하드웨어 연동 및 텔레메트리 파싱
+serialport = "4.3"
+regex = "1.10"
+
+# 5. 암호화 및 SEAL-CORE 토큰 증명
+sha2 = "0.10"
+hmac = "0.12"
+hex = "0.4"
+utoipa = "6.0.0"

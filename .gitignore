@@ -43,8 +43,13 @@ smithery.yaml
 
 target/
 pcam-gateway/target/
+pcam-gateway/*.tmp
+pcam-gateway/*.bak*
+pcam-gateway/src/*.bak*
+*stats.json
+node_modules/
+**/node_modules/
 
-pcam-gateway/
 benchmarks/.cache/
 
 # Environment and Secrets
